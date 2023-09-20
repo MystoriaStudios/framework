@@ -36,7 +36,7 @@ allprojects {
     }
 
     dependencies {
-        implementation("com.google.code.gson:gson:3.8.0")
+        implementation("com.google.code.gson:gson:2.9.0")
     }
 }
 
