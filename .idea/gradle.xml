@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/platform" />
+            <option value="$PROJECT_DIR$/platform/independent" />
+            <option value="$PROJECT_DIR$/platform/independent/api" />
+            <option value="$PROJECT_DIR$/platform/paper" />
+            <option value="$PROJECT_DIR$/platform/paper/api" />
+            <option value="$PROJECT_DIR$/platform/paper/core" />
+            <option value="$PROJECT_DIR$/platform/velocity" />
+            <option value="$PROJECT_DIR$/platform/velocity/api" />
+            <option value="$PROJECT_DIR$/platform/velocity/core" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
