@@ -16,6 +16,7 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "kotlin")
+    apply(plugin = "org.jetbrains.kotlin.kapt")
 
     this.group = "net.mystoria.framework"
     this.version =  "1.0.01-SNAPSHOT"
