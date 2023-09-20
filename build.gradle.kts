@@ -17,7 +17,7 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "kotlin")
 
-    this.group = "com.junglerealms.framework"
+    this.group = "net.mystoria.framework"
     this.version =  "1.0.01-SNAPSHOT"
 
     repositories {
