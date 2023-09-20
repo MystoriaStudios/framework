@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.LongSerializationPolicy
 import net.mystoria.framework.serializer.FrameworkSerializer
+import net.mystoria.framework.serializer.FrameworkTypeAdapter
 import kotlin.reflect.KClass
 
 object GsonSerializer : FrameworkSerializer {
@@ -37,5 +38,11 @@ object GsonSerializer : FrameworkSerializer {
 
     override fun <T : Any> deserialize(clazz: KClass<T>, input: String): T {
         TODO("Not yet implemented")
+    }
+
+    override fun <T : Any> registerTypeAdapter(adapter: FrameworkTypeAdapter) {
+        useGsonBuilderThenRebuild {
+            it.registerTypeAdapter(adapter.clazz, adapter)
+        }
     }
 }
