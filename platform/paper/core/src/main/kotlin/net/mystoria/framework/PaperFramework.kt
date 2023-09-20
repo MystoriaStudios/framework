@@ -1,4 +1,4 @@
 package net.mystoria.framework
 
-object SpigotFrameworkAPI {
+object PaperFramework {
 }

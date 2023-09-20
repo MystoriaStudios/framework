@@ -4,9 +4,7 @@ import kotlin.properties.Delegates
 
 /**
  * Contains code that is not platform
- * dependent to be used for data retrieving
- * this is either for the [PAPER, VELOCITY or INDEPENDENT]
- * platforms.
+ * dependent
  */
 abstract class Framework {
 
