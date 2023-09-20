@@ -1,5 +1,7 @@
 package net.mystoria.framework
 
+import net.mystoria.framework.serializer.FrameworkSerializer
+import net.mystoria.framework.serializer.impl.GsonSerializer
 import kotlin.properties.Delegates
 
 /**
@@ -10,6 +12,7 @@ abstract class Framework {
 
     companion object {
         private var instance by Delegates.notNull<Framework>()
+        var serializer: FrameworkSerializer = GsonSerializer
 
         fun use(lambda: (Framework) -> Unit) = lambda.invoke(instance)
     }
