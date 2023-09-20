@@ -22,6 +22,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven("https://repo.aikar.co/content/groups/aikar/")
 
         maven {
             this.name = "Jungle"
@@ -32,6 +33,10 @@ allprojects {
                 this.password = artifactory_password
             }
         }
+    }
+
+    dependencies {
+        implementation("com.google.code.gson:gson:3.8.0")
     }
 }
 
