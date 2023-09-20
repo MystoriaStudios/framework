@@ -4,7 +4,7 @@ package net.mystoria.framework.storage.type
  * Represents the layer in which the
  * [Storable] will be pushed to.
  *
- * [ALL] - Pushes to both [MONGO] & [REDIS]
+ * [ALL] - Pushes to both [MONGO]
  */
 enum class FrameworkStorageType(
     private val queryable: Boolean = true,
@@ -13,8 +13,8 @@ enum class FrameworkStorageType(
     MONGO(
         queryableExtensively = true
     ),
-    REDIS,
     CACHE,
+    REDIS,
     ALL(
         queryable = false
     );

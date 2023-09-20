@@ -6,7 +6,7 @@ abstract class AbstractFrameworkConnection<C, R> {
     companion object {
         private val logger: Logger = Logger.getLogger(AbstractFrameworkConnection::class.simpleName)
 
-        fun accessLogger(lambda: (Logger) -> Unit) {
+        fun useLogger(lambda: (Logger) -> Unit) {
             lambda.invoke(logger)
         }
     }
