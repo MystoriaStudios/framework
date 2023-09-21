@@ -1,7 +1,7 @@
 package net.mystoria.framework.utils
 
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
@@ -19,28 +19,28 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
 
     fun amount(amount: Int) = apply { itemStack.amount = amount }
 
-    fun name(name: String) = apply {
+    fun name(name: Component) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name))
+        meta.displayName(name)
         itemStack.itemMeta = meta
     }
 
-    fun lore(lore: List<String>) = apply {
+    fun lore(lore: List<Component>) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        if (meta.lore == null) {
-            meta.lore = lore.map { translate(it) }
+        if (!meta.hasLore()) {
+            meta.lore(lore)
         } else {
-            meta.lore!!.addAll(lore.map { translate(it) })
+            meta.lore()!!.addAll(lore)
         }
         itemStack.itemMeta = meta
     }
 
-    fun lore(vararg lore: String) = apply {
+    fun lore(vararg lore: Component) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        if (meta.lore == null) {
-            meta.lore = lore.map { translate(it) }
+        if (!meta.hasLore()) {
+            meta.lore(lore.toList())
         } else {
-            meta.lore!!.addAll(lore.map { translate(it) })
+            meta.lore()!!.addAll(lore.toList())
         }
         itemStack.itemMeta = meta
     }
@@ -59,7 +59,7 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         itemStack.itemMeta = meta
     }
 
-    fun itemFlag(itemFlag: ItemFlag) = apply {
+    fun flags(itemFlag: ItemFlag) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
         meta.addItemFlags(itemFlag)
         itemStack.itemMeta = meta
@@ -69,13 +69,9 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         this.itemStack.durability = data
     }
 
-    fun modelData(data: Int) = apply {
+    fun model(data: Int) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
         meta.setCustomModelData(data)
         itemStack.itemMeta = meta
-    }
-
-    private fun translate(s: String): String {
-        return ChatColor.translateAlternateColorCodes('&', s)
     }
 }
