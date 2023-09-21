@@ -6,12 +6,17 @@ import net.mystoria.framework.flavor.service.Configure
 import net.mystoria.framework.flavor.service.Service
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.scheduler.BukkitTask
 import java.util.UUID
 
 @Service
 object MenuService {
 
     private lateinit var openedMenus: MutableMap<UUID, IMenu>
+
+    @Inject
+    lateinit var menuHandler: IMenuHandler
 
     @Configure
     fun configure()

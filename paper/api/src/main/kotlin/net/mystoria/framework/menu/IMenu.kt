@@ -2,11 +2,14 @@ package net.mystoria.framework.menu
 
 import net.mystoria.framework.menu.button.IButton
 import org.bukkit.entity.Player
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * An interface representing a menu for a player in a game.
  */
 interface IMenu {
+
+    val metaData: MetaData
 
     /**
      * Determines whether the menu should auto-update its contents.
@@ -85,4 +88,10 @@ interface IMenu {
      * @param player The player who closed the menu.
      */
     fun onClose(player: Player) { }
+
+    class MetaData {
+        var buttons: ConcurrentHashMap<Int, IButton> = ConcurrentHashMap()
+        var manualClose: Boolean = true
+        var closed: Boolean = false
+    }
 }
