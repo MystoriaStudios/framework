@@ -199,7 +199,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
     fun Class<*>.objectInstance(): Any?
     {
         return kotlin.runCatching {
-            getDeclaREDField("INSTANCE").get(null) ?: kotlin.objectInstance
+            getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
         }.getOrNull().also { any ->
             if (any == null) constructors.forEach {
                 it.isAccessible = true

@@ -21,7 +21,7 @@ object AnnotationMappings
         AnnotationType.PostConstruct to listOf(
             net.mystoria.framework.flavor.service.Configure::class
         ),
-        AnnotationType.PREDestroy to listOf(
+        AnnotationType.PreDestroy to listOf(
             net.mystoria.framework.flavor.service.Close::class
         )
     )

@@ -10,7 +10,7 @@ object PaperFramework : Framework() {
 
     override var logger = Bukkit.getLogger()
 
-    override fun constructNewREeisConnection() : AbstractFrameworkRedisConnection {
+    override fun constructNewRedisConnection() : AbstractFrameworkRedisConnection {
         return BasicFrameworkRedisConnection(BasicFrameworkRedisConnection.Details())
     }
 

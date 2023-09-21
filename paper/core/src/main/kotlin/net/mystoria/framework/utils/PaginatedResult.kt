@@ -30,7 +30,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
 
         var i = this.resultsPerPage * (page - 1)
         while (i < this.resultsPerPage * page && i < results.size) {
-            FrameworkPaperPlugin.instance.audiences.sender(sender).sendMessage(format(results[i], i))
+            sender.sendMessage(format(results[i], i))
             ++i
         }
 
@@ -75,7 +75,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
                         }
                 )
 
-                FrameworkPaperPlugin.instance.audiences.player(sender).sendMessage(component.build())
+                sender.sendMessage(component.build())
             } else {
                 val component = Component.text()
                 component.append(Component
@@ -88,11 +88,11 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
                     .color(TextColor.fromHexString(Tailwind.GRAY_500))
                 )
 
-                FrameworkPaperPlugin.instance.audiences.sender(sender).sendMessage(component.build())
+                sender.sendMessage(component.build())
             }
         }
     }
 
-    abstract fun getHeader(page: Int, maxPages: Int): String
+    abstract fun getHeader(page: Int, maxPages: Int): Component
     abstract fun format(result: T, resultIndex: Int): Component
 }
