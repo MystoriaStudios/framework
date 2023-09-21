@@ -9,7 +9,6 @@ import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.properties.Delegates
 
 /**
  * Contains code that is not platform

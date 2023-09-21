@@ -1,6 +1,6 @@
 package net.mystoria.framework.permission
 
-import java.util.UUID
+import java.util.*
 
 interface IPermissionProvider {
 

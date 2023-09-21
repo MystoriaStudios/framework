@@ -1,12 +1,10 @@
 package net.mystoria.framework.menu.button
 
 import com.cryptomorin.xseries.XMaterial
-import net.mystoria.framework.utils.ItemBuilder
 import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 
 interface IButton {
     fun getMaterial(player: Player) : XMaterial
