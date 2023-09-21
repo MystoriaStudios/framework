@@ -4,8 +4,6 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.kyori.adventure.audience.Audiences
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.Listeners
 import net.mystoria.framework.annotation.command.AutoRegister
@@ -22,6 +20,7 @@ import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
+import net.mystoria.framework.utils.Strings
 import net.mystoria.framework.utils.Tasks
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
@@ -66,7 +65,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
      */
 
     lateinit var commandManager: FrameworkCommandManager
-    lateinit var audiences: BukkitAudiences
 
     override fun load() {
         if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_11)) {
@@ -104,12 +102,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
     }
 
     override fun enable() {
-        audiences = BukkitAudiences.create(this)
-
-        flavor {
-            bind<BukkitAudiences>() to audiences
-        }
-
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerEnable>()
             .forEach {
@@ -135,6 +127,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<PaperCommandManager>() to commandManager
         }
 
+        var commands = 0
         this.packageIndexer
             .getTypesAnnotatedWith<AutoRegister>()
             .forEach {
@@ -147,10 +140,14 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
                     this.commandManager.registerCommand(
                         instance as BaseCommand
                     )
+                    commands++
                 }.onFailure {
                     logger.log(Level.WARNING, "Failed to register command", it)
                 }
             }
+        Framework.use {
+            it.log("Commands", "Registered $commands ${Strings.pluralize(commands, "command")}")
+        }
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ManualRegister>()

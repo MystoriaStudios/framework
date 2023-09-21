@@ -5,8 +5,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextColor
-import net.mystoria.framework.FrameworkPaperPlugin
-import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.constants.Icons
 import net.mystoria.framework.constants.Tailwind
 import org.bukkit.ChatColor
@@ -41,7 +39,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
                 component.append(
                     Component
                         .text(Icons.DOUBLE_ARROW_LEFT.repeat(2))
-                        .color(TextColor.fromHexString(StringUtility.xor(page == 1, Tailwind.RED_600 to Tailwind.EMERALD_400))).also {
+                        .color(TextColor.fromHexString(Strings.xor(page == 1, Tailwind.RED_600 to Tailwind.EMERALD_400))).also {
                             if (page != 1) {
                                 it.hoverEvent(HoverEvent.showText(Component
                                     .text("Click to view page ${page - 1}")
@@ -57,14 +55,14 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
                     .color(TextColor.fromHexString(Tailwind.EMERALD_400))
                 )
                 component.append(Component
-                    .text("(${StringUtility.grammar(results.size, "result")})")
+                    .text("(${Strings.pluralize(results.size, "result")})")
                     .color(TextColor.fromHexString(Tailwind.GRAY_500))
                 )
 
                 component.append(
                     Component
                         .text(Icons.DOUBLE_ARROW_RIGHT.repeat(2))
-                        .color(TextColor.fromHexString(StringUtility.xor(page == maxPages, Tailwind.RED_600 to Tailwind.EMERALD_400))).also {
+                        .color(TextColor.fromHexString(Strings.xor(page == maxPages, Tailwind.RED_600 to Tailwind.EMERALD_400))).also {
                             if (page != maxPages) {
                                 it.hoverEvent(HoverEvent.showText(Component
                                     .text("Click to view page ${page + 1}")
@@ -84,7 +82,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
                 )
 
                 component.append(Component
-                    .text("(${StringUtility.grammar(results.size, "result")})")
+                    .text("(${Strings.pluralize(results.size, "result")})")
                     .color(TextColor.fromHexString(Tailwind.GRAY_500))
                 )
 

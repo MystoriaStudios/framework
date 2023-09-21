@@ -1,4 +1,4 @@
-package net.mystoria.framework.connection.Redis
+package net.mystoria.framework.connection.redis
 
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.StatefulRedisConnection

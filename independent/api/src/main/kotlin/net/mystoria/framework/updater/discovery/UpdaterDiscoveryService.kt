@@ -21,9 +21,7 @@ object UpdaterDiscoveryService
         val discoveryRepositories: List<String> = listOf(
             "gradle-dev-local"
         ),
-        val assets: MutableList<String> = mutableListOf(
-            "net.mystoria.framework.vines:spigot:vines",
-        )
+        val assets: MutableList<String> = mutableListOf()
     ) : IAbstractTypeSerializable
     {
         override fun getAbstractType() = DiscoverableAssets::class.java
