@@ -18,12 +18,12 @@ import kotlin.properties.Delegates
 abstract class Framework {
 
     companion object {
-        private lateinit var instance: Framework
+        lateinit var instance: Framework
 
         fun supply(framework: Framework, lambda: (Framework) -> Unit) {
             instance = framework
-            framework.log("Framework", "Registered with extension class ${framework::class.simpleName}")
-            lambda.invoke(framework)
+            instance.configure()
+            lambda.invoke(instance)
         }
 
         fun use(lambda: (Framework) -> Unit) = lambda.invoke(instance)
@@ -36,7 +36,8 @@ abstract class Framework {
     var messageHandler = FrameworkMessageHandler()
     var serializer: IFrameworkSerializer = GsonSerializer
 
-    init {
+    fun configure() {
+        instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
         sentryService.configure()
         messageHandler.configure()
     }
