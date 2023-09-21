@@ -11,7 +11,6 @@ import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
 import org.bukkit.Server
-import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
 

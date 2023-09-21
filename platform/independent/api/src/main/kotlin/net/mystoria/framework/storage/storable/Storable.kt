@@ -1,6 +1,6 @@
 package net.mystoria.framework.storage.storable
 
-import java.util.UUID
+import java.util.*
 
 /**
  * Represents a generic object storable
