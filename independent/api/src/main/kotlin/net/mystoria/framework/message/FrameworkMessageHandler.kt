@@ -1,12 +1,9 @@
 package net.mystoria.framework.message
 
 import net.mystoria.framework.Framework
-import net.mystoria.framework.flavor.service.Configure
-import net.mystoria.framework.flavor.service.Service
 import net.mystoria.framework.message.listener.FrameworkMessageListener
 import net.mystoria.framework.serializer.impl.GsonSerializer
 
-@Service
 class FrameworkMessageHandler {
 
     val MESSAGE_CHANNEL = "Framework:Global"
@@ -15,7 +12,6 @@ class FrameworkMessageHandler {
         it.constructNewRedisConnection().getConnection()
     }
 
-    @Configure
     fun configure() {
         connection.connect()
         connection.connectPubSub().addListener(FrameworkMessageListener())

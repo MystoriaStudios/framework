@@ -1,8 +1,6 @@
 package net.mystoria.framework.menu.paged
 
-import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.menu.IMenu
-import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.menu.MenuService
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.menu.distribution.MenuDistributionRow

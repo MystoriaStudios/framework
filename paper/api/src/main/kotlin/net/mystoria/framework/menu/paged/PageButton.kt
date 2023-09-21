@@ -1,13 +1,9 @@
 package net.mystoria.framework.menu.paged
 
-import com.cryptomorin.xseries.XItemStack
 import com.cryptomorin.xseries.XMaterial
-import net.kyori.adventure.text.Component
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemBuilder
-import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack

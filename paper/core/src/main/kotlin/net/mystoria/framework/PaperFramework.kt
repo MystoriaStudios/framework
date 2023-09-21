@@ -1,20 +1,20 @@
 package net.mystoria.framework
 
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
+import net.mystoria.framework.connection.mongo.impl.BasicFrameworkMongoConnection
+import net.mystoria.framework.connection.redis.AbstractFrameworkRedisConnection
+import net.mystoria.framework.connection.redis.impl.BasicFrameworkRedisConnection
 import org.bukkit.Bukkit
-import java.util.logging.Level
 
 object PaperFramework : Framework() {
 
-    override fun constructNewRedisConnection() {
-        TODO("Not yet implemented")
+    override var logger = Bukkit.getLogger()
+
+    override fun constructNewRedisConnection() : AbstractFrameworkRedisConnection {
+        return BasicFrameworkRedisConnection(BasicFrameworkRedisConnection.Details())
     }
 
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
-        TODO("Not yet implemented")
-    }
-
-    override fun debug(from: String, message: String) {
-        Bukkit.getLogger().log(Level.INFO, "[$from] $message")
+        return BasicFrameworkMongoConnection(BasicFrameworkMongoConnection.Details())
     }
 }

@@ -2,6 +2,7 @@ import java.net.URI
 
 plugins {
     id("maven-publish")
+    id("io.sentry.jvm.gradle") version "3.12.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
@@ -12,15 +13,16 @@ val artifactory_release: String by project
 val artifactory_user: String by project
 val artifactory_password: String by project
 
-val gitCommitHash = tasks.register("gitCommitHash") {
-    dependsOn("shadowJar")
-    val commandLine = "git rev-parse HEAD".split(" ")
-    val process = Runtime.getRuntime().exec(commandLine.toTypedArray()) // Converts the split commandLine to varargs
-    val standardOutput = process.inputReader().readLine()
+val sentry_auth: String by project
 
-    doLast {
-        project.version = standardOutput.toString().trim().substring(0, 8)
-    }
+sentry {
+    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+    // This enables source context, allowing you to see your source
+    // code as part of your stack traces in Sentry.
+    includeSourceContext.set(true)
+    org.set("mystoria-studios-196d3d453")
+    projectName.set("java")
+    authToken.set(sentry_auth)
 }
 
 allprojects {
@@ -50,6 +52,11 @@ allprojects {
         implementation("org.mongodb:mongo-java-driver:3.12.11")
         implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
         implementation("com.google.code.gson:gson:2.9.0")
+        implementation("io.sentry:sentry:6.29.0")
+        implementation("com.konghq:unirest-java:3.13.6:standalone")
+
+        implementation("com.google.guava:guava:31.0.1-jre")
+        implementation("commons-io:commons-io:2.11.0")
     }
 
     tasks.shadowJar {

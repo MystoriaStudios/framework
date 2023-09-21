@@ -1,6 +1,7 @@
 package net.mystoria.framework.plugin
 
-import co.aikar.commands.CommandManager
+import co.aikar.commands.BukkitCommandManager
+import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.container.ContainerEnable
@@ -9,7 +10,9 @@ import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoreDependencyInjection
-import net.mystoria.framework.flavor.annotation.Inject
+import net.mystoria.framework.message.FrameworkMessageHandler
+import net.mystoria.framework.sentry.SentryService
+import net.mystoria.framework.serializer.IFrameworkSerializer
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
@@ -76,7 +79,13 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<Logger>() to logger
         }
 
-        this.commandManager = FrameworkCommandManager()
+        Framework.use {
+            flavor {
+                bind<SentryService>() to it.sentryService
+                bind<FrameworkMessageHandler>() to it.messageHandler
+                bind<IFrameworkSerializer>() to it.serializer
+            }
+        }
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerEnable>()
@@ -87,5 +96,13 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
                     logger.log(Level.WARNING, "Failed to enable container part!", throwable)
                 }
             }
+
+        this.commandManager = FrameworkCommandManager(this)
+
+        flavor {
+            bind<FrameworkCommandManager>() to commandManager
+            bind<BukkitCommandManager>() to commandManager
+            bind<PaperCommandManager>() to commandManager
+        }
     }
 }

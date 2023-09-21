@@ -1,3 +1,9 @@
+repositories {
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+}
+
 dependencies {
     // local project includes
     implementation(project(":independent:independent-api"))
