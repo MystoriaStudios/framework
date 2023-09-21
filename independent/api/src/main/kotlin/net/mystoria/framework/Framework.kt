@@ -18,7 +18,13 @@ import kotlin.properties.Delegates
 abstract class Framework {
 
     companion object {
-        private var instance by Delegates.notNull<Framework>()
+        private lateinit var instance: Framework
+
+        fun supply(framework: Framework, lambda: (Framework) -> Unit) {
+            instance = framework
+            framework.log("Framework", "Registered with extension class ${framework::class.simpleName}")
+            lambda.invoke(framework)
+        }
 
         fun use(lambda: (Framework) -> Unit) = lambda.invoke(instance)
         fun <T> useWithReturn(lambda: (Framework) -> T) = lambda.invoke(instance)

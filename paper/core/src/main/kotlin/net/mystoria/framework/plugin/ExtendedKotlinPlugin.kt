@@ -1,10 +1,17 @@
 package net.mystoria.framework.plugin
 
+import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
+import net.mystoria.framework.annotation.Listeners
+import net.mystoria.framework.annotation.command.AutoRegister
+import net.mystoria.framework.annotation.command.ManualRegister
+import net.mystoria.framework.annotation.container.ContainerDisable
 import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.annotation.container.ContainerPreEnable
+import net.mystoria.framework.annotation.container.flavor.LazyStartup
 import net.mystoria.framework.command.FrameworkCommandManager
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
@@ -13,10 +20,12 @@ import net.mystoria.framework.flavor.annotation.IgnoreDependencyInjection
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
+import net.mystoria.framework.utils.Tasks
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
 import org.bukkit.Server
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -66,6 +75,16 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
 
         this.flavor = Flavor.create(this::class, FlavorOptions(logger))
 
+        this.packageIndexer
+            .getMethodsAnnotatedWith<ContainerPreEnable>()
+            .forEach {
+                kotlin.runCatching {
+                    it.invoke(this)
+                }.onFailure { throwable ->
+                    logger.log(Level.WARNING, "Failed to enable container part!", throwable)
+                }
+            }
+
         flavor().binders.add(
             FlavorBinder(this@ExtendedKotlinPlugin::class)
         ) to this@ExtendedKotlinPlugin
@@ -79,14 +98,9 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<Logger>() to logger
         }
 
-        Framework.use {
-            flavor {
-                bind<SentryService>() to it.sentryService
-                bind<FrameworkMessageHandler>() to it.messageHandler
-                bind<IFrameworkSerializer>() to it.serializer
-            }
-        }
+    }
 
+    override fun enable() {
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerEnable>()
             .forEach {
@@ -96,6 +110,13 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
                     logger.log(Level.WARNING, "Failed to enable container part!", throwable)
                 }
             }
+        Framework.use {
+            flavor {
+                bind<SentryService>() to it.sentryService
+                bind<FrameworkMessageHandler>() to it.messageHandler
+                bind<IFrameworkSerializer>() to it.serializer
+            }
+        }
 
         this.commandManager = FrameworkCommandManager(this)
 
@@ -103,6 +124,77 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<FrameworkCommandManager>() to commandManager
             bind<BukkitCommandManager>() to commandManager
             bind<PaperCommandManager>() to commandManager
+        }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<AutoRegister>()
+            .forEach {
+                kotlin.runCatching {
+                    val instance = it.objectInstance()
+                        ?: it.newInstance()
+
+                    this.flavor.inject(instance)
+
+                    this.commandManager.registerCommand(
+                        instance as BaseCommand
+                    )
+                }.onFailure {
+                    logger.log(Level.WARNING, "Failed to register command", it)
+                }
+            }
+
+        this.packageIndexer
+            .getMethodsAnnotatedWith<ManualRegister>()
+            .forEach {
+                kotlin.runCatching {
+                    it.invoke(this, this.commandManager)
+                }.onFailure {
+                    logger.log(Level.WARNING, "Failed to manually register command", it)
+                }
+            }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<Listeners>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .forEach {
+                this.flavor.inject(it)
+
+                this.server.pluginManager.registerEvents(it as Listener, this)
+            }
+
+        if (this::class.java.getAnnotation(LazyStartup::class.java) == null) Tasks.async {
+            this.flavor.startup()
+        }
+    }
+
+    override fun disable() {
+        this.packageIndexer
+            .getMethodsAnnotatedWith<ContainerDisable>()
+            .filter {
+                it.declaringClass == this::class.java
+            }
+            .forEach {
+                kotlin.runCatching {
+                    it.invoke(this)
+                }.onFailure {
+                    logger.log(Level.WARNING, "Failed to disable container part!", it)
+                }
+            }
+
+        this.commandManager.unregisterCommands()
+        this.flavor.close()
+    }
+
+    fun Class<*>.objectInstance(): Any?
+    {
+        return kotlin.runCatching {
+            getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
+        }.getOrNull().also { any ->
+            if (any == null) constructors.forEach {
+                it.isAccessible = true
+            }
         }
     }
 }

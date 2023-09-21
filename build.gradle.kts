@@ -32,6 +32,7 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.mystoria.framework"
+    version = "1.0.01-SNAPSHOT"
 
     repositories {
         mavenCentral()

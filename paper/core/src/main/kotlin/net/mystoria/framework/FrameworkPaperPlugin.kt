@@ -3,6 +3,7 @@ package net.mystoria.framework
 import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
@@ -16,9 +17,14 @@ import net.mystoria.framework.updater.UpdaterService
 @HelperImplementationPlugin
 class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
 
+    companion object {
+        lateinit var instance: FrameworkPaperPlugin
+    }
+
     @ContainerEnable
     fun containerEnable() {
-        Framework.use {
+        instance = this
+        Framework.supply(PaperFramework) {
             it.flavor = flavor()
         }
 

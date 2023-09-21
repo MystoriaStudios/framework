@@ -1,6 +1,6 @@
 package net.mystoria.framework.menu.distribution
 
-import net.mystoria.framework.menu.button.Button
+import net.mystoria.framework.menu.button.IButton
 
 enum class MenuDistributionRow(
     private val rowDistribution: (Int) -> List<Int>
@@ -53,7 +53,7 @@ enum class MenuDistributionRow(
     });
 
     fun allDistributed(
-        rows: Int, buttons: Map<Int, Button>
+        rows: Int, buttons: Map<Int, IButton>
     ): List<Int>
     {
         return mutableListOf<Int>()
@@ -68,7 +68,7 @@ enum class MenuDistributionRow(
     }
 
     private fun distributed(
-        row: Int, buttons: Map<Int, Button>
+        row: Int, buttons: Map<Int, IButton>
     ): List<Int>
     {
         val buttonsInRow = buttons.keys

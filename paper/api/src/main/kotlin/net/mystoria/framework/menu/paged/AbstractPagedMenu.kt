@@ -75,7 +75,7 @@ abstract class AbstractPagedMenu : IMenu {
             for (entry in getAllPagesButtons(player).entries)
             {
                 var ind = entry.key
-                if (ind in minIndex..<maxIndex)
+                if (ind in minIndex..maxIndex)
                 {
                     ind -= (maxItemsPerPage * (page - 1).toDouble()).toInt() - 9
                     buttons[buttonStartOffset + ind] = entry.value
