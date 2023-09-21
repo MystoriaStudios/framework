@@ -31,7 +31,7 @@ object FrameworkCommand : FrameworkCommand() {
     fun testScoreboard(player: Player) {
         if (scoreboardService.primaryScoreboard != null) throw RuntimeException("There is already a primary scoreboard provider.")
 
-        scoreboardService.primaryScoreboard = object : IScoreboard {
+        scoreboardService.updatePrimaryProvider(object : IScoreboard {
             override fun getTitle(player: Player) : Component {
                 return Component.text(Deployment.SERVER_NAME).color(TextColor.fromHexString(Tailwind.LIME_400))
             }
@@ -47,6 +47,6 @@ object FrameworkCommand : FrameworkCommand() {
                     Component.empty(),
                 )
             }
-        }
+        })
     }
 }
