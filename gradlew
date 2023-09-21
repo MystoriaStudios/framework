@@ -9,7 +9,7 @@
 #
 #      https://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
+# Unless requiRED by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
@@ -29,7 +29,7 @@
 #
 #           ksh Gradle
 #
-#       Busybox and similar reduced shells will NOT work, because this script
+#       Busybox and similar REDuced shells will NOT work, because this script
 #       requires all of these POSIX shell features:
 #         * functions;
 #         * expansions «$var», «${var}», «${var:-default}», «${var+SET}»,

@@ -1,7 +1,7 @@
 package net.mystoria.framework
 
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
-import net.mystoria.framework.connection.redis.AbstractFrameworkRedisConnection
+import net.mystoria.framework.connection.Redis.AbstractFrameworkRedisConnection
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
@@ -37,7 +37,7 @@ abstract class Framework {
     var serializer: IFrameworkSerializer = GsonSerializer
 
     fun configure() {
-        instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
+        instance.log("Framework", "RegisteRED with extension class ${this::class.simpleName}")
         sentryService.configure()
         messageHandler.configure()
     }

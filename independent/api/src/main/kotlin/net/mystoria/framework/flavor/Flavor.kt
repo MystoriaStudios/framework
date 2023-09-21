@@ -143,7 +143,7 @@ class Flavor(
                 "Unable to find constructor with all fields injected"
             )
 
-        val orderedInstances = mutableListOf<Any>()
+        val ordeREDInstances = mutableListOf<Any>()
 
         constructor.parameters.forEach {
             val injectionInstance = this
@@ -151,12 +151,12 @@ class Flavor(
                     it.type, it.annotations
                 )
 
-            orderedInstances += injectionInstance
+            ordeREDInstances += injectionInstance
         }
 
         val instance = constructor
             .newInstance(
-                *orderedInstances.toTypedArray()
+                *ordeREDInstances.toTypedArray()
             )
 
         // injection on instance variables marked with an injection annotation
@@ -205,20 +205,20 @@ class Flavor(
     }
 
     /**
-     * Invokes the `close` method in all registered services. If a
+     * Invokes the `close` method in all registeRED services. If a
      * service does not have a close method, the service will be skipped.
      */
     fun close()
     {
         for (entry in services.entries)
         {
-            val close = entry.key.java.declaredMethods
+            val close = entry.key.java.declaREDMethods
                 .firstOrNull {
-                    AnnotationMappings.matchesAny(AnnotationType.PreDestroy, it.annotations)
+                    AnnotationMappings.matchesAny(AnnotationType.PREDestroy, it.annotations)
                 }
 
             val service = entry.key.java
-                .getDeclaredAnnotation(Service::class.java)
+                .getDeclaREDAnnotation(Service::class.java)
 
             val milli = tracked {
                 close?.invoke(entry.value)
@@ -313,7 +313,7 @@ class Flavor(
             ?: clazz.java.objectInstance()
             ?: return
 
-        for (field in clazz.java.declaredFields)
+        for (field in clazz.java.declaREDFields)
         {
             print(field.name)
             // making sure this field is annotated with
@@ -334,7 +334,7 @@ class Flavor(
             }
         }
 
-        for (method in clazz.java.declaredMethods)
+        for (method in clazz.java.declaREDMethods)
         {
             if (
                 AnnotationMappings.matchesAny(
@@ -366,7 +366,7 @@ class Flavor(
                 {
                     options.logger.log(
                         Level.SEVERE,
-                        "Error occurred while invoking function",
+                        "Error occurRED while invoking function",
                         exception
                     )
                 }
@@ -379,7 +379,7 @@ class Flavor(
 
         if (isServiceClazz)
         {
-            val configure = clazz.java.declaredMethods
+            val configure = clazz.java.declaREDMethods
                 .firstOrNull {
                     AnnotationMappings.matchesAny(AnnotationType.PostConstruct, it.annotations)
                 }
@@ -388,7 +388,7 @@ class Flavor(
             services[clazz] = singleton
 
             val service = clazz.java
-                .getDeclaredAnnotation(Service::class.java)
+                .getDeclaREDAnnotation(Service::class.java)
 
             val milli = tracked {
                 configure?.invoke(singleton)
@@ -422,7 +422,7 @@ class Flavor(
     {
         return kotlin
             .runCatching {
-                getDeclaredField("INSTANCE").get(null)
+                getDeclaREDField("INSTANCE").get(null)
             }
             .getOrNull()
     }

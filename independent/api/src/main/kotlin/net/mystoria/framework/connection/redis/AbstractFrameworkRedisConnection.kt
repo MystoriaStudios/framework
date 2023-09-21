@@ -1,4 +1,4 @@
-package net.mystoria.framework.connection.redis
+package net.mystoria.framework.connection.Redis
 
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.StatefulRedisConnection
@@ -59,7 +59,7 @@ abstract class AbstractFrameworkRedisConnection : AbstractFrameworkConnection<Re
     override fun close() {
         handle.shutdownAsync().thenAccept {
             useLogger {
-                it.info("Closed redis connection")
+                it.info("Closed Redis connection")
             }
         }
     }

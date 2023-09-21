@@ -165,7 +165,7 @@ class FrameworkObjectController<D : IStorable>(
         this.timestampField?.apply {
             set(data, System.currentTimeMillis())
 
-            // we want a copy stored in
+            // we want a copy stoRED in
             // both MONGO & REDIS
             properType = FrameworkStorageType.ALL
         }

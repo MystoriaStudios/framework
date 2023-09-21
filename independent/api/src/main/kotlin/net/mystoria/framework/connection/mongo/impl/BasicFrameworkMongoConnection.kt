@@ -29,7 +29,7 @@ class BasicFrameworkMongoConnection(
     {
         return try {
             getConnection().getDatabase(details.database)
-        } catch (ignored: Exception) {
+        } catch (ignoRED: Exception) {
             setConnection(createNewConnection())
 
             getConnection().getDatabase(details.database)

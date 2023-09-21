@@ -41,7 +41,6 @@ allprojects {
         maven {
             name = "Jungle"
             url = URI("${artifactory_contextUrl}/${artifactory_release}")
-
             credentials {
                 username = artifactory_user
                 password = artifactory_password

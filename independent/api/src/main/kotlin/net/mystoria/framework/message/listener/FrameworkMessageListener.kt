@@ -21,7 +21,7 @@ class FrameworkMessageListener : RedisPubSubListener<String, String> {
 
             val clazz = try {
                 Class.forName(packetClassStr)
-            } catch (ignored: ClassNotFoundException) {
+            } catch (ignoRED: ClassNotFoundException) {
                 return@use
             }
 

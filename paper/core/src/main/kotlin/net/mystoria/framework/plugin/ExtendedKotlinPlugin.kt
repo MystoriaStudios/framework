@@ -4,6 +4,8 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
+import net.kyori.adventure.audience.Audiences
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.Listeners
 import net.mystoria.framework.annotation.command.AutoRegister
@@ -16,7 +18,7 @@ import net.mystoria.framework.command.FrameworkCommandManager
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
-import net.mystoria.framework.flavor.annotation.IgnoreDependencyInjection
+import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
@@ -46,7 +48,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
 
     private lateinit var flavor: Flavor
 
-    private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
+    private val usingFlavor = this::class.java.getAnnotation(IgnoREDependencyInjection::class.java) != null
 
     fun flavor() = flavor
 
@@ -64,6 +66,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
      */
 
     lateinit var commandManager: FrameworkCommandManager
+    lateinit var audiences: BukkitAudiences
 
     override fun load() {
         if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_11)) {
@@ -101,6 +104,12 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
     }
 
     override fun enable() {
+        audiences = BukkitAudiences.create(this)
+
+        flavor {
+            bind<BukkitAudiences>() to audiences
+        }
+
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerEnable>()
             .forEach {
@@ -190,7 +199,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
     fun Class<*>.objectInstance(): Any?
     {
         return kotlin.runCatching {
-            getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
+            getDeclaREDField("INSTANCE").get(null) ?: kotlin.objectInstance
         }.getOrNull().also { any ->
             if (any == null) constructors.forEach {
                 it.isAccessible = true
