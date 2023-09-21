@@ -1,6 +1,7 @@
 package net.mystoria.framework.menu.paged
 
 import com.cryptomorin.xseries.XMaterial
+import com.cryptomorin.xseries.XSound
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemBuilder
 import net.mystoria.framework.utils.ItemStackBuilder
@@ -32,11 +33,12 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         when {
             hasNext(player) -> {
                 menu.modPage(player, mod)
-                //playNeutral(player)
+
+                XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player)
             }
             else -> {
-
-            }//playFail(player)
+                XSound.BLOCK_GRAVEL_BREAK.play(player)
+            }
         }
     }
 }
