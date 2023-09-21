@@ -3,10 +3,10 @@ package net.mystoria.framework.menu.paged
 import com.cryptomorin.xseries.XMaterial
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemBuilder
+import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
-import org.bukkit.inventory.ItemStack
 
 class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IButton {
 
@@ -16,9 +16,8 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
     }
 
     override fun getMaterial(player: Player) = XMaterial.ARROW
-    override fun getButtonItem(player: Player): ItemStack {
-        return ItemBuilder {
-            type(getMaterial(player).parseMaterial()!!)
+    override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit {
+        return {
             name(
                 if (!hasNext(player)) {
                     " "
