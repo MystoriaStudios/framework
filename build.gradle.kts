@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import java.net.URI
 
 plugins {
@@ -18,20 +19,20 @@ allprojects {
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
-    this.group = "net.mystoria.framework"
-    this.version =  "1.0.01-SNAPSHOT"
+    group = "net.mystoria.framework"
+    version =  "1.0.01-SNAPSHOT"
 
     repositories {
         mavenCentral()
         maven("https://repo.aikar.co/content/groups/aikar/")
 
         maven {
-            this.name = "Jungle"
-            this.url = URI("${artifactory_contextUrl}/${artifactory_release}")
+            name = "Jungle"
+            url = URI("${artifactory_contextUrl}/${artifactory_release}")
 
             credentials {
-                this.username = artifactory_user
-                this.password = artifactory_password
+                username = artifactory_user
+                password = artifactory_password
             }
         }
     }
@@ -40,6 +41,41 @@ allprojects {
         implementation("org.mongodb:mongo-java-driver:3.12.11")
         implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
         implementation("com.google.code.gson:gson:2.9.0")
+    }
+
+    tasks.processResources {
+        filesMatching("**/*.kts") {
+            expand(mapOf("!{VERSION}" to version))
+        }
+    }
+
+    tasks.shadowJar {
+        archiveClassifier.set("")
+        archiveFileName.set("framework-${project.name}.jar")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("shadow") {
+                from(components["kotlin"])
+            }
+        }
+
+        repositories {
+            maven {
+                name = "Jungle"
+                url = uri("$artifactory_contextUrl/$artifactory_release")
+
+                credentials {
+                    username = artifactory_user
+                    password = artifactory_password
+                }
+            }
+        }
+    }
+
+    tasks.named("build") {
+        dependsOn("processResources", "shadowJar", "publishShadowPublicationToJungleRepository")
     }
 }
 
