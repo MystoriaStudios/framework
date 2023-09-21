@@ -17,6 +17,7 @@ class FrameworkApp {
             flavor.bind<FrameworkModuleLoader>() to loader
         }
 
+        loader.startup()
 
         flavor.startup()
     }

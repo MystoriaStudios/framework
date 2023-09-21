@@ -35,4 +35,12 @@ class FrameworkModuleLoader(private val directory: File) {
         }
         return null
     }
+
+    fun startup() {
+        directory.listFiles()?.filter {
+            it.extension == ".jar"
+        }?.forEach { file ->
+            loadModule(file)
+        }
+    }
 }
