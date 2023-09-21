@@ -43,12 +43,6 @@ allprojects {
         implementation("com.google.code.gson:gson:2.9.0")
     }
 
-    tasks.processResources {
-        filesMatching("**/*.kts") {
-            expand(mapOf("!{VERSION}" to version))
-        }
-    }
-
     tasks.shadowJar {
         archiveClassifier.set("")
         archiveFileName.set("framework-${project.name}.jar")
@@ -75,7 +69,7 @@ allprojects {
     }
 
     tasks.named("build") {
-        dependsOn("processResources", "shadowJar", "publishShadowPublicationToJungleRepository")
+        dependsOn(tasks.shadowJar, "publishShadowPublicationToJungleRepository")
     }
 }
 
