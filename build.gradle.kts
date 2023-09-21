@@ -50,6 +50,9 @@ allprojects {
     }
 
     dependencies {
+        implementation(kotlin("stdlib"))
+        implementation(kotlin("reflect")) // Add this line
+
         implementation("org.mongodb:mongo-java-driver:3.12.11")
         implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
         implementation("com.google.code.gson:gson:2.9.0")

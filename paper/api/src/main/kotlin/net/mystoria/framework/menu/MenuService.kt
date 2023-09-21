@@ -13,12 +13,10 @@ object MenuService {
 
     private lateinit var openedMenus: MutableMap<UUID, IMenu>
 
-    @Inject
     lateinit var menuHandler: IMenuHandler
 
     @Configure
-    fun configure()
-    {
+    fun configure() {
         openedMenus = mutableMapOf()
     }
 
