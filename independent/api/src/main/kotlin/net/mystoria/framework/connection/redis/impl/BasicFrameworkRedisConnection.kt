@@ -22,5 +22,5 @@ class BasicFrameworkRedisConnection(
         ) : this("redis://$username:$password@$hostname:$port")
     }
 
-    override fun createNewConnection() = RedisClient.create("")
+    override fun createNewConnection() = RedisClient.create(details.uri)
 }
