@@ -31,11 +31,6 @@ object GsonSerializer : IFrameworkSerializer {
         }
     }
 
-    override fun serialize(obj: Any): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun <T : Any> deserialize(clazz: KClass<T>, input: String): T {
-        TODO("Not yet implemented")
-    }
+    override fun serialize(obj: Any) = gson.toJson(obj)
+    override fun <T : Any> deserialize(clazz: KClass<T>, input: String) = gson.fromJson(input, clazz.java)
 }
