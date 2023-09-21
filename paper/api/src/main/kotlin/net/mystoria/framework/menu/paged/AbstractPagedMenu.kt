@@ -64,7 +64,7 @@ abstract class AbstractPagedMenu : IMenu {
 
         val buttonSlots = getAllPagesButtonSlots()
             .ifEmpty {
-                this.distribution.allDistributed(MenuService.menuHandler.size(this,buttons) / 9, buttons)
+                this.distribution.allDistributed(MenuService.menuHandler.size(this, buttons) / 9, buttons)
             }
 
         if (buttonSlots.isEmpty())

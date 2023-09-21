@@ -9,6 +9,9 @@ import java.util.concurrent.ConcurrentHashMap
  */
 interface IMenu {
 
+    /**
+     * Represents the metadata associated with the menu.
+     */
     val metaData: MetaData
 
     /**
@@ -89,9 +92,23 @@ interface IMenu {
      */
     fun onClose(player: Player) { }
 
+    /**
+     * A nested class representing metadata for the menu.
+     */
     class MetaData {
+        /**
+         * A ConcurrentHashMap containing button positions and button identifiers.
+         */
         var buttons: ConcurrentHashMap<Int, IButton> = ConcurrentHashMap()
+
+        /**
+         * Indicates whether the menu was manually closed.
+         */
         var manualClose: Boolean = true
+
+        /**
+         * Indicates whether the menu is closed.
+         */
         var closed: Boolean = false
     }
 }

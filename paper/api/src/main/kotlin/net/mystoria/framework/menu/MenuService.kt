@@ -1,6 +1,5 @@
 package net.mystoria.framework.menu
 
-import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.flavor.service.Close
 import net.mystoria.framework.flavor.service.Configure
 import net.mystoria.framework.flavor.service.Service
@@ -8,36 +7,69 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
 
+/**
+ * Service class for managing player menus and opened menus.
+ */
 @Service
 object MenuService {
 
+    // A mutable map to store opened menus associated with player UUIDs.
     private lateinit var openedMenus: MutableMap<UUID, IMenu>
 
+    // A reference to the menu handler used by the service.
     lateinit var menuHandler: IMenuHandler
 
+    /**
+     * Initializes the `openedMenus` map when configuring the service.
+     */
     @Configure
     fun configure() {
         openedMenus = mutableMapOf()
     }
 
+    /**
+     * Closes all opened menus and invokes the `onClose` method for each player.
+     */
     @Close
-    fun close()
-    {
-        openedMenus.forEach { (t, u) ->
-            Bukkit.getPlayer(t)?.let {
-                u.onClose(it)
+    fun close() {
+        openedMenus.forEach { (uuid, menu) ->
+            Bukkit.getPlayer(uuid)?.let {
+                menu.onClose(it)
             }
         }
     }
 
+    /**
+     * Checks if a player has an opened menu.
+     *
+     * @param player The player to check for an opened menu.
+     * @return `true` if the player has an opened menu, `false` otherwise.
+     */
     fun hasOpenedMenu(player: Player) = openedMenus.containsKey(player.uniqueId)
+
+    /**
+     * Retrieves the opened menu associated with a player.
+     *
+     * @param player The player for whom the opened menu is retrieved.
+     * @return The opened menu associated with the player, or null if none is found.
+     */
     fun getOpenedMenu(player: Player) = openedMenus[player.uniqueId]
 
-    fun addOpenedMenu(player: Player, menu: IMenu)
-    {
+    /**
+     * Adds an opened menu for a player.
+     *
+     * @param player The player for whom the menu is opened.
+     * @param menu The menu to be added as an opened menu for the player.
+     */
+    fun addOpenedMenu(player: Player, menu: IMenu) {
         openedMenus[player.uniqueId] = menu
     }
 
+    /**
+     * Removes an opened menu associated with a player.
+     *
+     * @param player The player for whom the opened menu is removed.
+     */
     fun removeOpenedMenu(player: Player) {
         openedMenus.remove(player.uniqueId)
     }
