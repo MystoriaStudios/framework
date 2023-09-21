@@ -2,10 +2,10 @@ package net.mystoria.framework.storage.impl
 
 import net.mystoria.framework.connection.cached.FrameworkCacheConnection
 import net.mystoria.framework.storage.FrameworkStorageLayer
-import net.mystoria.framework.storage.storable.Storable
+import net.mystoria.framework.storage.storable.IStorable
 import java.util.*
 
-class CachedFrameworkStorageLayer<D : Storable> : FrameworkStorageLayer<FrameworkCacheConnection<UUID, D>, D, (D) -> Boolean>(
+class CachedFrameworkStorageLayer<D : IStorable> : FrameworkStorageLayer<FrameworkCacheConnection<UUID, D>, D, (D) -> Boolean>(
     FrameworkCacheConnection()
 ) {
     override fun saveSync(data: D) {

@@ -1,5 +1,6 @@
 package net.mystoria.framework.menu
 
+import net.mystoria.framework.menu.button.IButton
 import org.bukkit.entity.Player
 
 /**
@@ -67,9 +68,9 @@ interface IMenu {
      * Retrieves a mapping of button positions to button identifiers for the menu.
      *
      * @param player The player for whom the button mapping is generated.
-     * @return A map of button positions (slot numbers) to button identifiers (string).
+     * @return A map of button positions (slot numbers) to button identifiers (IButton).
      */
-    fun getButtons(player: Player): Map<Int, String>
+    fun getButtons(player: Player): Map<Int, IButton>
 
     /**
      * Called when the menu is opened by a player.

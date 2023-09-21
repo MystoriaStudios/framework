@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 
-interface Button {
+interface IButton {
 
     fun getName(player: Player) : Component
 

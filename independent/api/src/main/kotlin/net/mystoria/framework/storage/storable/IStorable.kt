@@ -6,9 +6,9 @@ import java.util.*
  * Represents a generic object storable
  * in any storage layer type.
  *
- * [Storable] instances are identified
+ * [IStorable] instances are identified
  * via its [identifier]
  */
-interface Storable {
+interface IStorable {
     val identifier: UUID
 }

@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import java.net.URI
 
 plugins {
@@ -13,6 +12,17 @@ val artifactory_release: String by project
 val artifactory_user: String by project
 val artifactory_password: String by project
 
+val gitCommitHash = tasks.register("gitCommitHash") {
+    dependsOn("shadowJar")
+    val commandLine = "git rev-parse HEAD".split(" ")
+    val process = Runtime.getRuntime().exec(commandLine.toTypedArray()) // Converts the split commandLine to varargs
+    val standardOutput = process.inputReader().readLine()
+
+    doLast {
+        project.version = standardOutput.toString().trim().substring(0, 8)
+    }
+}
+
 allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -20,7 +30,6 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.mystoria.framework"
-    version =  "1.0.01-SNAPSHOT"
 
     repositories {
         mavenCentral()

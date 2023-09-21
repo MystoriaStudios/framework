@@ -7,14 +7,14 @@ import net.mystoria.framework.Framework
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.mystoria.framework.controller.FrameworkObjectController
 import net.mystoria.framework.storage.FrameworkStorageLayer
-import net.mystoria.framework.storage.storable.Storable
+import net.mystoria.framework.storage.storable.IStorable
 import org.bson.Document
 import org.bson.conversions.Bson
 import java.util.*
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
-class MongoFrameworkStorageLayer<D : Storable>(
+class MongoFrameworkStorageLayer<D : IStorable>(
     connection: AbstractFrameworkMongoConnection,
     private val container: FrameworkObjectController<D>,
     private val dataType: KClass<D>

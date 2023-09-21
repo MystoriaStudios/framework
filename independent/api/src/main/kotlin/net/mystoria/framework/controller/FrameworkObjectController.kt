@@ -6,7 +6,7 @@ import net.mystoria.framework.debug
 import net.mystoria.framework.storage.FrameworkStorageLayer
 import net.mystoria.framework.storage.impl.CachedFrameworkStorageLayer
 import net.mystoria.framework.storage.impl.MongoFrameworkStorageLayer
-import net.mystoria.framework.storage.storable.Storable
+import net.mystoria.framework.storage.storable.IStorable
 import net.mystoria.framework.storage.type.FrameworkStorageType
 import java.lang.reflect.Field
 import java.util.*
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
-class FrameworkObjectController<D : Storable>(
+class FrameworkObjectController<D : IStorable>(
     private val dataType: KClass<D>
 ) {
     val localLayerCache = mutableMapOf<FrameworkStorageType, FrameworkStorageLayer<*, D, *>>()

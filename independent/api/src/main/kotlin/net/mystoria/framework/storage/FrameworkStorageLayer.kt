@@ -1,11 +1,11 @@
 package net.mystoria.framework.storage
 
 import net.mystoria.framework.connection.AbstractFrameworkConnection
-import net.mystoria.framework.storage.storable.Storable
+import net.mystoria.framework.storage.storable.IStorable
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-abstract class FrameworkStorageLayer<C : AbstractFrameworkConnection<*, *>, D : Storable, F>(
+abstract class FrameworkStorageLayer<C : AbstractFrameworkConnection<*, *>, D : IStorable, F>(
     val connection: C
 ) {
 

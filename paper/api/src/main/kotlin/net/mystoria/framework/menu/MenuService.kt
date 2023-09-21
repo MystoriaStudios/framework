@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 import java.util.UUID
 
 @Service
-class MenuService {
+object MenuService {
 
     private lateinit var openedMenus: MutableMap<UUID, IMenu>
 
@@ -37,8 +37,7 @@ class MenuService {
         openedMenus[player.uniqueId] = menu
     }
 
-    fun removeOpenedMenu(player: Player)
-    {
+    fun removeOpenedMenu(player: Player) {
         openedMenus.remove(player.uniqueId)
     }
 }

@@ -3,10 +3,10 @@ package net.mystoria.framework.serializer.impl
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.LongSerializationPolicy
-import net.mystoria.framework.serializer.FrameworkSerializer
+import net.mystoria.framework.serializer.IFrameworkSerializer
 import kotlin.reflect.KClass
 
-object GsonSerializer : FrameworkSerializer {
+object GsonSerializer : IFrameworkSerializer {
 
     private val gsonBuilder = GsonBuilder()
         .setLongSerializationPolicy(LongSerializationPolicy.STRING)

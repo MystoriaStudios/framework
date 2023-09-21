@@ -1,7 +1,10 @@
 package net.mystoria.framework.plugin
 
+import co.aikar.commands.CommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
+import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.command.FrameworkCommandManager
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
@@ -12,6 +15,7 @@ import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Level
 import java.util.logging.Logger
 
 /**
@@ -47,7 +51,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
      * END FLAVOUR INJECTION AND HANDLING
      */
 
-    @Inject lateinit var framework: Framework
+    lateinit var commandManager: FrameworkCommandManager
 
     override fun load() {
         if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_11)) {
@@ -71,5 +75,17 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<Server>() to server
             bind<Logger>() to logger
         }
+
+        this.commandManager = FrameworkCommandManager()
+
+        this.packageIndexer
+            .getMethodsAnnotatedWith<ContainerEnable>()
+            .forEach {
+                kotlin.runCatching {
+                    it.invoke(this)
+                }.onFailure { throwable ->
+                    logger.log(Level.WARNING, "Failed to enable container part!", throwable)
+                }
+            }
     }
 }

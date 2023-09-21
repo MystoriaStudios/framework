@@ -1,4 +1,6 @@
 package net.mystoria.framework.command
 
-class FrameworkCommand {
+import co.aikar.commands.BaseCommand
+
+class FrameworkCommand : BaseCommand() {
 }

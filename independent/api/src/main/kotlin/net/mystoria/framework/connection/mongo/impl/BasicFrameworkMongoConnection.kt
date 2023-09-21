@@ -8,7 +8,7 @@ import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
 class BasicFrameworkMongoConnection(
     private val details: Details
 ) : AbstractFrameworkMongoConnection() {
-    class Details(
+    data class Details(
         val uri: String = "mongodb://admin:a=@NbvLLa9?!D2tVL#nwt-eEe5CWB\$ky+C&3YxwWxNN@100.67.254.17:27017/admin",
         val database: String = "framework"
     ) {

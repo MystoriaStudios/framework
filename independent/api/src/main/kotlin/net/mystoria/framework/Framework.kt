@@ -1,7 +1,9 @@
 package net.mystoria.framework
 
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
-import net.mystoria.framework.serializer.FrameworkSerializer
+import net.mystoria.framework.connection.redis.AbstractFrameworkRedisConnection
+import net.mystoria.framework.message.FrameworkMessageHandler
+import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
 import kotlin.properties.Delegates
 
@@ -18,9 +20,10 @@ abstract class Framework {
         fun <T> useWithReturn(lambda: (Framework) -> T) = lambda.invoke(instance)
     }
 
-    var serializer: FrameworkSerializer = GsonSerializer
+    var messageHandler = FrameworkMessageHandler()
+    var serializer: IFrameworkSerializer = GsonSerializer
 
-    abstract fun constructNewRedisConnection()
+    abstract fun constructNewRedisConnection() : AbstractFrameworkRedisConnection
     abstract fun constructNewMongoConnection() : AbstractFrameworkMongoConnection
 
     abstract fun debug(from: String, message: String)
