@@ -1,11 +1,12 @@
 rootProject.name = "framework"
 
-include("platform")
-include("platform:paper")
-include("platform:velocity")
-include("platform:paper:api")
-include("platform:paper:core")
-include("platform:velocity:api")
-include("platform:velocity:core")
-include("platform:independent")
-include("platform:independent:api")
+listOf("paper", "velocity", "independent").forEach {
+    include(":$it")
+    mutableListOf("$it:api", "$it:core")
+        .forEach { module ->
+            include(module)
+
+            val compat = module.replace(":", "-")
+            project(":$module").name = compat
+        }
+}
