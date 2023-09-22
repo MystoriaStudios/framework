@@ -3,6 +3,9 @@ package net.mystoria.framework
 import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.menu.FrameworkMenuHandler
+import net.mystoria.framework.menu.IMenuHandler
+import net.mystoria.framework.nms.INMSVersion
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
@@ -25,9 +28,19 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
         instance = this
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
+            it.flavor.bind<INMSVersion>() to getNMSInstance()
+            it.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
         }
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
+    }
+
+    private fun getNMSInstance(): INMSVersion {
+        var packageName = server.javaClass.getPackage().name;
+        packageName = packageName.substring(packageName.lastIndexOf('.') + 1);
+
+        val clazz = Class.forName("net.mystoria.framework.nms.${packageName.toUpperCase()}Version")
+        return clazz.getDeclaredConstructor().newInstance() as INMSVersion
     }
 }

@@ -24,6 +24,10 @@ dependencies {
     implementation("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
     implementation("me.lucko:helper:5.6.10")
     kapt("me.lucko:helper:5.6.10")
+
+    // NMS Stuff
+    implementation(project(":paper:nms:nms-core"))
+    implementation(project(":paper:nms:nms-v1_20_R1"))
 }
 
 tasks.shadowJar {

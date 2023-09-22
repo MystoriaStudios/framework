@@ -10,3 +10,16 @@ listOf("paper", "velocity", "independent").forEach {
             project(":$module").name = compat
         }
 }
+
+include(":paper:nms")
+include("paper:nms:core")
+project(":paper:nms:core").name = "nms-core"
+
+fun registerNMS(ver: String) {
+    val module = "paper:nms:v$ver"
+    include("paper:nms:v$ver")
+
+    project(":$module").name = "nms-v$ver"
+}
+
+registerNMS("1_20_R1")
