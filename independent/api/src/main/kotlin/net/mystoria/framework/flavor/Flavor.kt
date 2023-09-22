@@ -318,8 +318,7 @@ class Flavor(
             print(field.name)
             // making sure this field is annotated with
             // Inject before modifying its value.
-            if (AnnotationMappings.matchesAny(AnnotationType.Inject, field.annotations))
-            {
+            if (AnnotationMappings.matchesAny(AnnotationType.Inject, field.annotations)) {
                 val injectionInstance = this
                     .findInstanceForInjection(
                         field.type, field.annotations

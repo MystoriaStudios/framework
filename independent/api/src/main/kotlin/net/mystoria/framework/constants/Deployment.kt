@@ -1,15 +1,15 @@
 package net.mystoria.framework.constants
 
 object Deployment {
-    const val SERVER_NAME = "JungleRealms"
-    const val WEBSITE_URL = "www.junglerealms.com"
-    const val STORE_URL = "store.junglerealms.com"
+    const val SERVER_NAME = "PXLMC"
+    const val WEBSITE_URL = "www.pxlmc.net"
+    const val STORE_URL = "store.pxlmc.net"
 
     object Socials {
-        const val X = "@junglerealms"
-        const val YOUTUBE = "https://youtube.com/c/junglerealms"
-        const val TIK_TOK = "@junglerealms"
-        const val INSTAGRAM = "@junglerealms"
-        const val DISCORD = "discord.gg/junglerealms"
+        const val X = "@PxlMC"
+        const val YOUTUBE = "https://youtube.com/c/pxlmc"
+        const val TIK_TOK = "@PxlMC"
+        const val INSTAGRAM = "@PxlMC"
+        const val DISCORD = "discord.gg/pxlmc"
     }
 }

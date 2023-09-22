@@ -13,7 +13,7 @@ object UpdaterIndependentPlatform : IUpdaterPlatform {
         UpdaterService.authentication = UpdaterAuthenticationService.JungleConnectionAuthenticationWrapper()
         UpdaterService.discoverable = UpdaterDiscoveryService.DiscoverableAssets()
             .apply {
-                assets += "net.mystoria.mebula:nebula-independent:Nebula"
+                assets += "net.mystoria.nebula:nebula-independent:Nebula"
             }
     }
 }

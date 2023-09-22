@@ -47,7 +47,11 @@ object ScoreboardService {
     }
 
     fun refresh(player: Player) {
-        val board = handle[player.uniqueId] ?: return
+        val board = handle[player.uniqueId].apply {
+            if (this == null) handle[player.uniqueId] = FastBoard(player)
+            handle[player.uniqueId]
+        } ?: return
+
         val scoreboard = playerScoreboards.getOrDefault(player.uniqueId, primaryScoreboard) ?: return
 
         board.updateTitle(scoreboard.getTitle(player))

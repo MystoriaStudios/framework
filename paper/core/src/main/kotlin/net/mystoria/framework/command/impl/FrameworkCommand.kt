@@ -4,7 +4,9 @@ import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.CommandPermission
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Deployment
@@ -14,6 +16,7 @@ import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.menu.test.TestMenu
 import net.mystoria.framework.scoreboard.IScoreboard
 import net.mystoria.framework.scoreboard.ScoreboardService
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -36,21 +39,29 @@ object FrameworkCommand : FrameworkCommand() {
 
         scoreboardService.updatePrimaryProvider(object : IScoreboard {
             override fun getTitle(player: Player) : Component {
-                return Component.text(Deployment.SERVER_NAME).color(TextColor.fromHexString(Tailwind.LIME_400))
+                return Component
+                    .text(Deployment.SERVER_NAME)
+                    .style(Style
+                        .style(TextDecoration.BOLD)
+                        .color(TextColor.fromHexString(Tailwind.ORANGE_400))
+                    )
             }
 
             override fun getScores(player: Player): List<Component> {
                 return listOf(
                     Component.empty(),
-                    Component.text().apply {
-                        it.append(Component
-                            .text("this is a test")
-                        )
-                    }.build(),
+                    Component.text("this is a test of").color(TextColor.fromHexString(Tailwind.GRAY_100)),
+                    Component.text("the scoreboard provider").color(TextColor.fromHexString(Tailwind.GRAY_100)),
+                    Component.text("built into framework").color(TextColor.fromHexString(Tailwind.GRAY_100)),
                     Component.empty(),
+                    Component.text(Deployment.WEBSITE_URL).color(TextColor.fromHexString(Tailwind.AMBER_300)),
                 )
             }
         })
+
+        Bukkit.getServer().onlinePlayers.forEach {
+            scoreboardService.refresh(it)
+        }
     }
 
     @Subcommand("test-menu")
