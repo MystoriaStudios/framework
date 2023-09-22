@@ -1,7 +1,16 @@
 package net.mystoria.framework.loader
 
+import net.mystoria.framework.Framework
+import net.mystoria.framework.FrameworkApp
+import net.mystoria.framework.module.FrameworkModule
+import net.mystoria.framework.module.details.FrameworkModuleDetails
+import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URLClassLoader
+import java.nio.charset.Charset
+import java.util.jar.JarFile
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 class FrameworkModuleLoader(private val directory: File) {
 
@@ -25,10 +34,10 @@ class FrameworkModuleLoader(private val directory: File) {
         loaders.add(pluginClassLoader)
     }
 
-    fun getModuleClass(pluginClassName: String): Class<*>? {
+    fun getModuleClass(pluginClassName: String): KClass<*>? {
         for (classLoader in loaders) {
             try {
-                return classLoader.loadClass(pluginClassName)
+                return classLoader.loadClass(pluginClassName).kotlin
             } catch (e: ClassNotFoundException) {
                 // Class not found in this loader, try the next one
             }
@@ -40,7 +49,26 @@ class FrameworkModuleLoader(private val directory: File) {
         directory.listFiles()?.filter {
             it.extension == ".jar"
         }?.forEach { file ->
-            loadModule(file)
+            Framework.use { framework ->
+                runCatching {
+                    loadModule(file)
+
+                    val jarFile = JarFile(file)
+                    val entry = jarFile.getJarEntry("module.json") ?: throw RuntimeException("Unable to load module from class ${file.name} as there is no module.json present.")
+
+                    val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
+                    val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
+
+                    FrameworkApp.use {
+                        val module = getModuleClass(details.main)?.createInstance() as FrameworkModule? ?: return@use
+                        it.modules[details.name.lowercase()] = module
+                        module.load(details)
+                    }
+                }.onFailure {
+                    framework.severe("Framework", "There was an error trying to load that module please fix this.")
+                    it.printStackTrace()
+                }
+            }
         }
     }
 }
