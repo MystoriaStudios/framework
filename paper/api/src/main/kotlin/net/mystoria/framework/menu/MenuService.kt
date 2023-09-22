@@ -6,6 +6,7 @@ import net.mystoria.framework.flavor.service.Service
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Service class for managing player menus and opened menus.
@@ -16,6 +17,9 @@ object MenuService {
     // A mutable map to store opened menus associated with player UUIDs.
     private lateinit var openedMenus: MutableMap<UUID, IMenu>
 
+    // A mutable map to store button click cooldowns associated with player UUIDS.
+    lateinit var clickCooldown: MutableMap<UUID, Long>
+
     // A reference to the menu handler used by the service.
     lateinit var menuHandler: IMenuHandler
 
@@ -25,6 +29,7 @@ object MenuService {
     @Configure
     fun configure() {
         openedMenus = mutableMapOf()
+        clickCooldown = ConcurrentHashMap()
     }
 
     /**

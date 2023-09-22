@@ -14,14 +14,8 @@ abstract class AbstractPagedMenu : IMenu {
     // The current page number.
     var page: Int = 1
 
-    // Flag to enable vertical view.
-    var verticalView: Boolean = false
-
-    // Flag to determine whether to apply a header to the menu title.
-    var applyHeader: Boolean = true
-
     // The distribution type for menu buttons.
-    var distribution = MenuDistributionRow.NONE
+    private var distribution = MenuDistributionRow.NONE
 
     /**
      * Retrieves the title of the menu with pagination for the given player.

@@ -2,6 +2,8 @@ package net.mystoria.framework.menu.paged
 
 import com.cryptomorin.xseries.XMaterial
 import com.cryptomorin.xseries.XSound
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.ChatColor
@@ -20,9 +22,24 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         return {
             name(
                 if (!hasNext(player)) {
-                    " "
+                    Component.empty()
                 } else {
-                    (if (mod > 0) ChatColor.GREEN.toString() + (if (menu.verticalView) "Scroll down" else "Next page") else ChatColor.RED.toString() + (if (menu.verticalView) "Scroll up" else "Previous page")) + ChatColor.GRAY + " (${menu.page + mod}/${menu.getPages(player)})"
+                    if (mod > 0) {
+                        Component.text(
+                            "Next Page",
+                            NamedTextColor.GREEN
+                        )
+                    } else {
+                        Component.text(
+                            "Previous Page",
+                            NamedTextColor.RED
+                        )
+                    }.append(
+                        Component.text(
+                            " (${menu.page + mod}/${menu.getPages(player)})",
+                            NamedTextColor.GRAY
+                        )
+                    )
                 }
             )
         }

@@ -1,8 +1,10 @@
 package net.mystoria.framework.menu
 
+import net.kyori.adventure.text.Component
 import net.mystoria.framework.menu.button.IButton
 import org.bukkit.entity.Player
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.ceil
 
 /**
  * An interface representing a menu for a player in a game.
@@ -31,14 +33,6 @@ interface IMenu {
         get() = false
 
     /**
-     * Retrieves the size of the menu.
-     *
-     * @return The size of the menu as an integer, or -1 if it is not fixed.
-     */
-    val size: Int
-        get() = -1
-
-    /**
      * Determines whether lower clicks should be canceled when interacting with the menu.
      *
      * @return `true` if canceling lower clicks is enabled, `false` otherwise.
@@ -58,17 +52,17 @@ interface IMenu {
      * Retrieves the title of the menu for the given player.
      *
      * @param player The player for whom the title is generated.
-     * @return The title of the menu as a string.
+     * @return The title of the menu as a component.
      */
-    fun getTitle(player: Player): String
+    fun getTitle(player: Player): Component
 
     /**
      * Retrieves the texture for the menu's inventory for the given player.
      *
      * @param player The player for whom the inventory texture is generated.
-     * @return The inventory texture as a string.
+     * @return The inventory texture as a component.
      */
-    fun getInventoryTexture(player: Player): String = getTitle(player)
+    fun getInventoryTexture(player: Player): Component = getTitle(player)
 
     /**
      * Retrieves a mapping of button positions to button identifiers for the menu.
@@ -91,6 +85,25 @@ interface IMenu {
      * @param player The player who closed the menu.
      */
     fun onClose(player: Player) { }
+
+    /**
+     * Calculates and returns the size of the menu based on the buttons provided.
+     *
+     * @param buttons A map of button positions (slot numbers) to button identifiers (IButton).
+     * @return The calculated size of the menu as an integer.
+     */
+    fun size(buttons: Map<Int, IButton>): Int
+    {
+        var highest = 0
+        for (buttonValue in buttons.keys)
+        {
+            if (buttonValue > highest)
+            {
+                highest = buttonValue
+            }
+        }
+        return (ceil((highest + 1) / 9.0) * 9.0).toInt()
+    }
 
     /**
      * A nested class representing metadata for the menu.

@@ -1,9 +1,9 @@
 package net.mystoria.framework.menu
-
 import net.mystoria.framework.menu.button.IButton
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 
 /**
  * An interface representing a menu handler for managing in-game menus and inventories.
@@ -32,16 +32,9 @@ interface IMenuHandler {
      *
      * @param player The player for whom the custom inventory is opened.
      * @param inventory The custom inventory to be opened.
+     * @param menu The menu that the inventory is being opened.
      */
-    fun openCustomInventory(player: Player, inventory: Inventory)
-
-    /**
-     * Retrieves the inventory type for a given size.
-     *
-     * @param size The size for which the inventory type is determined.
-     * @return The corresponding inventory type.
-     */
-    fun getWindowType(size: Int): InventoryType
+    fun openCustomInventory(player: Player, inventory: Inventory, menu: IMenu)
 
     /**
      * Updates the specified menu for the given player.
@@ -61,20 +54,11 @@ interface IMenuHandler {
     fun getSlot(x: Int, y: Int): Int
 
     /**
-     * Asynchronously loads resources for the player and invokes the callback with a boolean
-     * indicating the success of the resource loading.
+     * Constructs an ItemStack for a button within the given player's context.
      *
-     * @param player The player for whom resources are loaded.
-     * @param callback A callback function to be invoked with a boolean result.
+     * @param player The player for whom the ItemStack is constructed.
+     * @param button The button for which the ItemStack is constructed.
+     * @return The constructed ItemStack.
      */
-    fun asyncLoadResources(player: Player, callback: (Boolean) -> Unit)
-
-    /**
-     * Calculates the size of the menu based on the provided buttons and menu configuration.
-     *
-     * @param menu The menu for which the size is calculated.
-     * @param buttons A map of button positions to button identifiers.
-     * @return The size of the menu.
-     */
-    fun size(menu: IMenu, buttons: Map<Int, IButton>): Int
+    fun constructItemStack(player: Player, button: IButton): ItemStack
 }
