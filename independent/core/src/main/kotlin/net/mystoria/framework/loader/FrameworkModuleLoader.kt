@@ -32,6 +32,7 @@ class FrameworkModuleLoader(private val directory: File) {
         )
 
         loaders.add(pluginClassLoader)
+        println("[Framework] Loaded module ${pluginFile.name} into class loader")
     }
 
     fun getModuleClass(pluginClassName: String): KClass<*>? {
@@ -39,7 +40,7 @@ class FrameworkModuleLoader(private val directory: File) {
             try {
                 return classLoader.loadClass(pluginClassName).kotlin
             } catch (e: ClassNotFoundException) {
-                // Class not found in this loader, try the next one
+                e.printStackTrace()
             }
         }
         return null
@@ -50,6 +51,7 @@ class FrameworkModuleLoader(private val directory: File) {
             it.extension == ".jar"
         }?.forEach { file ->
             Framework.use { framework ->
+                framework.log("Framework", file.name)
                 runCatching {
                     loadModule(file)
 
