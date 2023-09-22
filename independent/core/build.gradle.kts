@@ -3,12 +3,10 @@ plugins {
 }
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("net.mystoria.framework.FrameworkAppKt")
 }
 
 dependencies {
     implementation(project(":independent:independent-api"))
     implementation("org.reflections:reflections:0.10.2")
-
-    implementation("io.jooby:jooby-kotlin:3.0.5")
 }

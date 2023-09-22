@@ -7,7 +7,7 @@ import net.mystoria.framework.connection.redis.impl.BasicFrameworkRedisConnectio
 import java.util.logging.Logger
 
 object IndependentFramework : Framework() {
-    override var logger: Logger = Logger.getAnonymousLogger()
+    override var logger: Logger = Logger.getGlobal()
 
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
         return BasicFrameworkRedisConnection(BasicFrameworkRedisConnection.Details())
