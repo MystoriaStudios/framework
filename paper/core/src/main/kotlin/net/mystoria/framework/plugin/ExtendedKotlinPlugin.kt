@@ -22,6 +22,7 @@ import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.utils.Strings
 import net.mystoria.framework.utils.Tasks
+import net.mystoria.framework.utils.objectInstance
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
@@ -55,10 +56,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
         if (!usingFlavor) return
 
         flavor.lambda()
-    }
-
-    fun supplyFlavor(flavor: Flavor) {
-        this.flavor = flavor
     }
     /**
      * END FLAVOUR INJECTION AND HANDLING
@@ -98,7 +95,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<Server>() to server
             bind<Logger>() to logger
         }
-
     }
 
     override fun enable() {
@@ -132,14 +128,11 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             .getTypesAnnotatedWith<AutoRegister>()
             .forEach {
                 kotlin.runCatching {
-                    val instance = it.objectInstance()
-                        ?: it.newInstance()
+                    val instance = it.objectInstance() ?: it.newInstance()
 
                     this.flavor.inject(instance)
 
-                    this.commandManager.registerCommand(
-                        instance as BaseCommand
-                    )
+                    this.commandManager.registerCommand(instance as BaseCommand)
                     commands++
                 }.onFailure {
                     logger.log(Level.WARNING, "Failed to register command", it)
@@ -173,6 +166,17 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
         if (this::class.java.getAnnotation(LazyStartup::class.java) == null) Tasks.async {
             this.flavor.startup()
         }
+
+        fun Class<*>.objectInstance(): Any?
+        {
+            return kotlin.runCatching {
+                getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
+            }.getOrNull().also { any ->
+                if (any == null) constructors.forEach {
+                    it.isAccessible = true
+                }
+            }
+        }
     }
 
     override fun disable() {
@@ -191,16 +195,5 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
 
         this.commandManager.unregisterCommands()
         this.flavor.close()
-    }
-
-    fun Class<*>.objectInstance(): Any?
-    {
-        return kotlin.runCatching {
-            getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
-        }.getOrNull().also { any ->
-            if (any == null) constructors.forEach {
-                it.isAccessible = true
-            }
-        }
     }
 }
