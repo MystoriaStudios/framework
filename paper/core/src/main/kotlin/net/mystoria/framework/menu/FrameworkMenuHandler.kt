@@ -77,17 +77,14 @@ class FrameworkMenuHandler : IMenuHandler {
     override fun openCustomInventory(player: Player, inventory: Inventory, menu: IMenu) {
         val openInventory = player.openInventory
 
-        if (openInventory != null)
+        // check if top inv size is the same as new menu size and if the titles match
+        if (openInventory.topInventory.size == inventory.size && openInventory.title() == menu.getTitle(player))
         {
-            // check if top inv size is the same as new menu size and if the titles match
-            if (openInventory.topInventory != null && openInventory.topInventory.size == inventory.size && openInventory.title() == menu.getTitle(player))
-            {
-                openInventory.topInventory.contents = inventory.contents
-                return
-            }
-
-            menu.metaData.manualClose = false
+            openInventory.topInventory.contents = inventory.contents
+            return
         }
+
+        menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
             nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)

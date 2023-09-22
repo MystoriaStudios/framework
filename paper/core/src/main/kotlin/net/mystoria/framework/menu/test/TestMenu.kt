@@ -5,9 +5,11 @@ import net.kyori.adventure.text.Component
 import net.mystoria.framework.menu.IMenu
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemStackBuilder
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class TestMenu : IMenu {
+
     override val metaData: IMenu.MetaData = IMenu.MetaData()
     override fun getTitle(player: Player): Component {
         return Component.text("Test MENU !!!")
@@ -15,6 +17,8 @@ class TestMenu : IMenu {
 
     override fun getButtons(player: Player): Map<Int, IButton> {
         val buttons = mutableMapOf<Int, IButton>()
+
+        Bukkit.broadcastMessage("GETTING BUTTONS| TEST MENU")
 
         buttons[15] = TestButton()
 
