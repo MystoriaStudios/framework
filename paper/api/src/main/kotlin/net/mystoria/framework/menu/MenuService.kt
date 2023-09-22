@@ -61,6 +61,13 @@ object MenuService {
     fun getOpenedMenu(player: Player) = openedMenus[player.uniqueId]
 
     /**
+     * Retrieves all opened menus associated with players.
+     *
+     * @return A map containing all opened menus associated with players, where the player's uniqueId is the key.
+     */
+    fun getAllOpenedMenus() = openedMenus
+
+    /**
      * Adds an opened menu for a player.
      *
      * @param player The player for whom the menu is opened.
@@ -77,5 +84,14 @@ object MenuService {
      */
     fun removeOpenedMenu(player: Player) {
         openedMenus.remove(player.uniqueId)
+    }
+
+    /**
+     * Removes an opened menu associated with a uuid.
+     *
+     * @param player The UUID of the player for whom the opened menu is removed.
+     */
+    fun removeOpenedMenu(player: UUID) {
+        openedMenus.remove(player)
     }
 }

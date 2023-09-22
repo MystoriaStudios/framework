@@ -25,6 +25,14 @@ interface IMenu {
         get() = true
 
     /**
+     * The auto-update interval for a certain feature.
+     *
+     * @return The auto-update interval in milliseconds. A value of -1L indicates that auto-updating is disabled.
+     */
+    val autoUpdateInterval: Long
+        get() = -1L
+
+    /**
      * Determines whether the menu should update when clicked by the player.
      *
      * @return `true` if update on click is enabled, `false` otherwise.

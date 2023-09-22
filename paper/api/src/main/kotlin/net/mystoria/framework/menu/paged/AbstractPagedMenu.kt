@@ -1,5 +1,6 @@
 package net.mystoria.framework.menu.paged
 
+import net.kyori.adventure.text.Component
 import net.mystoria.framework.menu.IMenu
 import net.mystoria.framework.menu.MenuService
 import net.mystoria.framework.menu.button.IButton
@@ -23,16 +24,16 @@ abstract class AbstractPagedMenu : IMenu {
      * @param player The player for whom the title is generated.
      * @return The paginated menu title as a string.
      */
-    open fun getPrePaginatedTitle(player: Player): String? = null
+    open fun getPrePaginatedTitle(player: Player): Component? = null
 
     /**
      * Retrieves the title of the menu without pagination for the given player.
      *
      * @param player The player for whom the title is generated.
-     * @return The unpaginated menu title as a string.
+     * @return The unpaginated menu title as a component.
      */
-    open fun getUnPaginatedTitle(player: Player): String {
-        return ""
+    open fun getUnPaginatedTitle(player: Player): Component {
+        return Component.empty()
     }
 
     /**
@@ -41,14 +42,14 @@ abstract class AbstractPagedMenu : IMenu {
      * @param player The player for whom the title is generated.
      * @return The formatted menu title with pagination.
      */
-    override fun getTitle(player: Player): String {
+    override fun getTitle(player: Player): Component {
         with(getPrePaginatedTitle(player)) {
             if (this != null) {
                 val pages = getPages(player)
 
-                return "${getPrePaginatedTitle(player)}${
+                return this.append(Component.text(
                     if (pages > 1) " ($page/$pages)" else ""
-                }"
+                ))
             } else {
                 return getUnPaginatedTitle(player)
             }
@@ -99,7 +100,7 @@ abstract class AbstractPagedMenu : IMenu {
 
         val buttonSlots = getAllPagesButtonSlots()
             .ifEmpty {
-                this.distribution.allDistributed(MenuService.menuHandler.size(this, buttons) / 9, buttons)
+                this.distribution.allDistributed(size(buttons) / 9, buttons)
             }
 
         if (buttonSlots.isEmpty()) {

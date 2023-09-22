@@ -10,6 +10,8 @@ import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.flavor.annotation.Inject
+import net.mystoria.framework.menu.IMenuHandler
+import net.mystoria.framework.menu.test.TestMenu
 import net.mystoria.framework.scoreboard.IScoreboard
 import net.mystoria.framework.scoreboard.ScoreboardService
 import org.bukkit.command.CommandSender
@@ -21,6 +23,7 @@ import org.bukkit.entity.Player
 object FrameworkCommand : FrameworkCommand() {
 
     @Inject lateinit var scoreboardService: ScoreboardService
+    @Inject lateinit var menuHandler: IMenuHandler
 
     @Subcommand("test-sentry")
     fun testSentry(sender: CommandSender) {
@@ -48,5 +51,11 @@ object FrameworkCommand : FrameworkCommand() {
                 )
             }
         })
+    }
+
+    @Subcommand("test-menu")
+    fun testMenu(player: Player) {
+        val menu = TestMenu()
+        menuHandler.openMenu(player, menu)
     }
 }
