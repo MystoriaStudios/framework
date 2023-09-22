@@ -3,7 +3,7 @@ package net.mystoria.framework
 import com.junglerealms.commons.annotations.custom.CustomAnnotationProcessors
 import express.Express
 import express.ExpressRouter
-import net.mystoria.framework.annotation.RestController
+import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.loader.FrameworkModuleLoader
@@ -25,7 +25,6 @@ object FrameworkApp {
     lateinit var express: Express
 
     val modules: MutableMap<String, FrameworkModule> = mutableMapOf()
-    val routers = mutableListOf<ExpressRouter>()
 
     fun setup(args: Array<String>) {
         val port = Integer.parseInt(System.getProperty("port") ?: "8080")
@@ -34,10 +33,6 @@ object FrameworkApp {
 
         Framework.supply(IndependentFramework) {
             it.log("Framework", "Starting express server on port ${port}.")
-            it.log("Framework", "Registering annotations")
-            CustomAnnotationProcessors.process<RestController> {
-                if (it is ExpressRouter) routers.add(it)
-            }
 
             it.log("Framework", "Starting module setup")
             loader = FrameworkModuleLoader(File("modules"))
@@ -49,12 +44,13 @@ object FrameworkApp {
         modules.forEach { (key, module) ->
             Framework.instance.log("Framework", "Trying to enable $key")
             module.enable()
+
+            module.routers.forEach { router ->
+                Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
+                express.use(router)
+            }
         }
         Framework.instance.log("Framework", "Finished loading modules")
 
-        routers.forEach { router ->
-            Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
-            express.use(router)
-        }
     }
 }

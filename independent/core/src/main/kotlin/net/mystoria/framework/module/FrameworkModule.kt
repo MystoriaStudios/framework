@@ -1,6 +1,7 @@
 package net.mystoria.framework.module
 
 import com.junglerealms.commons.annotations.custom.CustomAnnotationProcessors
+import express.ExpressRouter
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
@@ -8,8 +9,10 @@ import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
+import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.module.details.FrameworkModuleDetails
 import net.mystoria.framework.utils.objectInstance
+import java.util.Scanner
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -21,6 +24,7 @@ abstract class FrameworkModule {
 
     private lateinit var flavor: Flavor
     private val usingFlavor = this::class.java.getAnnotation(IgnoREDependencyInjection::class.java) != null
+    val routers = mutableListOf<ExpressRouter>()
 
     fun flavor() = flavor
 
@@ -72,6 +76,16 @@ abstract class FrameworkModule {
                     it.invoke(this)
                 }.onFailure { throwable ->
                     logger.log(Level.WARNING, "Failed to enable container part!", throwable)
+                }
+            }
+        this.packageIndexer
+            .getTypesAnnotatedWith<RestController>()
+            .filterIsInstance<ExpressRouter>()
+            .forEach {
+                kotlin.runCatching {
+                    routers.add(it)
+                }.onFailure { throwable ->
+                    logger.log(Level.WARNING, "Failed to register rest controller", throwable)
                 }
             }
 

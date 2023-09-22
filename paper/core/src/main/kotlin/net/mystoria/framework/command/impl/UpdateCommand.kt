@@ -11,6 +11,7 @@ import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.flavor.annotation.Named
 import net.mystoria.framework.updater.UpdaterService
+import net.mystoria.framework.updater.connection.UpdaterConnector
 import net.mystoria.framework.utils.PaginatedResult
 import org.bukkit.command.CommandSender
 
@@ -18,6 +19,12 @@ import org.bukkit.command.CommandSender
 @CommandAlias("update")
 @CommandPermission("framework.command.updater")
 object UpdateCommand : FrameworkCommand() {
+
+    @Subcommand("force")
+    fun force(sender: CommandSender) {
+        UpdaterService.reload()
+        UpdaterConnector.applyPendingUpdates()
+    }
 
     @Subcommand("list")
     fun list(sender: CommandSender, @Named("page") @Default("1") page: Int) {

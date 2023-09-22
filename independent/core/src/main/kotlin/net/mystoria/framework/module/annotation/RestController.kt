@@ -1,4 +1,4 @@
-package net.mystoria.framework.annotation
+package net.mystoria.framework.module.annotation
 
 @Target(AnnotationTarget.CLASS)
 annotation class RestController

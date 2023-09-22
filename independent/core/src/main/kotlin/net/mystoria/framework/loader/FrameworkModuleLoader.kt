@@ -47,9 +47,7 @@ class FrameworkModuleLoader(private val directory: File) {
     }
 
     fun startup() {
-        directory.listFiles()?.filter {
-            it.extension == ".jar"
-        }?.forEach { file ->
+        directory.listFiles()?.forEach { file ->
             Framework.use { framework ->
                 framework.log("Framework", file.name)
                 runCatching {
@@ -57,6 +55,19 @@ class FrameworkModuleLoader(private val directory: File) {
 
                     val jarFile = JarFile(file)
                     val entry = jarFile.getJarEntry("module.json") ?: throw RuntimeException("Unable to load module from class ${file.name} as there is no module.json present.")
+
+                    val entries = jarFile.entries()
+                    while (entries.hasMoreElements()) {
+                        val entry = entries.nextElement()
+                        if (entry.name.endsWith(".class")) {
+                            framework.log("Framework Class Loader", "Found class ${entry.name} in module ${file.name}")
+                            loaders.forEach {
+                                it.runCatching {
+                                    loadClass(entry.name.replace("/", ".").replace(".class$", ""))
+                                }
+                            }
+                        }
+                    }
 
                     val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
                     val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
