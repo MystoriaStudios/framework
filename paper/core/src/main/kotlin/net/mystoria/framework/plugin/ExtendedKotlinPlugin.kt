@@ -5,6 +5,7 @@ import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
+import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.Listeners
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.annotation.command.ManualRegister
@@ -29,6 +30,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import java.awt.print.Paper
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -167,16 +169,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             this.flavor.startup()
         }
 
-        fun Class<*>.objectInstance(): Any?
-        {
-            return kotlin.runCatching {
-                getDeclaredField("INSTANCE").get(null) ?: kotlin.objectInstance
-            }.getOrNull().also { any ->
-                if (any == null) constructors.forEach {
-                    it.isAccessible = true
-                }
-            }
-        }
+        PaperFramework.registerInternalPlugin(this)
     }
 
     override fun disable() {

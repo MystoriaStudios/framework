@@ -4,6 +4,8 @@ import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.mystoria.framework.FrameworkPaperPlugin
+import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Tailwind
@@ -23,7 +25,7 @@ object PluginsCommand : FrameworkCommand() {
             .text("Mystoria Plugins: ")
             .color(TextColor.fromHexString(Tailwind.PURPLE_400))
 
-        Bukkit.getPluginManager().plugins.filterIsInstance<ExtendedKotlinPlugin>().forEach {
+        PaperFramework.registeredKotlinPlugins.forEach {
             mystoriaComponent.append(Component
                 .text(it.name)
                 .color(TextColor.fromHexString(if (it.isEnabled) Tailwind.EMERALD_400 else Tailwind.RED_600))
