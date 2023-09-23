@@ -13,12 +13,12 @@ dependencies {
 }
 
 tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-
     shadowJar {
         archiveClassifier.set("")
         archiveFileName.set("framework-${project.name}.jar")
+    }
+
+    build {
+        dependsOn(shadowJar)
     }
 }
