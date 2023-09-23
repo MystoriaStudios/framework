@@ -4,8 +4,13 @@ import co.aikar.commands.ConditionFailedException
 import co.aikar.commands.ExceptionHandler
 import co.aikar.commands.MessageType
 import co.aikar.commands.PaperCommandManager
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.format.TextColor
 import net.mystoria.framework.Framework
+import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.ConsoleCommandSender
 import java.util.regex.Pattern
@@ -29,11 +34,19 @@ class FrameworkCommandManager(
         defaultExceptionHandler = ExceptionHandler { command, _, sender, _, throwable ->
             Framework.use {
                 it.sentryService.log(throwable) { id ->
-                    var message = "${ChatColor.RED}Whoops! we ran into an error whilst trying to do that. "
-                    message += if (id != null) {
-                        "Please report the following error code to a platform administrator ${ChatColor.YELLOW}$id"
-                    } else "Please try again later."
-                    sender.sendMessage(message)
+                    var message = Component.text("Whoops! we ran into an error whilst trying to do that. ").color(TextColor.fromHexString(Tailwind.RED_600))
+                    message.append(Component.text(if (id != null) {
+                        "Please report the following error code to a platform administrator"
+                    } else "Please try again later.")).color(TextColor.fromHexString(Tailwind.RED_600))
+                    if (id != null) {
+                        message.append(Component
+                            .text("$id")
+                            .color(TextColor.fromHexString(Tailwind.ORANGE_400))
+                            .clickEvent(ClickEvent.openUrl("$id"))
+                        )
+                    }
+
+                    Bukkit.getPlayer(sender.uniqueId)?.sendMessage(message)
                 }
             }
 
