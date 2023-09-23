@@ -8,6 +8,7 @@ import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.nms.INMSVersion
+import net.mystoria.framework.nms.V1_20_R1Version
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
@@ -37,7 +38,7 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
         instance = this
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
-            it.flavor.bind<INMSVersion>() to getNMSInstance()
+            it.flavor.bind<INMSVersion>() to V1_20_R1Version()
             it.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
         }
 
@@ -54,6 +55,10 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
     private fun getNMSInstance(): INMSVersion {
         var packageName = server.javaClass.getPackage().name;
         packageName = packageName.substring(packageName.lastIndexOf('.') + 1);
+
+        Framework.use {
+            it.log("Framework", "Loaded NMS Version: net.mystoria.framework.nms.${packageName.toUpperCase()}Version")
+        }
 
         val clazz = Class.forName("net.mystoria.framework.nms.${packageName.toUpperCase()}Version")
         return clazz.getDeclaredConstructor().newInstance() as INMSVersion

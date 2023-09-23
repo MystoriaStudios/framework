@@ -4,6 +4,7 @@ import net.mystoria.framework.Framework
 import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.nms.INMSVersion
+import net.mystoria.framework.nms.V1_20_R1Version
 import net.mystoria.framework.utils.ItemStackBuilder
 import net.mystoria.framework.utils.Tasks
 import org.bukkit.Bukkit
