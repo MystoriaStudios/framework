@@ -62,8 +62,11 @@ class FrameworkMenuHandler : IMenuHandler {
                     message += if (id != null) {
                         "Please report the following error code to a platform administrator ${ChatColor.YELLOW}$id"
                     } else "Please try again later."
+                    player.sendMessage(message)
                 }
             }
+        }.onSuccess {
+            player.sendMessage("TESITNG SUCCESS")
         }
     }
 
@@ -81,6 +84,7 @@ class FrameworkMenuHandler : IMenuHandler {
         if (openInventory.topInventory.size == inventory.size && openInventory.title() == menu.getTitle(player))
         {
             openInventory.topInventory.contents = inventory.contents
+            Bukkit.broadcastMessage("APPLING CONTENTS")
             return
         }
 
