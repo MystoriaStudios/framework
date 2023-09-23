@@ -31,6 +31,10 @@ object FrameworkApp {
         express = Express("0.0.0.0")
         express.listen(port)
 
+        express.get("/") { req, res ->
+            res.send("its online si si si")
+        }
+
         Framework.supply(IndependentFramework) {
             it.log("Framework", "Starting express server on port ${port}.")
 

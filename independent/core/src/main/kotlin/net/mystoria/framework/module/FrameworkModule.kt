@@ -9,6 +9,8 @@ import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
+import net.mystoria.framework.flavor.reflections.PackageIndexer
+import net.mystoria.framework.loader.FrameworkModuleLoader
 import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.module.details.FrameworkModuleDetails
 import net.mystoria.framework.utils.objectInstance
@@ -18,9 +20,7 @@ import java.util.logging.Logger
 
 abstract class FrameworkModule {
 
-    val packageIndexer by lazy {
-        this.flavor.reflections
-    }
+    val packageIndexer get() = this.flavor.reflections
 
     private lateinit var flavor: Flavor
     private val usingFlavor = this::class.java.getAnnotation(IgnoREDependencyInjection::class.java) != null
@@ -42,10 +42,11 @@ abstract class FrameworkModule {
 
         Framework.use {
             this.logger = it.logger
-            it.log("[Framework]", "Loading module ${details.name} with version ${details.version}.")
+            it.log("Framework", "Loading module ${details.name} with version ${details.version}.")
         }
 
         this.flavor = Flavor.create(this::class, FlavorOptions(logger))
+        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), FrameworkModuleLoader.loaders)
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerPreEnable>()
@@ -78,16 +79,6 @@ abstract class FrameworkModule {
                     logger.log(Level.WARNING, "Failed to enable container part!", throwable)
                 }
             }
-        this.packageIndexer
-            .getTypesAnnotatedWith<RestController>()
-            .filterIsInstance<ExpressRouter>()
-            .forEach {
-                kotlin.runCatching {
-                    routers.add(it)
-                }.onFailure { throwable ->
-                    logger.log(Level.WARNING, "Failed to register rest controller", throwable)
-                }
-            }
 
         val processors = CustomAnnotationProcessors.processors
 
@@ -111,6 +102,7 @@ abstract class FrameworkModule {
         }
 
         this.flavor.startup()
+        logger.log(Level.INFO, "Loaded module ${details.name}.")
     }
 
     fun disable() {

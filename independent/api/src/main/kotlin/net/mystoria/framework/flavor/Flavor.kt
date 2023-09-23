@@ -43,7 +43,7 @@ class Flavor(
         }
     }
 
-    val reflections = PackageIndexer(initializer, options)
+    var reflections = PackageIndexer(initializer, options)
 
     val binders = mutableListOf<FlavorBinder<*>>()
     val services = mutableMapOf<KClass<*>, Any>()

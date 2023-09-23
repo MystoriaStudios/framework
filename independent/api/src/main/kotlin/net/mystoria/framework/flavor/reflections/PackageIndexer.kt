@@ -10,6 +10,7 @@ import org.reflections.scanners.TypeAnnotationsScanner
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.QueryFunction
 import java.lang.reflect.Method
+import java.net.URL
 import kotlin.reflect.KClass
 
 /**
@@ -18,15 +19,15 @@ import kotlin.reflect.KClass
  */
 class PackageIndexer(
     private val clazz: KClass<*>,
-    options: FlavorOptions
+    options: FlavorOptions,
+    loaders: List<ClassLoader> = emptyList(),
 )
 {
-    val reflections =
-        Reflections(
+    val reflections = Reflections(
             ConfigurationBuilder()
                 .forPackage(
                     options.`package` ?: this.clazz.java.`package`.name,
-                    this.clazz.java.classLoader
+                    *loaders.toTypedArray()
                 )
                 .addScanners(
                     MethodAnnotationsScanner(),
