@@ -8,6 +8,7 @@ import net.mystoria.framework.utils.ItemStackBuilder
 import net.mystoria.framework.utils.Tasks
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
@@ -139,7 +140,7 @@ class FrameworkMenuHandler : IMenuHandler {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
         return ItemStackBuilder().apply {
-            type(type.parseMaterial()!!)
+            type(type.parseMaterial() ?: Material.DIAMOND_SWORD)
             button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack

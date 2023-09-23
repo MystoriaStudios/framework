@@ -21,11 +21,20 @@ object PluginsCommand : FrameworkCommand() {
 
     @Default
     fun execute(sender: CommandSender) {
+        sender.sendMessage("Displaying Server Software")
+        sender.sendMessage("Version: ${Bukkit.getServer().version}")
+        sender.sendMessage("Bukkit Release: ${Bukkit.getServer().bukkitVersion}")
+        sender.sendMessage("Minecraft Version: ${Bukkit.getServer().minecraftVersion}")
+        val mystoriaPlugins = PaperFramework.registeredKotlinPlugins
         val mystoriaComponent = Component
-            .text("Mystoria Plugins: ")
+            .text("Mystoria: ")
             .color(TextColor.fromHexString(Tailwind.PURPLE_400))
 
-        PaperFramework.registeredKotlinPlugins.forEach {
+        mystoriaComponent.append(Component
+            .text("(${mystoriaPlugins.size} plugins)")
+            .color(TextColor.fromHexString(Tailwind.GRAY_500))
+        )
+        mystoriaPlugins.forEach {
             mystoriaComponent.append(Component
                 .text(it.name)
                 .color(TextColor.fromHexString(if (it.isEnabled) Tailwind.EMERALD_400 else Tailwind.RED_600))
@@ -33,11 +42,16 @@ object PluginsCommand : FrameworkCommand() {
         }
         sender.sendMessage(mystoriaComponent)
 
+        val paperPlugins = (Bukkit.getPluginManager() as SimplePluginManager).paperPluginManager.plugins
         val paperComponent = Component
-            .text("Paper Plugins: ")
+            .text("Paper: ")
             .color(TextColor.fromHexString(Tailwind.ORANGE_400))
 
-        (Bukkit.getPluginManager() as SimplePluginManager).paperPluginManager.plugins.forEach {
+        paperComponent.append(Component
+            .text("(${paperPlugins.size} plugins)")
+            .color(TextColor.fromHexString(Tailwind.GRAY_500))
+        )
+        paperPlugins.forEach {
             paperComponent.append(Component
                 .text(it.name)
                 .color(TextColor.fromHexString(if (it.isEnabled) Tailwind.EMERALD_400 else Tailwind.RED_600))
@@ -45,10 +59,15 @@ object PluginsCommand : FrameworkCommand() {
         }
         sender.sendMessage(paperComponent)
 
+        val plugins = Bukkit.getPluginManager().plugins.filterNot { it is ExtendedKotlinPlugin }
         val component = Component
-            .text("Bukkit Plugins: ")
+            .text("Bukkit: ")
             .color(TextColor.fromHexString(Tailwind.BLUE_400))
 
+        component.append(Component
+            .text("(${plugins.size} plugins)")
+            .color(TextColor.fromHexString(Tailwind.GRAY_500))
+        )
         Bukkit.getPluginManager().plugins.filterNot { it is ExtendedKotlinPlugin }.forEach {
             component.append(Component
                 .text(it.name)
