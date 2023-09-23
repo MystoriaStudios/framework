@@ -10,7 +10,7 @@ import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
 import net.mystoria.framework.flavor.reflections.PackageIndexer
-import net.mystoria.framework.loader.FrameworkModuleLoader
+import net.mystoria.framework.module.loader.FrameworkModuleLoader
 import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.module.details.FrameworkModuleDetails
 import net.mystoria.framework.utils.objectInstance

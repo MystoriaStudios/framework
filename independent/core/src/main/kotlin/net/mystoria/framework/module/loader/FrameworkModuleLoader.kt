@@ -1,4 +1,4 @@
-package net.mystoria.framework.loader
+package net.mystoria.framework.module.loader
 
 import express.ExpressRouter
 import net.mystoria.framework.Framework
@@ -43,12 +43,14 @@ class FrameworkModuleLoader(private val directory: File) {
         println("[Framework] Loaded module ${pluginFile.name} into class loader")
     }
 
-    fun getModuleClass(pluginClassName: String): KClass<*>? {
+    fun getModuleClass(pluginClassName: String): Class<*>? {
         for (classLoader in loaders) {
-            try {
-                return classLoader.loadClass(pluginClassName).kotlin
+            return try {
+                classLoader.loadClass(pluginClassName)
+
             } catch (e: ClassNotFoundException) {
                 e.printStackTrace()
+                null
             }
         }
         return null
@@ -67,7 +69,7 @@ class FrameworkModuleLoader(private val directory: File) {
                     val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
                     val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
 
-                    val module = getModuleClass(details.main)?.createInstance() as FrameworkModule? ?: return@use
+                    val module = getModuleClass(details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule? ?: return@use
                     FrameworkApp.use {
                         it.modules[details.name.lowercase()] = module
                         module.load(details)
@@ -78,10 +80,10 @@ class FrameworkModuleLoader(private val directory: File) {
                         val entry = entries.nextElement()
                         if (entry.name.endsWith(".class")) {
                             runCatching {
-                                val clazz = getModuleClass(entry.name.replace("/", ".").replace(".class$", "")) ?: throw RuntimeException("Class not found in loader.")
+                                val clazz = getModuleClass(entry.name.replace("/", ".").replace(".class", "")) ?: throw RuntimeException("Class not found in loader.")
 
-                                if (clazz.isSuperclassOf(ExpressRouter::class)) {
-                                    val obj = clazz.objectInstance ?: clazz.java.getDeclaredConstructor().newInstance()
+                                if (clazz.superclass == ExpressRouter::class.java) {
+                                    val obj = clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
                                     module.routers.add(obj as ExpressRouter)
                                     framework.log(details.name, "Registered router from class ${entry.name}")
                                 } else {

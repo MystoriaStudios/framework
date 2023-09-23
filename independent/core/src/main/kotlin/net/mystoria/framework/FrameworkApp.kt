@@ -6,7 +6,7 @@ import express.ExpressRouter
 import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorOptions
-import net.mystoria.framework.loader.FrameworkModuleLoader
+import net.mystoria.framework.module.loader.FrameworkModuleLoader
 import net.mystoria.framework.module.FrameworkModule
 import net.mystoria.framework.updater.UpdaterIndependentPlatform
 import net.mystoria.framework.updater.UpdaterService
@@ -51,7 +51,7 @@ object FrameworkApp {
 
             module.routers.forEach { router ->
                 Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
-                express.use(router)
+                express.use("/${module.details.name.lowercase()}", router)
             }
         }
         Framework.instance.log("Framework", "Finished loading modules")

@@ -88,7 +88,8 @@ allprojects {
     }
 
     tasks.named("build") {
-        dependsOn(tasks.shadowJar, "publishShadowPublicationToJungleRepository")
+        if (project.name.contains("core")) dependsOn(tasks.shadowJar)
+        dependsOn("publishShadowPublicationToJungleRepository")
     }
 }
 

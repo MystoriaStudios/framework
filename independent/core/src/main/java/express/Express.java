@@ -160,7 +160,7 @@ public class Express implements Router {
     /**
      * Add an routing object with an specific root root.
      *
-     * @param root   The root path for all request to this router.
+     * @param root The root path for all request to this router.
      * @param router The router.
      * @return Express this express instance
      */
