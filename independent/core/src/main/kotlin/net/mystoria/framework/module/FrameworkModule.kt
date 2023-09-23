@@ -46,7 +46,7 @@ abstract class FrameworkModule {
         }
 
         this.flavor = Flavor.create(this::class, FlavorOptions(logger))
-        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), FrameworkModuleLoader.loaders)
+        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger))
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerPreEnable>()

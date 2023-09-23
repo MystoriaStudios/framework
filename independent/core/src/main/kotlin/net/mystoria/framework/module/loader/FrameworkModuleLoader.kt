@@ -23,7 +23,7 @@ import kotlin.reflect.full.isSuperclassOf
 class FrameworkModuleLoader(private val directory: File) {
 
     companion object {
-        val loaders: MutableMap<String, URLClassLoader> = mutableListOf()
+        val loaders: MutableMap<String, URLClassLoader> = mutableMapOf()
     }
 
     init {
