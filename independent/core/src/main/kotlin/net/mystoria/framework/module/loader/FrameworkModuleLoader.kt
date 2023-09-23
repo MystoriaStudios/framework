@@ -23,7 +23,7 @@ import kotlin.reflect.full.isSuperclassOf
 class FrameworkModuleLoader(private val directory: File) {
 
     companion object {
-        val loaders: MutableList<URLClassLoader> = mutableListOf()
+        val loaders: MutableMap<String, URLClassLoader> = mutableMapOf()
     }
 
     init {
@@ -41,21 +41,17 @@ class FrameworkModuleLoader(private val directory: File) {
             this.javaClass.classLoader
         )
 
-        loaders.add(pluginClassLoader)
+        loaders[pluginFile.name] = pluginClassLoader
         println("[Framework] Loaded module ${pluginFile.name} into class loader")
     }
 
-    fun getModuleClass(pluginClassName: String): Class<*>? {
-        for (classLoader in loaders) {
-            return try {
-                classLoader.loadClass(pluginClassName)
-
-            } catch (e: ClassNotFoundException) {
-                e.printStackTrace()
-                null
-            }
+    fun getModuleClass(file: File, pluginClassName: String): Class<*>? {
+        return try {
+            loaders[file.name]?.loadClass(pluginClassName)
+        } catch (e: ClassNotFoundException) {
+            e.printStackTrace()
+            null
         }
-        return null
     }
 
     fun startup() {
@@ -71,7 +67,7 @@ class FrameworkModuleLoader(private val directory: File) {
                     val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
                     val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
 
-                    val module = getModuleClass(details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule? ?: return@use
+                    val module = getModuleClass(file, details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule? ?: return@use
                     FrameworkApp.use {
                         it.modules[details.name.lowercase()] = module
                         module.load(details)
@@ -79,10 +75,6 @@ class FrameworkModuleLoader(private val directory: File) {
                         // Pre enable
                         it.javaClass.declaredMethods.forEach { method ->
                             if (method.isAnnotationPresent(ContainerPreEnable::class.java)) {
-                                method.invoke(it)
-                            }
-
-                            if (method.isAnnotationPresent(ContainerEnable::class.java)) {
                                 method.invoke(it)
                             }
                         }
@@ -93,7 +85,7 @@ class FrameworkModuleLoader(private val directory: File) {
                         val entry = entries.nextElement()
                         if (entry.name.endsWith(".class")) {
                             runCatching {
-                                val clazz = getModuleClass(entry.name.replace("/", ".").replace(".class", "")) ?: throw RuntimeException("Class not found in loader.")
+                                val clazz = getModuleClass(file, entry.name.replace("/", ".").replace(".class", "")) ?: throw RuntimeException("Class not found in loader.")
 
                                 if (clazz.superclass == ExpressRouter::class.java) {
                                     val obj = clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
@@ -102,8 +94,6 @@ class FrameworkModuleLoader(private val directory: File) {
                                 } else {
                                     framework.log("${details.name} Class Loader", "Found class ${entry.name} in module ${file.name}")
                                 }
-                            }.onFailure {
-                                it.printStackTrace()
                             }
                         }
                     }

@@ -3,6 +3,8 @@ package net.mystoria.framework
 import com.junglerealms.commons.annotations.custom.CustomAnnotationProcessors
 import express.Express
 import express.ExpressRouter
+import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorOptions
@@ -48,6 +50,12 @@ object FrameworkApp {
         modules.forEach { (key, module) ->
             Framework.instance.log("Framework", "Trying to enable $key")
             module.enable()
+
+            module.javaClass.declaredMethods.forEach { method ->
+                if (method.isAnnotationPresent(ContainerEnable::class.java)) {
+                    method.invoke(module)
+                }
+            }
 
             module.routers.forEach { router ->
                 Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
