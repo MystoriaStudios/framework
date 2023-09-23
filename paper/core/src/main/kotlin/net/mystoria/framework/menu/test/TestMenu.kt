@@ -11,6 +11,7 @@ import org.bukkit.entity.Player
 class TestMenu : IMenu {
 
     override val metaData: IMenu.MetaData = IMenu.MetaData()
+
     override fun getTitle(player: Player): Component {
         return Component.text("Test MENU !!!")
     }

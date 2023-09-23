@@ -1,5 +1,6 @@
 plugins {
-    id("io.ktor.plugin") version "2.3.4"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    application
 }
 
 application {
@@ -9,4 +10,15 @@ application {
 dependencies {
     implementation(project(":independent:independent-api"))
     implementation("org.reflections:reflections:0.10.2")
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+        archiveFileName.set("framework-${project.name}.jar")
+    }
 }

@@ -3,7 +3,6 @@ import java.net.URI
 plugins {
     id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
 }
@@ -27,7 +26,6 @@ sentry {
 
 allprojects {
     apply(plugin = "maven-publish")
-    apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
@@ -62,11 +60,6 @@ allprojects {
         implementation("commons-io:commons-io:2.11.0")
     }
 
-    tasks.shadowJar {
-        archiveClassifier.set("")
-        archiveFileName.set("framework-${project.name}.jar")
-    }
-
     publishing {
         publications {
             create<MavenPublication>("shadow") {
@@ -88,7 +81,6 @@ allprojects {
     }
 
     tasks.named("build") {
-        if (project.name.contains("core")) dependsOn(tasks.shadowJar)
         dependsOn("publishShadowPublicationToJungleRepository")
     }
 }

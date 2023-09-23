@@ -98,10 +98,15 @@ class FrameworkMenuHandler : IMenuHandler {
             return
         }
 
-        FrameworkPaperPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
-        updateMenu(player, menu)
 
-        player.updateInventory()
+        Tasks.delayed(1L)
+        {
+
+            FrameworkPaperPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
+            updateMenu(player, menu)
+
+            player.updateInventory()
+        }
     }
 
     /**
