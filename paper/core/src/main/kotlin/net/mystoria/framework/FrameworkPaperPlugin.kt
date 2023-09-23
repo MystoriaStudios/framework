@@ -8,7 +8,6 @@ import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.nms.INMSVersion
-import net.mystoria.framework.nms.V1_20_R1Version
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService

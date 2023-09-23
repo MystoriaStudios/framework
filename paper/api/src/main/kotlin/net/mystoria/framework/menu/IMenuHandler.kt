@@ -1,7 +1,6 @@
 package net.mystoria.framework.menu
 import net.mystoria.framework.menu.button.IButton
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 

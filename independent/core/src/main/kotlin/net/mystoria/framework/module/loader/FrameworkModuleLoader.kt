@@ -3,22 +3,13 @@ package net.mystoria.framework.module.loader
 import express.ExpressRouter
 import net.mystoria.framework.Framework
 import net.mystoria.framework.FrameworkApp
-import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.module.FrameworkModule
-import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.module.details.FrameworkModuleDetails
-import net.mystoria.framework.utils.objectInstance
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URLClassLoader
-import java.nio.charset.Charset
 import java.util.jar.JarFile
-import java.util.logging.Level
-import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.hasAnnotation
-import kotlin.reflect.full.isSuperclassOf
 
 class FrameworkModuleLoader(private val directory: File) {
 

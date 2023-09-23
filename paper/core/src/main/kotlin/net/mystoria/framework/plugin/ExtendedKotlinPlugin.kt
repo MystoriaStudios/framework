@@ -30,7 +30,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import java.awt.print.Paper
 import java.util.logging.Level
 import java.util.logging.Logger
 

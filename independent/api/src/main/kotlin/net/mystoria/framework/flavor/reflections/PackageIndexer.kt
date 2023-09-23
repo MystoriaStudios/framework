@@ -10,7 +10,6 @@ import org.reflections.scanners.TypeAnnotationsScanner
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.QueryFunction
 import java.lang.reflect.Method
-import java.net.URL
 import kotlin.reflect.KClass
 
 /**

@@ -1,17 +1,9 @@
 package net.mystoria.framework
 
-import com.junglerealms.commons.annotations.custom.CustomAnnotationProcessors
 import express.Express
-import express.ExpressRouter
 import net.mystoria.framework.annotation.container.ContainerEnable
-import net.mystoria.framework.annotation.container.ContainerPreEnable
-import net.mystoria.framework.module.annotation.RestController
-import net.mystoria.framework.flavor.Flavor
-import net.mystoria.framework.flavor.FlavorOptions
-import net.mystoria.framework.module.loader.FrameworkModuleLoader
 import net.mystoria.framework.module.FrameworkModule
-import net.mystoria.framework.updater.UpdaterIndependentPlatform
-import net.mystoria.framework.updater.UpdaterService
+import net.mystoria.framework.module.loader.FrameworkModuleLoader
 import java.io.File
 
 fun main(args: Array<String>) {

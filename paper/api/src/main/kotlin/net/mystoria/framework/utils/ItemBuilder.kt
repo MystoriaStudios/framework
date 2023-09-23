@@ -11,10 +11,8 @@ import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
-import java.awt.Color
 import java.util.*
 import java.util.stream.Collectors
-import kotlin.collections.ArrayList
 
 inline fun ItemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder(itemStack = itemStack).apply(builder).build()
 

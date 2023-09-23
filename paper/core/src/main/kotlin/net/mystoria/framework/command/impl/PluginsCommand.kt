@@ -4,7 +4,6 @@ import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import net.mystoria.framework.FrameworkPaperPlugin
 import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.command.FrameworkCommand
@@ -13,7 +12,6 @@ import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.SimplePluginManager
-import org.bukkit.plugin.java.JavaPlugin
 
 @CommandAlias("plugins|pl|modules|module")
 @AutoRegister
