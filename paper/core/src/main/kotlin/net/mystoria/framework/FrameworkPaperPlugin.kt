@@ -4,6 +4,7 @@ import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerDisable
 import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.nms.INMSVersion
@@ -11,6 +12,7 @@ import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
+import org.bukkit.Bukkit
 
 @Plugin(
     name = "Framework",
@@ -23,6 +25,11 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
 
     companion object {
         lateinit var instance: FrameworkPaperPlugin
+    }
+
+    @ContainerPreEnable
+    fun containerPreEnable() {
+        Bukkit.getCommandMap().knownCommands.remove("plugins")
     }
 
     @ContainerEnable
