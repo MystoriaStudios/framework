@@ -81,10 +81,6 @@ class FrameworkModuleLoader(private val directory: File) {
                             if (method.isAnnotationPresent(ContainerPreEnable::class.java)) {
                                 method.invoke(it)
                             }
-
-                            if (method.isAnnotationPresent(ContainerEnable::class.java)) {
-                                method.invoke(it)
-                            }
                         }
                     }
 
@@ -102,8 +98,6 @@ class FrameworkModuleLoader(private val directory: File) {
                                 } else {
                                     framework.log("${details.name} Class Loader", "Found class ${entry.name} in module ${file.name}")
                                 }
-                            }.onFailure {
-                                it.printStackTrace()
                             }
                         }
                     }
