@@ -139,8 +139,8 @@ class FrameworkMenuHandler : IMenuHandler {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
         return ItemStackBuilder().apply {
-            button.getButtonItem(player).invoke(this)
             type(type.parseMaterial()!!)
+            button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack
             button.applyTexture(player).invoke(this)
