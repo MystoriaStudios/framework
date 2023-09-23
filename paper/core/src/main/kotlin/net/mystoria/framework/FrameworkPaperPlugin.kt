@@ -28,6 +28,8 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
         lateinit var instance: FrameworkPaperPlugin
     }
 
+    lateinit var nmsVersion: INMSVersion
+
     @ContainerPreEnable
     fun containerPreEnable() {
         Bukkit.getCommandMap().knownCommands.remove("plugins")
@@ -38,9 +40,10 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
         instance = this
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
-            it.flavor.bind<INMSVersion>() to V1_20_R1Version()
             it.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
         }
+
+        nmsVersion = getNMSInstance()
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,

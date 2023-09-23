@@ -3,6 +3,8 @@ package net.mystoria.framework.module.loader
 import express.ExpressRouter
 import net.mystoria.framework.Framework
 import net.mystoria.framework.FrameworkApp
+import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.module.FrameworkModule
 import net.mystoria.framework.module.annotation.RestController
 import net.mystoria.framework.module.details.FrameworkModuleDetails
@@ -73,6 +75,17 @@ class FrameworkModuleLoader(private val directory: File) {
                     FrameworkApp.use {
                         it.modules[details.name.lowercase()] = module
                         module.load(details)
+
+                        // Pre enable
+                        it.javaClass.declaredMethods.forEach { method ->
+                            if (method.isAnnotationPresent(ContainerPreEnable::class.java)) {
+                                method.invoke(it)
+                            }
+
+                            if (method.isAnnotationPresent(ContainerEnable::class.java)) {
+                                method.invoke(it)
+                            }
+                        }
                     }
 
                     val entries = jarFile.entries()

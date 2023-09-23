@@ -7,6 +7,8 @@ dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
-tasks.named("build") {
-    dependsOn("reobfJar")
+tasks {
+    build {
+        dependsOn(reobfJar)
+    }
 }
