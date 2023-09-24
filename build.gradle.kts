@@ -3,6 +3,7 @@ import java.net.URI
 plugins {
     id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
 }
@@ -27,10 +28,11 @@ sentry {
 allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
+    apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.mystoria.framework"
-    version = "1.0.05-SNAPSHOT"
+    version = "1.0.07-SNAPSHOT"
 
     repositories {
         mavenCentral()
@@ -81,7 +83,13 @@ allprojects {
         }
     }
 
+    tasks.shadowJar {
+        archiveFileName.set("framework-${project.name}.jar")
+    }
+
     tasks.named("build") {
+        dependsOn(tasks.shadowJar, "publishShadowPublicationToJungleRepository")
+        if (project.name.contains("core")) dependsOn(tasks.shadowJar)
         dependsOn("publishShadowPublicationToJungleRepository")
     }
 }

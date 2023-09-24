@@ -1,3 +1,4 @@
+/*
 package net.mystoria.framework.hotbar.impl
 
 import com.cryptomorin.xseries.XItemStack
@@ -14,4 +15,4 @@ class FixedHotbarEntry(
 ) : IHotbarEntry {
 
     override val uniqueId: UUID = UUID.randomUUID()
-}
+}*/

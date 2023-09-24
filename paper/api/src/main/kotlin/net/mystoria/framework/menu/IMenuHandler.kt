@@ -61,3 +61,7 @@ interface IMenuHandler {
      */
     fun constructItemStack(player: Player, button: IButton): ItemStack
 }
+
+fun Player.openMenu(menu: IMenu) {
+    MenuService.menuHandler.openMenu(this, menu)
+}
