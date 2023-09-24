@@ -40,7 +40,7 @@ abstract class AbstractNMSEntity(var location: Location) {
     /**
      * This entity's animation.
      */
-    var animation: EntityAnimation? = null
+    //var animation: EntityAnimation? = null
 
     /**
      * The players currently viewing this entity.

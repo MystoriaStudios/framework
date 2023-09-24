@@ -6,7 +6,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val artifactory_contextUrl: String by project

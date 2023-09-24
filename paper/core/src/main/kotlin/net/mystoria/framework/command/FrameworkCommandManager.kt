@@ -1,9 +1,6 @@
 package net.mystoria.framework.command
 
-import co.aikar.commands.ConditionFailedException
-import co.aikar.commands.ExceptionHandler
-import co.aikar.commands.MessageType
-import co.aikar.commands.PaperCommandManager
+import co.aikar.commands.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor
@@ -66,6 +63,8 @@ class FrameworkCommandManager(
                 throw ConditionFailedException("The value provided cannot be used in this context.")
             }
         }
+
+
 
         commandContexts.registerIssuerOnlyContext(ConsoleCommandSender::class.java) { c ->
             if (c.sender !is ConsoleCommandSender) throw ConditionFailedException("Only console may perform this command.")
