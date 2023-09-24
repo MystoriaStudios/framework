@@ -1,14 +1,18 @@
 package net.mystoria.framework.cache
 
 import net.mystoria.framework.Framework
-import net.mystoria.framework.cache.impl.LocalUUIDCacheTranslator
+import net.mystoria.framework.cache.impl.ILocalUUIDCacheTranslator
+import net.mystoria.framework.cache.impl.distribution.DistributedRedisUUIDCache
+import net.mystoria.framework.flavor.annotation.Inject
 import java.util.*
 
 object UUIDCache
 {
-    private lateinit var translator: IUUIDCacheTranslator
+    @Inject
+    private lateinit var localTranslator: ILocalUUIDCacheTranslator
+    private var translator: IUUIDCacheTranslator = DistributedRedisUUIDCache
 
-    fun configure(translator: IUUIDCacheTranslator)
+    fun configure(translator: ILocalUUIDCacheTranslator)
     {
         this.translator = translator
 
@@ -24,15 +28,21 @@ object UUIDCache
         }
     }
 
-    fun useTranslator(lambda: IUUIDCacheTranslator.() -> Unit)
-    {
-        lambda.invoke(translator)
-    }
-
     fun uniqueId(username: String): UUID?
     {
-        validateTranslator()
+        var translated = localTranslator
+            .uniqueId(username)
 
+        if (translated != null) return translated
+
+
+        translated = translator
+            .uniqueId(username)
+
+        if (translated != null) return translated
+
+        // TODO: send backend reqeust
+        /*
         val translated = translator
             .uniqueId(username)
 
@@ -49,13 +59,13 @@ object UUIDCache
             return mojang.id
         }
 
+
+         */
         return null
     }
 
     fun username(uniqueId: UUID): String?
     {
-        validateTranslator()
-
         val translated = translator
             .username(uniqueId)
 
@@ -74,16 +84,4 @@ object UUIDCache
 
         return null
     }
-
-    private fun validateTranslator()
-    {
-        try
-        {
-            translator
-        } catch (ignored: Exception)
-        {
-            translator = LocalUUIDCacheTranslator
-        }
-    }
-
 }

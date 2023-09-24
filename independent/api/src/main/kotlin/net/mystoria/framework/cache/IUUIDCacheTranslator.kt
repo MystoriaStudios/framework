@@ -5,9 +5,6 @@ import java.util.concurrent.CompletionStage
 
 interface IUUIDCacheTranslator
 {
-    val uniqueIdCache: MutableMap<UUID, String>
-    val usernameCache: MutableMap<String, UUID>
-
     fun configure() : CompletionStage<Void>
 
     fun preLoadCache(async: Boolean = true)

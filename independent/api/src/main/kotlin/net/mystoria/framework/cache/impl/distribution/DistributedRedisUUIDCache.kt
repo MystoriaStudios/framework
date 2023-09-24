@@ -12,23 +12,17 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import kotlin.math.exp
 
-class DistributedRedisUUIDCache : IUUIDCacheTranslator
+object DistributedRedisUUIDCache : IUUIDCacheTranslator
 {
 
-    companion object {
-        const val UUID_CACHE_KEY_UUID = "FRAMEWORK-UUID-CACHE-UUID"
-        const val UUID_CACHE_KEY_USERNAME = "FRAMEWORK-UUID-CACHE-USERNAME"
-    }
+    const val UUID_CACHE_KEY_UUID = "FRAMEWORK-UUID-CACHE-UUID"
+    const val UUID_CACHE_KEY_USERNAME = "FRAMEWORK-UUID-CACHE-USERNAME"
 
     private val redisConnection by lazy {
         Framework.useWithReturn {
             it.constructNewRedisConnection()
         }
     }
-
-    override val uniqueIdCache: MutableMap<UUID, String> = mutableMapOf()
-    override val usernameCache: MutableMap<String, UUID> = mutableMapOf()
-
     override fun configure(): CompletionStage<Void> {
         return CompletableFuture.completedFuture(null)
     }
