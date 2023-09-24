@@ -1,7 +1,3 @@
-plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-}
-
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")

@@ -16,7 +16,7 @@ import org.bukkit.Bukkit
 
 @Plugin(
     name = "Framework",
-    version = "!{VERSION}",
+    version = "1.0.07-SNAPSHOT",
     authors = ["Mystoria Studios"],
     website = "https://mystoria.net/",
 )
