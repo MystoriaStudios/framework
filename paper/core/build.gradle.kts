@@ -26,6 +26,8 @@ dependencies {
     implementation("fr.mrmicky:fastboard:2.0.0")
     implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
     implementation("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("me.lucko:helper:5.6.10")
     kapt("me.lucko:helper:5.6.10")
 

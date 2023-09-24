@@ -7,6 +7,8 @@ import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
 import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.Listeners
+import net.mystoria.framework.annotation.RetrofitService
+import net.mystoria.framework.annotation.UsesRetrofit
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.annotation.command.ManualRegister
 import net.mystoria.framework.annotation.container.ContainerDisable
@@ -14,24 +16,32 @@ import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.annotation.container.flavor.LazyStartup
 import net.mystoria.framework.command.FrameworkCommandManager
+import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
+import net.mystoria.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
+import net.mystoria.framework.serializer.impl.GsonSerializer
 import net.mystoria.framework.utils.Strings
 import net.mystoria.framework.utils.Tasks
 import net.mystoria.framework.utils.objectInstance
+import okhttp3.OkHttpClient
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.reflect.full.hasAnnotation
 
 /**
  * An extension of [ExtendedJavaPlugin] with
@@ -63,6 +73,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
      */
 
     lateinit var commandManager: FrameworkCommandManager
+    lateinit var retrofit: Retrofit
 
     override fun load() {
         if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_11)) {
@@ -73,6 +84,26 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
         }
 
         this.flavor = Flavor.create(this::class, FlavorOptions(logger))
+
+        if (this::class.hasAnnotation<UsesRetrofit>()) {
+            retrofit = Retrofit.Builder()
+                .baseUrl("${Deployment.Security.API_BASE_URL}/${this.description.name}/")
+                .client(
+                    OkHttpClient.Builder()
+                        .addInterceptor(FrameworkAuthenticationInterceptor)
+                        .build()
+                )
+                .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
+                .build()
+            logger.log(Level.INFO, "Registering Retrofit instance as required.")
+
+            this.packageIndexer
+                .getTypesAnnotatedWith<RetrofitService>()
+                .forEach {
+                    flavor().binders.add(FlavorBinder(it::class) to retrofit.create(it))
+                    logger.log(Level.INFO, "Registered Retrofit service from class ${it.name}")
+                }
+        }
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerPreEnable>()
@@ -85,8 +116,8 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             }
 
         flavor().binders.add(
-            FlavorBinder(this@ExtendedKotlinPlugin::class)
-        ) to this@ExtendedKotlinPlugin
+            FlavorBinder(this@ExtendedKotlinPlugin::class) to this@ExtendedKotlinPlugin
+        )
 
         flavor {
             bind<ExtendedKotlinPlugin>() to this@ExtendedKotlinPlugin
