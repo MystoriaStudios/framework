@@ -31,12 +31,3 @@ dependencies {
     implementation(project(":paper:nms:nms-core"))
     implementation(project(":paper:nms:nms-v1_20_R1", "reobf"))
 }
-
-tasks.shadowJar {
-    relocate("co.aikar.commands", "${group}.commands")
-    relocate("co.aikar.locales", "${group}.locales")
-    relocate("co.aikar.locales", "${group}.locales")
-    relocate("net.wesjd.anvilgui", "${group}.anvil")
-
-    relocate("fr.mrmicky.fastboard", "${group}.scoreboard.sidebar")
-}
