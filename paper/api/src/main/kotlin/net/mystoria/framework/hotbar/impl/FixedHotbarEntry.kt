@@ -14,4 +14,7 @@ class FixedHotbarEntry(
 ) : IHotbarEntry {
 
     override val uniqueId: UUID = UUID.randomUUID()
+    override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit {
+        return builder
+    }
 }
