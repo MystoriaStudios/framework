@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 
 @Listeners
-class FrameworkMenuListeners : Listener {
+object FrameworkMenuListeners : Listener {
 
     @Inject
     lateinit var menuHandler: IMenuHandler
