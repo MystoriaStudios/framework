@@ -37,7 +37,7 @@ object DistributedRedisUUIDCache : IUUIDCacheTranslator
             async.hset(UUID_CACHE_KEY_UUID, response.id.toString(), response.name)
             async.hset(UUID_CACHE_KEY_USERNAME, response.name.lowercase(), response.id.toString())
 
-            // TODO: Expire this
+            // TODO: Expire this on the independent server
         }
     }
 
