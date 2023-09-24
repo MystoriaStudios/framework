@@ -40,7 +40,6 @@ class FrameworkModuleLoader(private val directory: File) {
         return try {
             loaders[file.name]?.loadClass(pluginClassName)
         } catch (e: ClassNotFoundException) {
-            e.printStackTrace()
             null
         }
     }
@@ -82,8 +81,6 @@ class FrameworkModuleLoader(private val directory: File) {
                                     val obj = clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
                                     module.routers.add(obj as ExpressRouter)
                                     framework.log(details.name, "Registered router from class ${entry.name}")
-                                } else {
-                                    framework.log("${details.name} Class Loader", "Found class ${entry.name} in module ${file.name}")
                                 }
                             }
                         }

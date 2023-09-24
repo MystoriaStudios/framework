@@ -58,6 +58,7 @@ allprojects {
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
+        implementation("com.squareup.retrofit:retrofit:2.0.0-beta2")
     }
 
     publishing {

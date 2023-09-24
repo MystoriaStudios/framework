@@ -12,7 +12,7 @@ object GsonSerializer : IFrameworkSerializer {
         .setLongSerializationPolicy(LongSerializationPolicy.STRING)
         .serializeNulls()
 
-    private var gson = gsonBuilder.create()
+    var gson = gsonBuilder.create()
 
     fun create(use: GsonBuilder.() -> Unit) {
         synchronized(gsonBuilder) {
