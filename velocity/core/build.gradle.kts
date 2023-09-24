@@ -4,15 +4,3 @@ plugins {
 dependencies {
     implementation("com.squareup.retrofit:retrofit:2.0.0-beta2")
 }
-
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-
-    shadowJar {
-        archiveClassifier.set("")
-        archiveFileName.set("framework-${project.name}.jar")
-    }
-}
-

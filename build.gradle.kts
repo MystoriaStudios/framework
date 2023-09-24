@@ -5,6 +5,7 @@ plugins {
     id("io.sentry.jvm.gradle") version "3.12.0"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val artifactory_contextUrl: String by project
@@ -28,6 +29,7 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.kotlin.kapt")
+    apply(plugin = "com.github.johnrengelman.shadow")
 
     group = "net.mystoria.framework"
     version = "1.0.05-SNAPSHOT"
@@ -61,6 +63,11 @@ allprojects {
         implementation("com.squareup.retrofit:retrofit:2.0.0-beta2")
     }
 
+    tasks.shadowJar {
+        archiveClassifier.set("")
+        archiveFileName.set("framework-${project.name}.jar")
+    }
+
     publishing {
         publications {
             create<MavenPublication>("shadow") {
@@ -82,6 +89,7 @@ allprojects {
     }
 
     tasks.named("build") {
+        if (project.name.contains("core")) dependsOn(tasks.shadowJar)
         dependsOn("publishShadowPublicationToJungleRepository")
     }
 }

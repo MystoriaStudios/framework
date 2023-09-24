@@ -44,14 +44,3 @@ tasks.shadowJar {
 
     relocate("fr.mrmicky.fastboard", "${group}.scoreboard.sidebar")
 }
-
-tasks {
-    build {
-        dependsOn(shadowJar)
-    }
-
-    shadowJar {
-        archiveClassifier.set("")
-        archiveFileName.set("framework-${project.name}.jar")
-    }
-}
