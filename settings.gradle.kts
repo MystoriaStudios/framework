@@ -23,3 +23,6 @@ fun registerNMS(ver: String) {
 }
 
 registerNMS("1_20_R1")
+registerNMS("1_19_R4")
+registerNMS("1_18_R2")
+registerNMS("1_17_R1")
