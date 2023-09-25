@@ -1,9 +1,6 @@
 package net.mystoria.framework.command
 
-import co.aikar.commands.ConditionFailedException
-import co.aikar.commands.ExceptionHandler
-import co.aikar.commands.MessageType
-import co.aikar.commands.PaperCommandManager
+import co.aikar.commands.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor
@@ -73,6 +70,20 @@ class FrameworkCommandManager(
             if (c.sender !is ConsoleCommandSender) throw ConditionFailedException("Only console may perform this command.")
 
             return@registerIssuerOnlyContext c.sender as ConsoleCommandSender
+        }
+    }
+
+    override fun hasPermission(issuer: CommandIssuer, permissions: MutableSet<String>?): Boolean {
+        if (!issuer.isPlayer) return true
+        val player = Bukkit.getPlayer(issuer.uniqueId) ?: return false
+
+        val permission = player.effectivePermissions.find {
+            permissions?.contains(it.permission) == true
+        }?.permission ?: ""
+
+        return Framework.useWithReturn {
+            it.permissionProvider.evaluate(issuer.uniqueId, permission)
+            it.permissionProvider.hasPermission(issuer.uniqueId, permission)
         }
     }
 }

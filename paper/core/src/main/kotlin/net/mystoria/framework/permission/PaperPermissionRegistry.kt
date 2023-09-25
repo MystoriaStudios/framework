@@ -4,6 +4,8 @@ import org.bukkit.Bukkit
 
 object PaperPermissionRegistry : IPermissionRegistry {
     override fun getRegisteredPermissions(): List<String> {
-        return Bukkit.getServer().
+        return Bukkit.getServer().pluginManager.permissions.map {
+            it.name
+        }
     }
 }

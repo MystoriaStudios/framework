@@ -36,7 +36,7 @@ object UpdateCommand : FrameworkCommand() {
             .color(TextColor.fromHexString(Tailwind.EMERALD_400))
 
         override fun format(result: String, resultIndex: Int) = Component
-            .text("${resultIndex}: $result")
+            .text("$result")
             .color(TextColor.fromHexString(Tailwind.EMERALD_300))
     }
 }

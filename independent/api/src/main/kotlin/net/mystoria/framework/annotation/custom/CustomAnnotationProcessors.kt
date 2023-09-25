@@ -1,4 +1,4 @@
-package com.junglerealms.commons.annotations.custom
+package net.mystoria.framework.annotation.custom
 
 import kotlin.reflect.KClass
 
@@ -15,6 +15,6 @@ object CustomAnnotationProcessors
         noinline lambda: (Any) -> Unit
     )
     {
-        this.processors[T::class] = lambda
+        processors[T::class] = lambda
     }
 }

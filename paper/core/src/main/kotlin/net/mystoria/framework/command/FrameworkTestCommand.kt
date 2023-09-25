@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.constants.Tailwind
@@ -22,7 +23,7 @@ import org.bukkit.entity.Player
 @AutoRegister
 @CommandAlias("framework")
 @CommandPermission("framework.command.admin")
-object FrameworkCommand : FrameworkCommand() {
+object FrameworkTestCommand : FrameworkCommand() {
 
     @Inject lateinit var scoreboardService: ScoreboardService
     @Inject lateinit var menuHandler: IMenuHandler

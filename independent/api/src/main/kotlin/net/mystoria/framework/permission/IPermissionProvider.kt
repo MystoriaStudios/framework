@@ -10,5 +10,8 @@ interface IPermissionProvider<T> {
     fun getPermissions(uuid: UUID): List<String>
 
     @Throws(ConditionFailedException::class)
+    fun evaluate(uuid: UUID, test: String)
+
+    @Throws(ConditionFailedException::class)
     fun evaluate(uuid: UUID, test: T)
 }

@@ -4,4 +4,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("co.aikar:acf-core:0.5.1-SNAPSHOT")
+    implementation("xyz.mkotb:config-api:1.0.1")
 }

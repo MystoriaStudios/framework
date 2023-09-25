@@ -1,6 +1,6 @@
 package net.mystoria.framework.module
 
-import com.junglerealms.commons.annotations.custom.CustomAnnotationProcessors
+import net.mystoria.framework.annotation.custom.CustomAnnotationProcessors
 import express.ExpressRouter
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.container.ContainerEnable

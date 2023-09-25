@@ -1,4 +1,4 @@
-import java.net.URI
+ import java.net.URI
 
 plugins {
     id("maven-publish")
@@ -33,7 +33,7 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
 
     group = "net.mystoria.framework"
-    version = "1.0.07-SNAPSHOT"
+    version = "1.0.10-SNAPSHOT"
 
     repositories {
         mavenCentral()
