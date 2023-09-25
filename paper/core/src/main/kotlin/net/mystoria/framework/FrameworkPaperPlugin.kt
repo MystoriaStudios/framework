@@ -1,5 +1,6 @@
 package net.mystoria.framework
 
+import me.lucko.helper.Events
 import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerDisable
@@ -9,6 +10,7 @@ import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.nms.INMSVersion
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
+import net.mystoria.framework.plugin.event.KotlinPluginEnabledEvent
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
@@ -46,6 +48,11 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
+
+        // uses the event from the plugin so we can just do extra logic as required :D
+        Events.subscribe(KotlinPluginEnabledEvent::class.java).handler { event ->
+            PaperFramework.registerInternalPlugin(event.plugin)
+        }
     }
 
     @ContainerDisable

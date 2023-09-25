@@ -25,7 +25,7 @@ object ScoreboardService {
     }
 
     fun updatePrimaryProvider(scoreboard: IScoreboard) {
-        this.primaryScoreboard = scoreboard
+        primaryScoreboard = scoreboard
         Events.subscribe(PlayerJoinEvent::class.java).handler {
             val player = it.player
             val board = FastBoard(player)

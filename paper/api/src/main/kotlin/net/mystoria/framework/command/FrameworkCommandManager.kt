@@ -1,6 +1,9 @@
 package net.mystoria.framework.command
 
-import co.aikar.commands.*
+import co.aikar.commands.ConditionFailedException
+import co.aikar.commands.ExceptionHandler
+import co.aikar.commands.MessageType
+import co.aikar.commands.PaperCommandManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor

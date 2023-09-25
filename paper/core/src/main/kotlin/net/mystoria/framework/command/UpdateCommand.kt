@@ -1,4 +1,4 @@
-package net.mystoria.framework.command.impl
+package net.mystoria.framework.command
 
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.CommandPermission
@@ -7,7 +7,6 @@ import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.mystoria.framework.annotation.command.AutoRegister
-import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.flavor.annotation.Named
 import net.mystoria.framework.updater.UpdaterService

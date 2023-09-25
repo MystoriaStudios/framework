@@ -1,4 +1,4 @@
-package net.mystoria.framework.command.impl
+package net.mystoria.framework.command
 
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.Default
@@ -6,7 +6,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.command.AutoRegister
-import net.mystoria.framework.command.FrameworkCommand
 import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import org.bukkit.Bukkit

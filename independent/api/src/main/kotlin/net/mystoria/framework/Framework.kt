@@ -21,13 +21,14 @@ abstract class Framework {
 
         fun supply(framework: Framework, lambda: (Framework) -> Unit) {
             instance = framework
-            instance.configure()
             lambda.invoke(instance)
         }
 
         fun use(lambda: (Framework) -> Unit) = lambda.invoke(instance)
         fun <T> useWithReturn(lambda: (Framework) -> T) = lambda.invoke(instance)
     }
+
+    lateinit var platform: IFrameworkPlatform
 
     abstract var logger: Logger
     lateinit var flavor: Flavor
@@ -36,7 +37,8 @@ abstract class Framework {
     var messageHandler = FrameworkMessageHandler()
     var serializer: IFrameworkSerializer = GsonSerializer
 
-    fun configure() {
+    fun configure(platform: IFrameworkPlatform) {
+        this.platform = platform
         instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
 
         sentryService.configure()

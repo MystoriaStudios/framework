@@ -15,8 +15,8 @@ import kotlin.math.exp
 object DistributedRedisUUIDCache : IUUIDCacheTranslator
 {
 
-    const val UUID_CACHE_KEY_UUID = "FRAMEWORK-UUID-CACHE-UUID"
-    const val UUID_CACHE_KEY_USERNAME = "FRAMEWORK-UUID-CACHE-USERNAME"
+    const val UUID_CACHE_KEY_UUID = "Framework:UUID"
+    const val UUID_CACHE_KEY_USERNAME = "Framework:Username"
 
     private val redisConnection by lazy {
         Framework.useWithReturn {

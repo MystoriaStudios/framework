@@ -89,10 +89,6 @@ allprojects {
         }
     }
 
-    tasks.shadowJar {
-        archiveFileName.set("framework-${project.name}.jar")
-    }
-
     tasks.named("build") {
         if (project.name.contains("core")) dependsOn(tasks.shadowJar)
         dependsOn("publishShadowPublicationToJungleRepository")

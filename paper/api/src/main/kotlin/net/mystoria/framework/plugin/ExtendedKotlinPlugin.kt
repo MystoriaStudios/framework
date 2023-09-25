@@ -5,16 +5,15 @@ import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.mystoria.framework.Framework
-import net.mystoria.framework.PaperFramework
 import net.mystoria.framework.annotation.Listeners
-import net.mystoria.framework.annotation.RetrofitService
-import net.mystoria.framework.annotation.UsesRetrofit
 import net.mystoria.framework.annotation.command.AutoRegister
 import net.mystoria.framework.annotation.command.ManualRegister
 import net.mystoria.framework.annotation.container.ContainerDisable
 import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.annotation.container.flavor.LazyStartup
+import net.mystoria.framework.annotation.retrofit.RetrofitService
+import net.mystoria.framework.annotation.retrofit.UsesRetrofit
 import net.mystoria.framework.command.FrameworkCommandManager
 import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.flavor.Flavor
@@ -23,6 +22,7 @@ import net.mystoria.framework.flavor.FlavorOptions
 import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
 import net.mystoria.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.mystoria.framework.message.FrameworkMessageHandler
+import net.mystoria.framework.plugin.event.KotlinPluginEnabledEvent
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
@@ -198,7 +198,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             this.flavor.startup()
         }
 
-        PaperFramework.registerInternalPlugin(this)
+        if (!KotlinPluginEnabledEvent(this).callEvent()) {
+            this.logger.severe("Disabling plugin due to event being cancelled by another plugin.")
+            Bukkit.getPluginManager().disablePlugin(this)
+        }
     }
 
     override fun disable() {
