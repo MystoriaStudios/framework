@@ -16,16 +16,13 @@ import org.bukkit.inventory.Inventory
 class V1_20_R1MenuHandler : INMSMenuHandler {
 
     override fun openCustomInventory(p: Any, inventory: Any, size: Int) {
-        Bukkit.broadcastMessage("STARTING OPEN CUSTOM INVENTOORY")
         val player = (p as CraftPlayer).handle
         inventory as Inventory
         Preconditions.checkArgument(true, "Unknown windowType")
         var container: AbstractContainerMenu? = CraftContainer(inventory, player, player.nextContainerCounter())
         val result = CraftEventFactory.callInventoryOpenEventWithTitle(player, container)
         container = result.second
-        Bukkit.broadcastMessage("CHECK 1")
         if (container == null) return
-        Bukkit.broadcastMessage("CHECK 2")
         var component: Component? = container.bukkitView.title()
         if (result.first != null) component = result.first
 
@@ -39,7 +36,6 @@ class V1_20_R1MenuHandler : INMSMenuHandler {
 
         player.containerMenu = container
         player.initMenu(container)
-        Bukkit.broadcastMessage("FINISHING OPEN CUSTOM INVEOOOOOOOOOOOOOOOORY")
     }
 
     private fun getWindowType(size: Int): MenuType<ChestMenu> {
