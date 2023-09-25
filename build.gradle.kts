@@ -7,6 +7,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
 }
 
 val artifactory_contextUrl: String by project
@@ -32,6 +33,7 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.kotlin.kapt")
     apply(plugin = "com.github.johnrengelman.shadow")
+    apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
 
     group = "net.mystoria.framework"
     version = "1.0.11-SNAPSHOT"
@@ -107,4 +109,17 @@ allprojects {
 
 kotlin {
     jvmToolchain(18)
+}
+
+idea {
+    project {
+        settings {
+            runConfigurations {
+                create<Gradle>("Clean build") {
+                    setProject(project)
+                    scriptParameters = "clean build"
+                }
+            }
+        }
+    }
 }
