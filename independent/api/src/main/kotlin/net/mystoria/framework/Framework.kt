@@ -3,10 +3,12 @@ package net.mystoria.framework
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.mystoria.framework.connection.redis.AbstractFrameworkRedisConnection
 import net.mystoria.framework.flavor.Flavor
+import net.mystoria.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
+import okhttp3.OkHttpClient
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -36,6 +38,10 @@ abstract class Framework {
     var sentryService: SentryService = SentryService()
     var messageHandler = FrameworkMessageHandler()
     var serializer: IFrameworkSerializer = GsonSerializer
+
+    var okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(FrameworkAuthenticationInterceptor)
+        .build()
 
     fun configure(platform: IFrameworkPlatform) {
         this.platform = platform

@@ -87,11 +87,9 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
         if (this::class.hasAnnotation<UsesRetrofit>()) {
             retrofit = Retrofit.Builder()
                 .baseUrl("${Deployment.Security.API_BASE_URL}/${this.description.name}/")
-                .client(
-                    OkHttpClient.Builder()
-                        .addInterceptor(FrameworkAuthenticationInterceptor)
-                        .build()
-                )
+                .client(Framework.useWithReturn {
+                    it.okHttpClient
+                })
                 .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
                 .build()
             logger.log(Level.INFO, "Registering Retrofit instance as required.")
