@@ -23,23 +23,24 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
                 if (!hasNext(player)) {
                     Component.empty()
                 } else {
-                    if (mod > 0) {
-                        Component.text(
-                            "Next Page",
-                            NamedTextColor.GREEN
-                        )
-                    } else {
-                        Component.text(
-                            "Previous Page",
-                            NamedTextColor.RED
-                        )
-                    }.append(
-                        Component.text(
-                            " (${menu.page + mod}/${menu.getPages(player)})",
-                            NamedTextColor.GRAY
-                        )
+                    Component.text(
+                        if (mod > 0) {
+                            "Next Page"
+                        } else {
+                            "Previous Page"
+                        },
+                        TextColor.fromHexString("#ffae42")).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false)
                     )
                 }
+            )
+
+            lore(
+                Component.text("View the ${if (mod > 0) "next" else "previous"} menu page.", NamedTextColor.GRAY),
+                Component.empty(),
+                Component.text(
+                    "Click the view the ${if (mod > 0) "next" else "previous"} page!",
+                    TextColor.fromHexString("#ffae42")
+                ).decoration(TextDecoration.ITALIC, false)
             )
         }
     }
