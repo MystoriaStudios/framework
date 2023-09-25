@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":independent:independent-api"))
     implementation(project(":paper:paper-api"))
 
+
     // reference libraries
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.2")
@@ -17,6 +18,7 @@ dependencies {
 
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     // final compilation libraries
+    implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
     implementation("net.kyori:adventure-text-serializer-gson:4.10.1")
     implementation("net.kyori:adventure-text-minimessage:4.10.1")
     implementation("fr.mrmicky:fastboard:2.0.0")

@@ -1,11 +1,9 @@
 package net.mystoria.framework.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.google.gson.JsonParser
-import com.google.gson.annotations.SerializedName
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
 import net.mystoria.framework.Framework
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +24,7 @@ object UUIDCacheHelper {
 
             if (response.isSuccessful) {
                 return Framework.useWithReturn {
-                    it.serializer.deserialize(MojangResponse::class, response.body().string())
+                    response.body()?.let { it1 -> it.serializer.deserialize(MojangResponse::class, it1.string()) }
                 }
             }
         }.onFailure {
@@ -48,7 +46,7 @@ object UUIDCacheHelper {
 
             if (response.isSuccessful) {
                 return Framework.useWithReturn {
-                    it.serializer.deserialize(MojangResponse::class, response.body().string())
+                    response.body()?.let { it1 -> it.serializer.deserialize(MojangResponse::class, it1.string()) }
                 }
             }
         }.onFailure {

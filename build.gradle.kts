@@ -1,3 +1,4 @@
+ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
  import java.net.URI
 
 plugins {
@@ -33,14 +34,14 @@ allprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
 
     group = "net.mystoria.framework"
-    version = "1.0.10-SNAPSHOT"
+    version = "1.0.11-SNAPSHOT"
 
     repositories {
         mavenCentral()
         maven("https://repo.aikar.co/content/groups/aikar/")
 
         maven {
-            name = "Jungle"
+            name = "Mystoria"
             url = URI("${artifactory_contextUrl}/${artifactory_release}")
             credentials {
                 username = artifactory_user
@@ -61,24 +62,32 @@ allprojects {
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
-        implementation("com.squareup.retrofit:retrofit:2.0.0-beta2")
     }
 
-    tasks.shadowJar {
+    tasks.withType<ShadowJar> {
         archiveClassifier.set("")
         archiveFileName.set("framework-${project.name}.jar")
+
+        relocate("co.aikar.commands", "${project.group}.commands")
+        relocate("co.aikar.locales", "${project.group}.locales")
+        relocate("co.aikar.locales", "${project.group}.locales")
+        relocate("net.wesjd.anvilgui", "${project.group}.anvil")
+
+        relocate("fr.mrmicky.fastboard", "${project.group}.scoreboard.sidebar")
     }
 
     publishing {
         publications {
-            create<MavenPublication>("shadow") {
-                from(components["kotlin"])
-            }
+            register(
+                name = "mavenJava",
+                type = MavenPublication::class,
+                configurationAction = shadow::component
+            )
         }
 
         repositories {
             maven {
-                name = "Jungle"
+                name = "Mystoria"
                 url = uri("$artifactory_contextUrl/$artifactory_release")
 
                 credentials {
@@ -89,10 +98,11 @@ allprojects {
         }
     }
 
-    tasks.named("build") {
-        if (project.name.contains("core")) dependsOn(tasks.shadowJar)
-        dependsOn("publishShadowPublicationToJungleRepository")
-    }
+    tasks["build"]
+        .dependsOn(
+            "shadowJar",
+            "publishMavenJavaPublicationToMystoriaRepository"
+        )
 }
 
 kotlin {

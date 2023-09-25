@@ -15,7 +15,7 @@ object UpdaterPaperPlatform : IUpdaterPlatform {
         )
 
         // configuration
-        UpdaterService.authentication = UpdaterAuthenticationService.JungleConnectionAuthenticationWrapper()
+        UpdaterService.authentication = UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper()
         UpdaterService.discoverable = UpdaterDiscoveryService.DiscoverableAssets()
             .apply {
                 assets += "net.mystoria.framework:paper-core:Framework"

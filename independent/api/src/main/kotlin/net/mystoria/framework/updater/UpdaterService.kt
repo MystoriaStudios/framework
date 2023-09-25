@@ -8,7 +8,7 @@ import java.io.File
 object UpdaterService {
 
     lateinit var pluginContainer: File
-    lateinit var authentication: UpdaterAuthenticationService.JungleConnectionAuthenticationWrapper
+    lateinit var authentication: UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper
     lateinit var discoverable: UpdaterDiscoveryService.DiscoverableAssets
 
     private lateinit var platform: IUpdaterPlatform

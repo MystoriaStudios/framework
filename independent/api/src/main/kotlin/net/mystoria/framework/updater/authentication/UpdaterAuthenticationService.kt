@@ -8,7 +8,7 @@ import net.mystoria.framework.updater.UpdaterService
 @Service(priority = 50)
 object UpdaterAuthenticationService
 {
-    var authentication: JungleConnectionAuthenticationWrapper = JungleConnectionAuthenticationWrapper()
+    var authentication: MystoriaConnectionAuthenticationWrapper = MystoriaConnectionAuthenticationWrapper()
 
     @Configure
     fun configure() {
@@ -17,9 +17,9 @@ object UpdaterAuthenticationService
 
     fun getWrapper() = authentication
 
-    class JungleConnectionAuthenticationWrapper(
+    class MystoriaConnectionAuthenticationWrapper(
         val apiKey: String = "AKCp8pQvVzYyzygdLTieUB4uMMWt5nGh8pFcd5qAfJP4xEoeWEwpjHSDimSehAQNN759yx4Mx"
     ) : IAbstractTypeSerializable {
-        override fun getAbstractType() = JungleConnectionAuthenticationWrapper::class.java
+        override fun getAbstractType() = MystoriaConnectionAuthenticationWrapper::class.java
     }
 }
