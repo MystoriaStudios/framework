@@ -15,6 +15,7 @@ dependencies {
 
     compileOnly("net.kyori:adventure-platform-bukkit:4.1.0")
 
+    compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     // final compilation libraries
     implementation("net.kyori:adventure-text-serializer-gson:4.10.1")
     implementation("net.kyori:adventure-text-minimessage:4.10.1")

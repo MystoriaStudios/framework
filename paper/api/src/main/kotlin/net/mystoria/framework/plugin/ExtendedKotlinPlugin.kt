@@ -19,17 +19,15 @@ import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
-import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
-import net.mystoria.framework.interceptor.FrameworkAuthenticationInterceptor
+import net.mystoria.framework.flavor.annotation.IgnoreDependencyInjection
 import net.mystoria.framework.message.FrameworkMessageHandler
-import net.mystoria.framework.plugin.event.KotlinPluginEnabledEvent
+import net.mystoria.framework.plugin.event.KotlinPluginEnableEvent
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
 import net.mystoria.framework.utils.Strings
 import net.mystoria.framework.utils.Tasks
 import net.mystoria.framework.utils.objectInstance
-import okhttp3.OkHttpClient
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import org.bukkit.Bukkit
@@ -58,7 +56,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
 
     private lateinit var flavor: Flavor
 
-    private val usingFlavor = this::class.java.getAnnotation(IgnoREDependencyInjection::class.java) != null
+    private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
 
     fun flavor() = flavor
 
@@ -196,7 +194,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             this.flavor.startup()
         }
 
-        if (!KotlinPluginEnabledEvent(this).callEvent()) {
+        if (!KotlinPluginEnableEvent(this).callEvent()) {
             this.logger.severe("Disabling plugin due to event being cancelled by another plugin.")
             Bukkit.getPluginManager().disablePlugin(this)
         }

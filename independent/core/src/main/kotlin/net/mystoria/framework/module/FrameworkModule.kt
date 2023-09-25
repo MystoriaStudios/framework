@@ -8,7 +8,7 @@ import net.mystoria.framework.annotation.container.ContainerPreEnable
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.flavor.FlavorOptions
-import net.mystoria.framework.flavor.annotation.IgnoREDependencyInjection
+import net.mystoria.framework.flavor.annotation.IgnoreDependencyInjection
 import net.mystoria.framework.flavor.reflections.PackageIndexer
 import net.mystoria.framework.module.details.FrameworkModuleDetails
 import net.mystoria.framework.utils.objectInstance
@@ -20,7 +20,7 @@ abstract class FrameworkModule {
     val packageIndexer get() = this.flavor.reflections
 
     private lateinit var flavor: Flavor
-    private val usingFlavor = this::class.java.getAnnotation(IgnoREDependencyInjection::class.java) != null
+    private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
     val routers = mutableListOf<ExpressRouter>()
 
     fun flavor() = flavor

@@ -10,7 +10,7 @@ import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
 import net.mystoria.framework.nms.INMSVersion
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
-import net.mystoria.framework.plugin.event.KotlinPluginEnabledEvent
+import net.mystoria.framework.plugin.event.KotlinPluginEnableEvent
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
@@ -50,7 +50,7 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
         // bind the menu to the impleemnbtation here O,
 
         // uses the event from the plugin so we can just do extra logic as required :D
-        Events.subscribe(KotlinPluginEnabledEvent::class.java).handler { event ->
+        Events.subscribe(KotlinPluginEnableEvent::class.java).handler { event ->
             PaperFramework.registerInternalPlugin(event.plugin)
         }
     }

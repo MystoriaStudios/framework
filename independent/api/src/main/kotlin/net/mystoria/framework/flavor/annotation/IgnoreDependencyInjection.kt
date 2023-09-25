@@ -1,4 +1,4 @@
 package net.mystoria.framework.flavor.annotation
 
 @Target(AnnotationTarget.CLASS)
-annotation class IgnoREDependencyInjection
+annotation class IgnoreDependencyInjection
