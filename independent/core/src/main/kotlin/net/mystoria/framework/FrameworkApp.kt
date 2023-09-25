@@ -2,6 +2,7 @@ package net.mystoria.framework
 
 import express.Express
 import net.mystoria.framework.annotation.container.ContainerEnable
+import net.mystoria.framework.cache.MojangUUIDCacheRouter
 import net.mystoria.framework.module.FrameworkModule
 import net.mystoria.framework.module.loader.FrameworkModuleLoader
 import java.io.File
@@ -21,15 +22,17 @@ object FrameworkApp {
     val modules: MutableMap<String, FrameworkModule> = mutableMapOf()
 
     fun setup(args: Array<String>) {
-        val port = Integer.parseInt(System.getProperty("port") ?: "8080")
-        express = Express("0.0.0.0")
-        express.listen(port)
-
-        express.get("/") { req, res ->
-            res.send("its online si si si")
-        }
-
         Framework.supply(IndependentFramework) {
+            val port = Integer.parseInt(System.getProperty("port") ?: "8080")
+            express = Express("0.0.0.0")
+            express.listen(port)
+
+            express.use(MojangUUIDCacheRouter)
+
+            express.get("/") { req, res ->
+                res.send("its online si si si")
+            }
+
             it.log("Framework", "Starting express server on port ${port}.")
 
             it.log("Framework", "Starting module setup")
