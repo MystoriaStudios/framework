@@ -1,7 +1,7 @@
 package net.mystoria.framework.menu
 
 import net.mystoria.framework.Framework
-import net.mystoria.framework.FrameworkPaperPlugin
+import net.mystoria.framework.PaperFrameworkPlugin
 import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemStackBuilder
@@ -88,7 +88,7 @@ class FrameworkMenuHandler : IMenuHandler {
         menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
-            FrameworkPaperPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
+            PaperFrameworkPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
             updateMenu(player, menu)
 
             player.updateInventory()
@@ -99,7 +99,7 @@ class FrameworkMenuHandler : IMenuHandler {
         Tasks.delayed(1L)
         {
 
-            FrameworkPaperPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
+            PaperFrameworkPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
             updateMenu(player, menu)
 
             player.updateInventory()

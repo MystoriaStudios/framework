@@ -111,6 +111,7 @@ kotlin {
     jvmToolchain(18)
 }
 
+/*
 idea {
     project {
         settings {
@@ -122,4 +123,4 @@ idea {
             }
         }
     }
-}
+}*/

@@ -14,6 +14,7 @@ import net.mystoria.framework.plugin.event.KotlinPluginEnableEvent
 import net.mystoria.framework.updater.UpdaterPaperPlatform
 import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
+import net.mystoria.framework.utils.Tasks
 import org.bukkit.Bukkit
 
 @Plugin(
@@ -23,13 +24,20 @@ import org.bukkit.Bukkit
     website = "https://mystoria.net/",
 )
 @HelperImplementationPlugin
-class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
+class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     companion object {
-        lateinit var instance: FrameworkPaperPlugin
+        lateinit var instance: PaperFrameworkPlugin
     }
 
     lateinit var nmsVersion: INMSVersion
+
+    override fun load() {
+        Framework.supply(PaperFramework) {
+            it.flavor = flavor()
+        }
+        super.load()
+    }
 
     @ContainerPreEnable
     fun containerPreEnable() {
@@ -39,15 +47,16 @@ class FrameworkPaperPlugin : ExtendedKotlinPlugin() {
     @ContainerEnable
     fun containerEnable() {
         instance = this
-        Framework.supply(PaperFramework) {
-            it.flavor = flavor()
-            it.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
+        Framework.use { framework ->
+            framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
         }
 
         nmsVersion = getNMSInstance()
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
+
+        Tasks.plugin = this
 
         // uses the event from the plugin so we can just do extra logic as required :D
         Events.subscribe(KotlinPluginEnableEvent::class.java).handler { event ->
