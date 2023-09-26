@@ -65,5 +65,3 @@ abstract class AbstractNMSEntity(var location: Location) {
      * Therefore, this method is called immediately after deserialization.
      */
 }
-    }
-}
