@@ -2,6 +2,7 @@ package net.mystoria.framework.entity
 
 import org.bukkit.Location
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class AbstractNMSEntity(var location: Location) {
 
@@ -63,4 +64,6 @@ abstract class AbstractNMSEntity(var location: Location) {
      *
      * Therefore, this method is called immediately after deserialization.
      */
+}
+    }
 }

@@ -5,6 +5,8 @@ import java.util.UUID
 
 interface IEntityHandler {
 
+    fun nextEntityId(): Int
+
     fun getEntities(): Set<AbstractNMSEntity>
 
     fun <T : AbstractNMSEntity> getEntitiesByType(clazz: Class<out T>): Set<T>
