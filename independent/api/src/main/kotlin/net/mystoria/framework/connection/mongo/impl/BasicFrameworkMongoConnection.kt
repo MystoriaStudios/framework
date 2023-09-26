@@ -4,12 +4,13 @@ import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import com.mongodb.client.MongoDatabase
 import net.mystoria.framework.connection.mongo.AbstractFrameworkMongoConnection
+import java.net.URLEncoder
 
 class BasicFrameworkMongoConnection(
     private val details: Details
 ) : AbstractFrameworkMongoConnection() {
     data class Details(
-        val uri: String = "mongodb://admin:a=@NbvLLa9?!D2tVL#nwt-eEe5CWB\$ky+C&3YxwWxNN@100.67.254.17:27017/admin",
+        val uri: String = "mongodb://admin:${URLEncoder.encode("a=@NbvLLa9?!D2tVL#nwt-eEe5CWB\$ky+C&3YxwWxNN")}@100.67.254.17:27017/admin",
         val database: String = "framework"
     ) {
         constructor(
