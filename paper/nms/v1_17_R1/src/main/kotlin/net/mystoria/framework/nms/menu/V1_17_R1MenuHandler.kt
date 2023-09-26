@@ -2,38 +2,37 @@ package net.mystoria.framework.nms.menu
 
 import com.google.common.base.Preconditions
 import io.papermc.paper.adventure.PaperAdventure
-import net.kyori.adventure.text.Component
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.inventory.MenuType
-import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftHumanEntity
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftContainer
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftHumanEntity
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftContainer
 import org.bukkit.inventory.Inventory
 
-class V1_20_R1MenuHandler : INMSMenuHandler {
+class V1_17_R1MenuHandler : INMSMenuHandler {
 
     override fun openCustomInventory(p: Any, inventory: Any, size: Int) {
         val player = (p as CraftPlayer).handle
         inventory as Inventory
+        if (player.connection == null) return
         Preconditions.checkArgument(true, "Unknown windowType")
         var container: AbstractContainerMenu? = CraftContainer(inventory, player, player.nextContainerCounter())
-        val result = CraftEventFactory.callInventoryOpenEventWithTitle(player, container)
-        container = result.second
-        if (container == null) return
-        var component: Component? = container.bukkitView.title()
-        if (result.first != null) component = result.first
 
-        if (!player.isImmobile) player.connection.send(
+        container = CraftEventFactory.callInventoryOpenEvent(player, container)
+        if (container == null) return
+
+        var `adventure$title` = container.bukkitView.title()
+
+        if (!player.isImmobile()) player.connection.send(
             ClientboundOpenScreenPacket(
                 container.containerId,
                 getWindowType(size),
-                PaperAdventure.asVanilla(component)
+                PaperAdventure.asVanilla(`adventure$title`)
             )
-        )
+        ) // Paper
 
         player.containerMenu = container
         player.initMenu(container)
