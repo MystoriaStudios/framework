@@ -9,9 +9,10 @@ plugins {
     id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("kapt") version "1.9.10"
     kotlin("jvm") version "1.9.10"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
+    id("org.jetbrains.dokka") version "1.9.0"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 }
 
 val artifactory_contextUrl: String by project
@@ -35,9 +36,11 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
     apply(plugin = "com.github.johnrengelman.shadow")
-    apply(plugin = "org.jetbrains.kotlin.kapt")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
+    apply(plugin = "org.jetbrains.dokka")
+    apply(plugin = "com.google.devtools.ksp")
+
 
     group = "net.mystoria.framework"
     version = "1.0.11-SNAPSHOT"

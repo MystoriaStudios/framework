@@ -25,7 +25,7 @@ dependencies {
     implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
     implementation("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
     compileOnly("me.lucko:helper:5.6.10")
-    kapt("me.lucko:helper:5.6.10")
+    ksp("me.lucko:helper:5.6.10")
 
     // NMS Stuff
     implementation(project(":paper:nms:nms-core"))
