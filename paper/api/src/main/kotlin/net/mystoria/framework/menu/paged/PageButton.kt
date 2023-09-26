@@ -4,6 +4,8 @@ import com.cryptomorin.xseries.XMaterial
 import com.cryptomorin.xseries.XSound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.mystoria.framework.menu.button.IButton
 import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.entity.Player
@@ -30,7 +32,6 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
                             "Previous Page"
                         },
                         TextColor.fromHexString("#ffae42")).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false)
-                    )
                 }
             )
 

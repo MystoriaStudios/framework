@@ -16,7 +16,7 @@ object PaperFramework : Framework() {
     var registeredKotlinPlugins = mutableListOf<ExtendedKotlinPlugin>()
     override var logger = Bukkit.getLogger()
 
-    override var permissionProvider: IPermissionProvider<*> = PaperPermissionProvider
+    override var permissionProvider: IPermissionProvider = PaperPermissionProvider
     override var permissionRegistry: IPermissionRegistry = PaperPermissionRegistry
 
     override fun constructNewRedisConnection() : AbstractFrameworkRedisConnection {

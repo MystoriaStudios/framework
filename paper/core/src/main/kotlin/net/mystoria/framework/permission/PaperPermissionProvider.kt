@@ -4,7 +4,7 @@ import co.aikar.commands.ConditionFailedException
 import org.bukkit.Bukkit
 import java.util.*
 
-object PaperPermissionProvider : IPermissionProvider<String> {
+object PaperPermissionProvider : IPermissionProvider {
 
     override fun hasPermission(uuid: UUID, permission: String) = Bukkit.getPlayer(uuid)?.hasPermission(permission) ?: false
 

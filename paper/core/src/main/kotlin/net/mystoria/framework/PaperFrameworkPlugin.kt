@@ -32,15 +32,12 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     lateinit var nmsVersion: INMSVersion
 
-    override fun load() {
+    @ContainerPreEnable
+    fun containerPreEnable() {
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
         }
-        super.load()
-    }
 
-    @ContainerPreEnable
-    fun containerPreEnable() {
         Bukkit.getCommandMap().knownCommands.remove("plugins")
     }
 

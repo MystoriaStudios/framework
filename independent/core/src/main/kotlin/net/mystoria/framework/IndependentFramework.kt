@@ -12,7 +12,7 @@ import java.util.logging.Logger
 object IndependentFramework : Framework() {
     override var logger: Logger = FrameworkLogger()
 
-    override var permissionProvider: IPermissionProvider<*>
+    override var permissionProvider: IPermissionProvider
         get() = TODO("Not yet implemented")
         set(value) {}
     override var permissionRegistry: IPermissionRegistry

@@ -36,7 +36,7 @@ abstract class Framework {
     }
 
     lateinit var platform: IFrameworkPlatform
-    abstract var permissionProvider: IPermissionProvider<*>
+    abstract var permissionProvider: IPermissionProvider
     abstract var permissionRegistry: IPermissionRegistry
 
     abstract var logger: Logger
