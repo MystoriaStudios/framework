@@ -1,4 +1,6 @@
  import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+ import org.jetbrains.dokka.DokkaConfiguration
+ import org.jetbrains.dokka.gradle.DokkaTaskPartial
  import org.jetbrains.gradle.ext.settings
  import java.net.URI
  import org.jetbrains.gradle.ext.runConfigurations
@@ -70,6 +72,9 @@ allprojects {
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
+
+        // Generate documentation
+        dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
     }
 
     tasks.withType<ShadowJar> {
@@ -82,6 +87,15 @@ allprojects {
         relocate("net.wesjd.anvilgui", "${project.group}.anvil")
 
         relocate("fr.mrmicky.fastboard", "${project.group}.scoreboard.sidebar")
+    }
+
+    tasks.withType<DokkaTaskPartial>().configureEach {
+        dokkaSourceSets.configureEach {
+            documentedVisibilities.set(setOf(
+                DokkaConfiguration.Visibility.PUBLIC,
+                DokkaConfiguration.Visibility.PROTECTED
+            ))
+        }
     }
 
     publishing {

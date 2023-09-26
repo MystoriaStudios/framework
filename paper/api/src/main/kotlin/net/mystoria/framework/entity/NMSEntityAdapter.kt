@@ -38,5 +38,7 @@ object NMSEntityAdapter : JsonSerializer<AbstractNMSEntity>, JsonDeserializer<Ab
         } catch (e: ClassNotFoundException) {
             throw JsonParseException("Unknown type: $type", e)
         }
+
+        return null
     }
 }
