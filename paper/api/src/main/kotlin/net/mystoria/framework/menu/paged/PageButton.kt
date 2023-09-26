@@ -31,7 +31,8 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
                         } else {
                             "Previous Page"
                         },
-                        TextColor.fromHexString("#ffae42")).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false)
+                        TextColor.fromHexString("#ffae42")
+                    ).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false)
                 }
             )
 

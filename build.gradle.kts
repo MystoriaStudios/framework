@@ -1,5 +1,9 @@
  import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+ import org.jetbrains.gradle.ext.settings
  import java.net.URI
+ import org.jetbrains.gradle.ext.runConfigurations
+ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+ import org.jetbrains.gradle.ext.Gradle
 
 plugins {
     id("maven-publish")
@@ -111,7 +115,7 @@ kotlin {
     jvmToolchain(18)
 }
 
-/*
+
 idea {
     project {
         settings {
@@ -123,4 +127,4 @@ idea {
             }
         }
     }
-}*/
+}

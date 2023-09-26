@@ -4,11 +4,12 @@ import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.Component
 import net.mystoria.framework.menu.IMenu
 import net.mystoria.framework.menu.button.IButton
+import net.mystoria.framework.menu.paged.AbstractPagedMenu
 import net.mystoria.framework.utils.ItemStackBuilder
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-class TestMenu : IMenu {
+class TestMenu : AbstractPagedMenu() {
 
     override val metaData: IMenu.MetaData = IMenu.MetaData()
 
@@ -16,15 +17,18 @@ class TestMenu : IMenu {
         return Component.text("Test MENU !!!")
     }
 
-    override fun getButtons(player: Player): Map<Int, IButton> {
+    override fun getAllPagesButtons(player: Player): Map<Int, IButton> {
         val buttons = mutableMapOf<Int, IButton>()
-
-        Bukkit.broadcastMessage("GETTING BUTTONS| TEST MENU")
 
         buttons[15] = TestButton()
 
         return buttons
     }
+
+    override val maxItemsPerPage: Int
+        get() = 9
+    override val buttonStartOffset: Int
+        get() = 9
 
     override fun size(buttons: Map<Int, IButton>): Int {
         return 27
