@@ -8,6 +8,8 @@ import net.mystoria.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.mystoria.framework.message.FrameworkMessageHandler
 import net.mystoria.framework.permission.IPermissionProvider
 import net.mystoria.framework.permission.IPermissionRegistry
+import net.mystoria.framework.security.SecurityService
+import net.mystoria.framework.security.impl.Argon2HashingAlgorithm
 import net.mystoria.framework.sentry.SentryService
 import net.mystoria.framework.serializer.IFrameworkSerializer
 import net.mystoria.framework.serializer.impl.GsonSerializer
@@ -57,10 +59,11 @@ abstract class Framework {
 
         sentryService.configure()
         messageHandler.configure()
+        SecurityService.configure(Argon2HashingAlgorithm)
 
         retrofit = Retrofit.Builder()
             .baseUrl("${Deployment.Security.API_BASE_URL}/")
-            .client(Framework.useWithReturn {
+            .client(useWithReturn {
                 it.okHttpClient
             })
             .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
