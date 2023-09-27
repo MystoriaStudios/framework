@@ -24,7 +24,7 @@ class CylinderRegion(
 
     override fun getVolume(): Double = Math.PI * radius * radius * height
 
-    override fun getBoundary() = Boundary.Cylinder(center, radius, height)\
+    override fun getBoundary() = Boundary.Cylinder(center, radius, height)
 
     override fun drawWithParticle(player: Player) {
         val stepSize = 0.25

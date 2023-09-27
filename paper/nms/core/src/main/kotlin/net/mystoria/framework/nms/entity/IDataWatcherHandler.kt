@@ -1,4 +1,7 @@
 package net.mystoria.framework.nms.entity
 
-class IDataWatcherHandler {
+interface IDataWatcherHandler
+{
+    fun initiateObject(entityClass: Class<*>): Any
+    fun register(dataWatcher: Any, key: Int, value: Any)
 }
