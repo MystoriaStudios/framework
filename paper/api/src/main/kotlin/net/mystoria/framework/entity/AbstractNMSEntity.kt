@@ -58,7 +58,7 @@ abstract class AbstractNMSEntity(var location: Location) {
     abstract fun getTypeName(): String
 
     /**
-     * Each transient field (fields that are not serialized) of an [Entity] implementation
+     * Each transient field (fields that are not serialized) of an [AbstractNMSEntity] implementation
      * must be initialized in this method as GSON deserialization sets transient field values
      * to null.
      *
