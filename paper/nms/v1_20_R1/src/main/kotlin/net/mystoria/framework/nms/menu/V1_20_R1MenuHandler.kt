@@ -7,14 +7,18 @@ import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.inventory.MenuType
+import net.mystoria.framework.nms.NMSVersion
+import net.mystoria.framework.nms.annotation.NMSHandler
 import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftHumanEntity
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftContainer
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 
-class V1_20_R1MenuHandler : INMSMenuHandler {
+@NMSHandler(NMSVersion.V1_20_R1)
+object V1_20_R1MenuHandler : INMSMenuHandler {
 
     override fun openCustomInventory(p: Any, inventory: Any, size: Int) {
         val player = (p as CraftPlayer).handle
@@ -37,6 +41,14 @@ class V1_20_R1MenuHandler : INMSMenuHandler {
 
         player.containerMenu = container
         player.initMenu(container)
+    }
+
+    override fun isSameInventory(inventory: Any, openInventory: Any, title: Any): Boolean {
+        inventory as Inventory
+        openInventory as InventoryView
+        title as Component
+        return openInventory.topInventory.size == inventory.size && openInventory.title() == title
+
     }
 
     private fun getWindowType(size: Int): MenuType<ChestMenu> {

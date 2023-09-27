@@ -2,29 +2,33 @@ package net.mystoria.framework.nms.menu
 
 import com.google.common.base.Preconditions
 import io.papermc.paper.adventure.PaperAdventure
+import net.kyori.adventure.text.Component
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.inventory.MenuType
+import net.mystoria.framework.nms.NMSVersion
+import net.mystoria.framework.nms.annotation.NMSHandler
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftHumanEntity
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftContainer
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 
-class V1_17_R1MenuHandler : INMSMenuHandler {
+@NMSHandler(NMSVersion.V1_17_R1)
+object V1_17_R1MenuHandler : INMSMenuHandler {
 
     override fun openCustomInventory(p: Any, inventory: Any, size: Int) {
         val player = (p as CraftPlayer).handle
         inventory as Inventory
-        if (player.connection == null) return
         Preconditions.checkArgument(true, "Unknown windowType")
         var container: AbstractContainerMenu? = CraftContainer(inventory, player, player.nextContainerCounter())
 
         container = CraftEventFactory.callInventoryOpenEvent(player, container)
         if (container == null) return
 
-        var `adventure$title` = container.bukkitView.title()
+        val `adventure$title` = container.bukkitView.title()
 
         if (!player.isImmobile()) player.connection.send(
             ClientboundOpenScreenPacket(
@@ -36,6 +40,14 @@ class V1_17_R1MenuHandler : INMSMenuHandler {
 
         player.containerMenu = container
         player.initMenu(container)
+    }
+
+    override fun isSameInventory(inventory: Any, openInventory: Any, title: Any): Boolean {
+        inventory as Inventory
+        openInventory as InventoryView
+        title as Component
+        return openInventory.topInventory.size == inventory.size && openInventory.title() == title
+
     }
 
     private fun getWindowType(size: Int): MenuType<ChestMenu> {
