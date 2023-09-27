@@ -4,6 +4,7 @@ import net.mystoria.framework.Framework
 import net.mystoria.framework.PaperFrameworkPlugin
 import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.menu.button.IButton
+import net.mystoria.framework.nms.menu.INMSMenuHandler
 import net.mystoria.framework.utils.ItemStackBuilder
 import net.mystoria.framework.utils.Tasks
 import org.bukkit.Bukkit
@@ -17,6 +18,9 @@ class FrameworkMenuHandler : IMenuHandler {
 
     @Inject
     lateinit var menuService: MenuService
+
+    @Inject
+    lateinit var nmsMenuHandler: INMSMenuHandler
 
     /**
      * Creates an inventory for the given player and menu.
@@ -62,8 +66,6 @@ class FrameworkMenuHandler : IMenuHandler {
                     player.sendMessage(message)
                 }
             }
-        }.onSuccess {
-            player.sendMessage("TESITNG SUCCESS")
         }
     }
 
@@ -78,17 +80,16 @@ class FrameworkMenuHandler : IMenuHandler {
         val openInventory = player.openInventory
 
         // check if top inv size is the same as new menu size and if the titles match
-        if (openInventory.topInventory.size == inventory.size && openInventory.title() == menu.getTitle(player))
+        if (nmsMenuHandler.isSameInventory(inventory, openInventory, menu.getTitle(player)))
         {
             openInventory.topInventory.contents = inventory.contents
-            Bukkit.broadcastMessage("APPLING CONTENTS")
             return
         }
 
         menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
-            PaperFrameworkPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
+            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
             updateMenu(player, menu)
 
             player.updateInventory()
@@ -99,7 +100,7 @@ class FrameworkMenuHandler : IMenuHandler {
         Tasks.delayed(1L)
         {
 
-            PaperFrameworkPlugin.instance.nmsVersion.menuHandler.openCustomInventory(player, inventory, inventory.size)
+            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
             updateMenu(player, menu)
 
             player.updateInventory()

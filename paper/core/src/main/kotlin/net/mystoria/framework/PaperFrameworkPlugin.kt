@@ -6,9 +6,12 @@ import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerDisable
 import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
+import net.mystoria.framework.flavor.Flavor
+import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.menu.FrameworkMenuHandler
 import net.mystoria.framework.menu.IMenuHandler
-import net.mystoria.framework.nms.INMSVersion
+import net.mystoria.framework.nms.NMSVersion
+import net.mystoria.framework.nms.annotation.NMSHandler
 import net.mystoria.framework.plugin.ExtendedKotlinPlugin
 import net.mystoria.framework.plugin.event.KotlinPluginEnableEvent
 import net.mystoria.framework.updater.UpdaterPaperPlatform
@@ -16,6 +19,7 @@ import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
 import net.mystoria.framework.utils.Tasks
 import org.bukkit.Bukkit
+import kotlin.reflect.KClass
 
 @Plugin(
     name = "Framework",
@@ -30,7 +34,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         lateinit var instance: PaperFrameworkPlugin
     }
 
-    lateinit var nmsVersion: INMSVersion
+    lateinit var nmsVersion: NMSVersion
 
     @ContainerPreEnable
     fun containerPreEnable() {
@@ -48,7 +52,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
         }
 
-        nmsVersion = getNMSInstance()
+        nmsVersion = getNMSVersion()
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
@@ -59,6 +63,23 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         Events.subscribe(KotlinPluginEnableEvent::class.java).handler { event ->
             PaperFramework.registerInternalPlugin(event.plugin)
         }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<NMSHandler>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .filter {
+                it.javaClass.getAnnotation(NMSHandler::class.java).version == nmsVersion
+            }
+            .forEach { instance ->
+                instance.javaClass.interfaces.forEach { interfaceClass ->
+                    Framework.use {
+                        it.flavor.bindRaw(interfaceClass.kotlin) to instance
+                    }
+                }
+            }
+
     }
 
     @ContainerDisable
@@ -67,15 +88,19 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         UpdaterConnector.applyPendingUpdates()
     }
 
-    private fun getNMSInstance(): INMSVersion {
+    private fun getNMSVersion(): NMSVersion
+    {
         var packageName = server.javaClass.getPackage().name;
         packageName = packageName.substring(packageName.lastIndexOf('.') + 1);
 
-        Framework.use {
-            it.log("Framework", "Loaded NMS Version: net.mystoria.framework.nms.${packageName.toUpperCase()}Version")
-        }
-
-        val clazz = Class.forName("net.mystoria.framework.nms.${packageName.toUpperCase()}Version")
-        return clazz.getDeclaredConstructor().newInstance() as INMSVersion
+        return NMSVersion.valueOf(packageName.toUpperCase())
     }
+
+    private fun Flavor.bindRaw(klass: KClass<*>): FlavorBinder<Any>
+    {
+        val binder = FlavorBinder(klass)
+        binders.add(binder)
+        return binder
+    }
+
 }

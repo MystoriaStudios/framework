@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
+import me.lucko.helper.reflect.NmsVersion
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.Listeners
 import net.mystoria.framework.annotation.command.AutoRegister
