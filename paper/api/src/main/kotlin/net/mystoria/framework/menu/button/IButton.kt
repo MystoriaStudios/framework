@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 
 interface IButton {
-    fun getMaterial(player: Player) : XMaterial
+    fun getMaterial(player: Player): XMaterial
     fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit
 
     fun onClick(player: Player, type: ClickType) {}

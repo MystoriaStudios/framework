@@ -38,3 +38,27 @@ class TestMenu : IMenu {
     }
 }
 ```
+
+## `IButton`
+```kt
+import net.mystoria.framework.menu.button.IButton
+
+class ExampleButton : IButton 
+{
+    override fun getMaterial(player: Player) = XMaterial.DIAMOND_SWORD
+}
+interface IButton {
+    fun getMaterial(player: Player) : XMaterial
+    fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit
+
+    fun onClick(player: Player, type: ClickType) {}
+    fun onClick(player: Player, type: ClickType, event: InventoryClickEvent) {}
+
+    // change to itembuilder
+    fun applyTexture(player: Player): ItemStackBuilder.() -> Unit {
+        return {
+
+        }
+    }
+}
+```
