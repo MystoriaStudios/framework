@@ -16,7 +16,12 @@
             <option value="$PROJECT_DIR$/paper/core" />
             <option value="$PROJECT_DIR$/paper/nms" />
             <option value="$PROJECT_DIR$/paper/nms/core" />
+            <option value="$PROJECT_DIR$/paper/nms/v1_12_R2" />
+            <option value="$PROJECT_DIR$/paper/nms/v1_17_R1" />
+            <option value="$PROJECT_DIR$/paper/nms/v1_18_R2" />
+            <option value="$PROJECT_DIR$/paper/nms/v1_19_R4" />
             <option value="$PROJECT_DIR$/paper/nms/v1_20_R1" />
+            <option value="$PROJECT_DIR$/paper/nms/v1_8_R8" />
             <option value="$PROJECT_DIR$/velocity" />
             <option value="$PROJECT_DIR$/velocity/api" />
             <option value="$PROJECT_DIR$/velocity/core" />

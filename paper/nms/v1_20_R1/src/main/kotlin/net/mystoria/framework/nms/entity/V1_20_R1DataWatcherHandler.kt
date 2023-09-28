@@ -66,7 +66,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
-    fun setFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any, value: Boolean)
+    override fun setFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any, value: Boolean)
     {
         dataWatcher as SynchedEntityData
         getAccessor(wrapper)?.let {
@@ -75,22 +75,17 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
                     it,
                     ByteUtil.setBit(
                         dataWatcher.get(it),
-                        wrapper.bitField,
+                        wrapper.bitFlag,
                         value
                     )
                 )
         }
     }
 
-    fun getFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any): Boolean
+    override fun getFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any): Boolean
     {
         dataWatcher as SynchedEntityData
         return (dataWatcher.get(getAccessor(wrapper)!!) as Byte).toInt() and wrapper.bitField != 0
-    }
-
-    override fun <T> get(dataWatcher: Any) {
-        dataWatcher as SynchedEntityData
-
     }
 
     private fun <T> getSerializer(wrapper: EntityDataAccessorWrapper<T>): EntityDataSerializer<T>?
@@ -116,8 +111,8 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
     private fun <T> getAccessor(
         wrapper: EntityDataAccessorWrapper<T>
     ): EntityDataAccessor<T>? {
-        return getSerializer<T>(wrapper)?.let {
-            SynchedEntityData.defineId(wrapper.entityClass as Class<out Entity>, it)
+        return getSerializer(wrapper)?.let {
+            EntityDataAccessor(wrapper.bitField, it)
         }
     }
 }
