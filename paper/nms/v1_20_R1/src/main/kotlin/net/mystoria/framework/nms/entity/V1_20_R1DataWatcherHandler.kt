@@ -28,6 +28,21 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
+    override fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T) {
+        dataWatcher as SynchedEntityData
+        getAccessor(wrapper)?.let {
+            dataWatcher.set(
+                it,
+                value
+            )
+        }
+    }
+
+    override fun <T> get(dataWatcher: Any) {
+        dataWatcher as SynchedEntityData
+        r
+    }
+
     private fun <T> getSerializer(wrapper: EntityDataAccessorWrapper<T>): EntityDataSerializer<T>?
     {
         var foundSerializer: EntityDataSerializer<T>? = null
