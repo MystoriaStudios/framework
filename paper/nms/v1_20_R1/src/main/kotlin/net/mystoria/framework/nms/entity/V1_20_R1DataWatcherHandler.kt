@@ -61,11 +61,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
             dataWatcher
                 .set(
                     it,
-                    ByteUtil.setBit(
-                        dataWatcher.get<Byte>(it as EntityDataAccessor<Byte>),
-                        wrapper.bitField,
-                        value as Boolean
-                    ) as T // TODO this really wont work for anything else besides bytes
+                    value
                 )
         }
     }
