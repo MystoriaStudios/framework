@@ -5,7 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.monster.Zombie
+import net.minecraft.world.entity.decoration.ArmorStand
 import net.mystoria.framework.nms.NMSVersion
 import net.mystoria.framework.nms.annotation.NMSHandler
 import net.mystoria.framework.nms.util.ByteUtil
@@ -70,9 +70,31 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
+    fun setFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any, value: Boolean)
+    {
+        dataWatcher as SynchedEntityData
+        getAccessor(wrapper)?.let {
+            dataWatcher
+                .set(
+                    it,
+                    ByteUtil.setBit(
+                        dataWatcher.get(it),
+                        wrapper.bitField,
+                        value
+                    )
+                )
+        }
+    }
+
+    fun getFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any): Boolean
+    {
+        dataWatcher as SynchedEntityData
+        return (dataWatcher.get(getAccessor(wrapper)!!) as Byte).toInt() and wrapper.bitField != 0
+    }
+
     override fun <T> get(dataWatcher: Any) {
         dataWatcher as SynchedEntityData
-        
+
     }
 
     private fun <T> getSerializer(wrapper: EntityDataAccessorWrapper<T>): EntityDataSerializer<T>?
