@@ -6,11 +6,12 @@ package net.mystoria.framework.nms.entity
  */
 class EntityDataAccessorWrapper<T>(
     var entityClass: Class<*>, // This is used for getting EntityDataAccessor,
-    var typeClass: Class<*>
+    var typeClass: Class<*>,
+    var bitField: Int
 ) {
     companion object {
-        inline fun <reified T> of(entityClass: Class<*>): EntityDataAccessorWrapper<T> {
-            return EntityDataAccessorWrapper(entityClass, T::class.java)
+        inline fun <reified T> of(entityClass: Class<*>, bitField: Int): EntityDataAccessorWrapper<T> {
+            return EntityDataAccessorWrapper(entityClass, T::class.java, bitField)
         }
     }
 }
