@@ -4,8 +4,6 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.decoration.ArmorStand
 import net.mystoria.framework.nms.NMSVersion
 import net.mystoria.framework.nms.annotation.NMSHandler
 import net.mystoria.framework.nms.util.ByteUtil
@@ -45,7 +43,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         // Appears there may be an issue with class accessors.
     }
 
-    override fun <T> register(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T) {
+    override fun <T> register(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any) {
         dataWatcher as SynchedEntityData
         getAccessor(wrapper)?.let {
             dataWatcher.define(
@@ -55,7 +53,8 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
-    override fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T) {
+    override fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any)
+    {
         dataWatcher as SynchedEntityData
         getAccessor(wrapper)?.let {
             dataWatcher
@@ -88,7 +87,9 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         return (dataWatcher.get(getAccessor(wrapper)!!) as Byte).toInt() and wrapper.bitField != 0
     }
 
-    private fun <T> getSerializer(wrapper: EntityDataAccessorWrapper<T>): EntityDataSerializer<T>?
+    private fun <T> getSerializer(
+        wrapper: EntityDataAccessorWrapper<T>
+    ): EntityDataSerializer<T>?
     {
         var foundSerializer: EntityDataSerializer<T>? = null
         EntityDataSerializers::class.java.declaredFields
