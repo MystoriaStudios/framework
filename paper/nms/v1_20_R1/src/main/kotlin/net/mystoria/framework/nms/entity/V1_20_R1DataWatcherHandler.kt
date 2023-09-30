@@ -38,7 +38,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
      *     the boolean
      */
 
-    override fun initiateObject(entityClass: Class<*>): Any {
+    override fun initiateObject(): Any {
         return SynchedEntityData(null)
         // Appears there may be an issue with class accessors.
     }
