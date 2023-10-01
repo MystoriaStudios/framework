@@ -1,4 +1,3 @@
-/*
 package net.mystoria.framework.entity.hologram
 
 import net.mystoria.framework.entity.AbstractNMSEntity
@@ -8,8 +7,9 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.time.Instant
 import java.util.*
+import kotlin.collections.HashSet
 
-abstract class AbstractNMSHologram(
+open class AbstractNMSHologram(
     private var text: String,
     location: Location,
     var parent: AbstractNMSEntity? = null
@@ -61,18 +61,6 @@ abstract class AbstractNMSHologram(
 //        }
     }
 
-    fun setFloatingItem(floatingItem: FloatingItem) {
-        this.floatingItem = floatingItem
-        synchronizeLocations()
-    }
-
-    fun removeFloatingItem() {
-        this.floatingItem?.also {
-            EntityHandler.forgetEntity(it)
-            it.destroyForCurrentWatchers()
-        }
-    }
-
     fun getFloatingItemLocation(): Location {
         return if (childHolograms.isEmpty()) {
             location.clone().add(0.0, 1.0, 0.0)
@@ -110,66 +98,52 @@ abstract class AbstractNMSHologram(
             childHologram.parent = this
             childHologram.updateLocation(startLocation.subtract(0.0, 0.24, 0.0).clone()) // each iteration subtracts 0.24 from startLoc
         }
-
-        if (floatingItem != null) {
-            floatingItem!!.updateLocation(getFloatingItemLocation())
-        }
     }
 
     override fun spawn(player: Player) {
-        if (!text.equals("{empty}", true) || ChatColor.stripColor(text).isNotEmpty()) {
+        if (!text.equals("{empty}", true) || ChatColor.stripColor(text)!!.isNotEmpty()) {
             super.spawn(player)
         }
     }
 
     override fun destroy(player: Player) {
-        if (!text.equals("{empty}", true) || ChatColor.stripColor(text).isNotEmpty()) {
+        if (!text.equals("{empty}", true) || ChatColor.stripColor(text)!!.isNotEmpty()) {
             super.destroy(player)
         }
     }
 
     override fun sendSpawnPackets(player: Player) {
-        HologramProtocol.sendSpawnPackets(player, this)
+        HololgramProtocol.sendSpawnPackets(player, this)
     }
 
     override fun sendDestroyPackets(player: Player) {
-        val destroyPacket = MinecraftProtocol.newPacket("PacketPlayOutEntityDestroy")
-        Reflection.setDeclaredFieldValue(destroyPacket, "a", intArrayOf(id, witherSkullId))
+        //val destroyPacket = MinecraftProtocol.newPacket("PacketPlayOutEntityDestroy")
+        //Reflection.setDeclaredFieldValue(destroyPacket, "a", intArrayOf(id, witherSkullId))
 
-        MinecraftProtocol.send(player, destroyPacket)
+        //MinecraftProtocol.send(player, destroyPacket)
     }
 
     override fun sendUpdatePackets(player: Player) {
-        HologramProtocol.sendUpdatePackets(player, this)
+//        HologramProtocol.sendUpdatePackets(player, this)
     }
 
     override fun sendRepositionPackets(player: Player) {
-        MinecraftProtocol.send(player, MinecraftProtocol.buildEntityTeleportPacket(id, getAdjustedLocation(player)))
+  //      MinecraftProtocol.send(player, MinecraftProtocol.buildEntityTeleportPacket(id, getAdjustedLocation(player)))
     }
 
     override fun isMultiPartEntity(): Boolean {
-        return childHolograms.isNotEmpty() || floatingItem != null
+        return childHolograms.isNotEmpty()
     }
 
-    override fun getChildEntities(): Set<Entity> {
-        return hashSetOf<Entity>().also { set ->
+    override fun getChildEntities(): List<AbstractNMSEntity> {
+        return mutableListOf<AbstractNMSEntity>().also { set ->
             set.addAll(childHolograms)
-
-            if (floatingItem != null) {
-                set.add(floatingItem!!)
-            }
         }
     }
 
-    fun removeChildHologram(child: HologramEntity) {
+    fun removeChildHologram(child: AbstractNMSHologram) {
         if (childHolograms.remove(child)) {
             synchronizeLocations()
-        }
-    }
-
-    override fun getEditorButtons(player: Player, menu: Menu): MutableList<Button> {
-        return super.getEditorButtons(player, menu).also {
-            it.add(UpdateTextButton(this))
         }
     }
 
@@ -189,8 +163,8 @@ abstract class AbstractNMSHologram(
         }
     }
 
-    fun getMappedLines(): Map<HologramEntity, String> {
-        return hashMapOf<HologramEntity, String>().also { map ->
+    fun getMappedLines(): Map<AbstractNMSHologram, String> {
+        return hashMapOf<AbstractNMSHologram, String>().also { map ->
             map[this] = this.getText()
 
             for (child in childHolograms) {
@@ -217,14 +191,9 @@ abstract class AbstractNMSHologram(
         }
     }
 
-    */
-/**
-     * Processes and updates this hologram's children entities text attribute using the given [lines].
-     *//*
-
     private fun updateLinesRaw(lines: List<String>) {
-        val addedChildren = arrayListOf<HologramEntity>()
-        val removedChildren = arrayListOf<HologramEntity>()
+        val addedChildren = arrayListOf<AbstractNMSHologram>()
+        val removedChildren = arrayListOf<AbstractNMSHologram>()
 
         when {
             lines.isEmpty() -> {
@@ -236,7 +205,7 @@ abstract class AbstractNMSHologram(
                     if (index < childHolograms.size) {
                         childHolograms[index].updateText(line)
                     } else {
-                        val newChildHologram = HologramEntity(text = line, parent = this@HologramEntity, location = location)
+                        val newChildHologram = AbstractNMSHologram(text = line, parent = this@AbstractNMSHologram, location = location)
                         newChildHologram.initializeData()
                         newChildHologram.persistent = false
                         newChildHologram.root = false
@@ -273,6 +242,7 @@ abstract class AbstractNMSHologram(
     }
 
     open fun processPlaceholders(player: Player, text: String): String {
+        /*
         if (parent != null) {
             if (parent is AbstractNMSHologram) {
                 return (parent as AbstractNMSHologram).processPlaceholders(player, text)
@@ -282,10 +252,11 @@ abstract class AbstractNMSHologram(
                 }
             }
         }
+        TODO:
+         */
 
         return text
             .replace("{playerName}", player.name)
             .replace("{playerDisplayName}", player.displayName)
-            .replace("{time}", TimeUtil.formatIntoFullCalendarString(Date.from(Instant.now())))
     }
-}*/
+}
