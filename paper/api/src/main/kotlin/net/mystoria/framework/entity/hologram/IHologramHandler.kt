@@ -1,3 +1,4 @@
+/*
 package net.mystoria.framework.entity.hologram
 
 import net.mystoria.framework.entity.hologram.personalized.AbstractPersonalizedNMSHologramEntity
@@ -10,4 +11,4 @@ interface IHologramHandler {
     fun getUpdatingHolograms(): List<AbstractUpdatingNMSHologram>
 
     fun getPersonalizedHolograms(): List<AbstractPersonalizedNMSHologramEntity>
-}
+}*/
