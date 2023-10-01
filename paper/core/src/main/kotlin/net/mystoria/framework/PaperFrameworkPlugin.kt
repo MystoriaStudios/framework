@@ -6,6 +6,7 @@ import me.lucko.helper.plugin.ap.Plugin
 import net.mystoria.framework.annotation.container.ContainerDisable
 import net.mystoria.framework.annotation.container.ContainerEnable
 import net.mystoria.framework.annotation.container.ContainerPreEnable
+import net.mystoria.framework.config.load
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
 import net.mystoria.framework.menu.FrameworkMenuHandler

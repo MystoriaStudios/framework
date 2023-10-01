@@ -10,6 +10,7 @@ object GsonSerializer : IFrameworkSerializer {
 
     private val gsonBuilder = GsonBuilder()
         .setLongSerializationPolicy(LongSerializationPolicy.STRING)
+        .setPrettyPrinting()
         .serializeNulls()
 
     var gson = gsonBuilder.create()

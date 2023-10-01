@@ -16,6 +16,9 @@ import net.mystoria.framework.annotation.container.flavor.LazyStartup
 import net.mystoria.framework.annotation.retrofit.RetrofitService
 import net.mystoria.framework.annotation.retrofit.UsesRetrofit
 import net.mystoria.framework.command.FrameworkCommandManager
+import net.mystoria.framework.config.IConfigProvider
+import net.mystoria.framework.config.JsonConfig
+import net.mystoria.framework.config.load
 import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.flavor.Flavor
 import net.mystoria.framework.flavor.FlavorBinder
@@ -37,6 +40,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.reflect.full.hasAnnotation
@@ -46,7 +50,9 @@ import kotlin.reflect.full.hasAnnotation
  * support for our custom annotation-based
  * plugin framework.
  */
-open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
+open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
+
+    override fun getBaseFolder() = dataFolder
 
     /**
      * START FLAVOR INJECTION AND HANDLING
@@ -123,6 +129,18 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin() {
             bind<Server>() to server
             bind<Logger>() to logger
         }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<JsonConfig>()
+            .forEach {
+                kotlin.runCatching {
+                    flavor().binders.add(
+                        FlavorBinder(it::class) to load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                    )
+                }.onFailure { throwable ->
+                    logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)
+                }
+            }
     }
 
     override fun enable() {

@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.command.AutoRegister
+import net.mystoria.framework.config.SecurityConfig
 import net.mystoria.framework.constants.Deployment
 import net.mystoria.framework.constants.Tailwind
 import net.mystoria.framework.flavor.annotation.Inject
@@ -27,6 +28,14 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Inject lateinit var scoreboardService: ScoreboardService
     @Inject lateinit var menuHandler: IMenuHandler
+    @Inject lateinit var config: SecurityConfig
+
+    @Subcommand("config-security")
+    fun config(sender: CommandSender) {
+        sender.sendMessage(Framework.useWithReturn {
+            it.serializer.serialize(config)
+        })
+    }
 
     @Subcommand("test-sentry")
     fun testSentry(sender: CommandSender) {

@@ -1,3 +1,4 @@
+/*
 package net.mystoria.framework.entity.hologram
 
 import net.mystoria.framework.entity.AbstractNMSEntity
@@ -30,8 +31,6 @@ abstract class AbstractNMSHologram(
         super.initializeData()
 
         this.witherSkullId = IEntityHandler.instance.nextEntityId()
-
-        sy
     }
 
 
@@ -218,9 +217,11 @@ abstract class AbstractNMSHologram(
         }
     }
 
-    /**
+    */
+/**
      * Processes and updates this hologram's children entities text attribute using the given [lines].
-     */
+     *//*
+
     private fun updateLinesRaw(lines: List<String>) {
         val addedChildren = arrayListOf<HologramEntity>()
         val removedChildren = arrayListOf<HologramEntity>()
@@ -287,4 +288,4 @@ abstract class AbstractNMSHologram(
             .replace("{playerDisplayName}", player.displayName)
             .replace("{time}", TimeUtil.formatIntoFullCalendarString(Date.from(Instant.now())))
     }
-}
+}*/

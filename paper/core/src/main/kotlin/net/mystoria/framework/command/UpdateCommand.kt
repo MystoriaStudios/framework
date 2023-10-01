@@ -6,8 +6,11 @@ import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
+import net.mystoria.framework.Framework
 import net.mystoria.framework.annotation.command.AutoRegister
+import net.mystoria.framework.config.SecurityConfig
 import net.mystoria.framework.constants.Tailwind
+import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.flavor.annotation.Named
 import net.mystoria.framework.updater.UpdaterService
 import net.mystoria.framework.updater.connection.UpdaterConnector
