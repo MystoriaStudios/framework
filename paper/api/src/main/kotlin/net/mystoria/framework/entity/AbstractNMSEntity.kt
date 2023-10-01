@@ -1,6 +1,5 @@
 package net.mystoria.framework.entity
 
-import net.mystoria.framework.entity.hologram.AbstractNMSHologram
 import net.mystoria.framework.flavor.annotation.Inject
 import net.mystoria.framework.nms.entity.INMSEntityHandler
 import net.mystoria.framework.utils.AngleUtils
@@ -136,11 +135,13 @@ abstract class AbstractNMSEntity(var location: Location) {
     {
         return location.clone().subtract(0.0, 0.0, 0.0)
     }
+/*
 
     open fun getAttachedHologram(): AbstractNMSHologram?
     {
         return null
     }
+*/
 
     fun isInitialized(): Boolean
     {
