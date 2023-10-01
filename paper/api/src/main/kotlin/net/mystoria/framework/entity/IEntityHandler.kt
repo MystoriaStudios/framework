@@ -1,5 +1,6 @@
 package net.mystoria.framework.entity
 
+import net.mystoria.framework.flavor.annotation.Inject
 import org.bukkit.entity.Player
 import java.util.UUID
 
@@ -34,4 +35,9 @@ interface IEntityHandler {
     fun trackInstanceEntity(player: Player, entity: AbstractNMSEntity)
 
     fun forgetInstanceEntity(player: Player, entity: AbstractNMSEntity)
+
+    companion object {
+        @Inject
+        lateinit var instance: IEntityHandler
+    }
 }
