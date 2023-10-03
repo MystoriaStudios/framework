@@ -3,5 +3,7 @@ package net.mystoria.framework
 interface IFrameworkPlatform {
 
     val id: String
-    val group: String
+    val groups: MutableList<String>
+
+    fun hasGroup(group: String) = groups.contains(group)
 }
