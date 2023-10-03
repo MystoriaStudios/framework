@@ -1,7 +1,6 @@
 package net.mystoria.framework.region
 
 import net.mystoria.framework.region.flag.IRegionFlag
-import org.bukkit.World
 import org.bukkit.entity.Player
 
 interface IRegion{
