@@ -2,6 +2,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -13,6 +14,7 @@ dependencies {
     // reference libraries
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.2")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
     compileOnly("net.kyori:adventure-platform-bukkit:4.1.0")
 
