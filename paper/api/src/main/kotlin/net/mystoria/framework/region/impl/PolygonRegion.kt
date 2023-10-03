@@ -11,6 +11,9 @@ class PolygonRegion(
     private val minY: Double,
     private val maxY: Double
 ) : IRegion {
+
+    override val flags = mutableListOf<String>()
+
     override fun isInside(x: Double, y: Double, z: Double): Boolean {
         if (y < minY || y > maxY) return false  // Check vertical boundaries
 

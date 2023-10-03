@@ -55,7 +55,7 @@ abstract class AbstractNMSEntity(var location: Location) {
     @Transient
     protected lateinit var currentWatchers: MutableSet<UUID>
 
-    val isMultiPartEntity: Boolean
+    val multiPartEntity: Boolean
         get() = false
 
     var command: String? = null
@@ -82,7 +82,7 @@ abstract class AbstractNMSEntity(var location: Location) {
         this.root = true
         this.currentWatchers = ConcurrentHashMap.newKeySet()
 
-        if (this.isMultiPartEntity) {
+        if (this.multiPartEntity) {
             for (childEntity in getChildEntities()) {
                 childEntity.initializeData()
                 childEntity.persistent = false

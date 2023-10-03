@@ -10,6 +10,8 @@ class SphereRegion(
     private var radius: Double
 ) : IRegion {
 
+    override val flags = mutableListOf<String>()
+
     override fun isInside(x: Double, y: Double, z: Double): Boolean {
         val dx = center.x - x
         val dy = center.y - y

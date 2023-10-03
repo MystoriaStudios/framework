@@ -11,6 +11,8 @@ class CuboidRegion(
     private var max: Point
 ) : IRegion {
 
+    override val flags = mutableListOf<String>()
+
     override fun isInside(x: Double, y: Double, z: Double): Boolean {
         return x in min.x..max.x && y in min.y..max.y && z in min.z..max.z
     }
