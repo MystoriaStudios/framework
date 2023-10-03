@@ -3,7 +3,6 @@ package net.mystoria.framework.region.impl
 import net.mystoria.framework.region.Boundary
 import net.mystoria.framework.region.IRegion
 import net.mystoria.framework.region.Point
-import org.bukkit.Particle
 import org.bukkit.entity.Player
 
 class PolygonRegion(

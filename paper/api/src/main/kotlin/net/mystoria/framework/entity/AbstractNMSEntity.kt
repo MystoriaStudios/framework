@@ -6,8 +6,7 @@ import net.mystoria.framework.utils.AngleUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import org.checkerframework.checker.units.qual.Angle
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class AbstractNMSEntity(var location: Location) {

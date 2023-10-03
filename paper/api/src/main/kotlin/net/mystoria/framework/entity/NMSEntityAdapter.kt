@@ -2,12 +2,6 @@ package net.mystoria.framework.entity
 
 import com.google.gson.*
 import net.mystoria.framework.flavor.annotation.Inject
-import org.bukkit.inventory.ItemStack
-import org.bukkit.util.io.BukkitObjectInputStream
-import org.bukkit.util.io.BukkitObjectOutputStream
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
 
 object NMSEntityAdapter : JsonSerializer<AbstractNMSEntity>, JsonDeserializer<AbstractNMSEntity> {

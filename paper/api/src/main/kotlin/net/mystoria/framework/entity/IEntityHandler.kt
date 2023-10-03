@@ -2,7 +2,7 @@ package net.mystoria.framework.entity
 
 import net.mystoria.framework.flavor.annotation.Inject
 import org.bukkit.entity.Player
-import java.util.UUID
+import java.util.*
 
 interface IEntityHandler {
 

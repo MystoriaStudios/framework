@@ -5,9 +5,7 @@ import net.mystoria.framework.entity.IEntityHandler
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import java.time.Instant
 import java.util.*
-import kotlin.collections.HashSet
 
 open class AbstractNMSHologram(
     private var text: String,
