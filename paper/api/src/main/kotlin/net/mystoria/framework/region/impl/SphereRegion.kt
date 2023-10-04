@@ -3,16 +3,19 @@ package net.mystoria.framework.region.impl
 import net.mystoria.framework.region.Boundary
 import net.mystoria.framework.region.IRegion
 import net.mystoria.framework.region.Point
+import org.bukkit.World
 import org.bukkit.entity.Player
 
 class SphereRegion(
     private var center: Point,
-    private var radius: Double
+    private var radius: Double,
+    private var world: World
 ) : IRegion {
 
     override val flags = mutableListOf<String>()
 
-    override fun isInside(x: Double, y: Double, z: Double): Boolean {
+    override fun isInside(x: Double, y: Double, z: Double, world: World): Boolean {
+        if (this.world.uid != world.uid) return false
         val dx = center.x - x
         val dy = center.y - y
         val dz = center.z - z

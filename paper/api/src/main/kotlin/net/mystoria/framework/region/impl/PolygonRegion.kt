@@ -3,17 +3,20 @@ package net.mystoria.framework.region.impl
 import net.mystoria.framework.region.Boundary
 import net.mystoria.framework.region.IRegion
 import net.mystoria.framework.region.Point
+import org.bukkit.World
 import org.bukkit.entity.Player
 
 class PolygonRegion(
     private val vertices: List<Point>,
     private val minY: Double,
-    private val maxY: Double
+    private val maxY: Double,
+    private var world: World
 ) : IRegion {
 
     override val flags = mutableListOf<String>()
 
-    override fun isInside(x: Double, y: Double, z: Double): Boolean {
+    override fun isInside(x: Double, y: Double, z: Double, world: World): Boolean {
+        if (this.world.uid != world.uid) return false
         if (y < minY || y > maxY) return false  // Check vertical boundaries
 
         // Use ray-casting algorithm to determine if the point is inside the polygon

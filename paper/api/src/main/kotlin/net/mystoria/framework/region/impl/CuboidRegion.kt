@@ -4,16 +4,20 @@ import net.mystoria.framework.region.Boundary
 import net.mystoria.framework.region.IRegion
 import net.mystoria.framework.region.Point
 import org.bukkit.Particle
+import org.bukkit.World
 import org.bukkit.entity.Player
 
 class CuboidRegion(
     private var min: Point,
-    private var max: Point
+    private var max: Point,
+    private var world: World
 ) : IRegion {
 
     override val flags = mutableListOf<String>()
 
-    override fun isInside(x: Double, y: Double, z: Double): Boolean {
+    override fun isInside(x: Double, y: Double, z: Double, world: World): Boolean {
+        if (this.world.uid != world.uid) return false
+
         return x in min.x..max.x && y in min.y..max.y && z in min.z..max.z
     }
 
