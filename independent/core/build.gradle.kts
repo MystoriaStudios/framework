@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClass.set("net.mystoria.framework.FrameworkAppKt")
+    mainClass.set("net.revive.framework.FrameworkAppKt")
 }
 
 dependencies {

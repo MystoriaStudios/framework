@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.mystoria.framework:independent-api:VERSION") // Framework API
-    compileOnly("net.mystoria.framework:paper-api:VERSION") // Paper Specific API
+    compileOnly("net.revive.framework:independent-api:VERSION") // Framework API
+    compileOnly("net.revive.framework:paper-api:VERSION") // Paper Specific API
 }
 ```

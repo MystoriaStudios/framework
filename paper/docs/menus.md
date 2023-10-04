@@ -3,7 +3,7 @@ A guide on how to implement both `IMenu`'s and `AbstractPagedMenu`'s.
 
 ## `IMenu`
 ```kt
-import net.mystoria.framework.menu.IMenu
+import net.revive.framework.menu.IMenu
 
 class TestMenu : IMenu {
 
@@ -41,7 +41,7 @@ class TestMenu : IMenu {
 
 ## `IButton`
 ```kt
-import net.mystoria.framework.menu.button.IButton
+import net.revive.framework.menu.button.IButton
 
 class ExampleButton : IButton 
 {

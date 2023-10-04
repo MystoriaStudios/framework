@@ -2,7 +2,7 @@
 how to utilize stuff like ItemBuilders and more...
 
 ```kt
-import net.mystoria.framework.util.ItemBuilder
+import net.revive.framework.util.ItemBuilder
 
 val item: ItemStack = ItemBuilder {
     name(

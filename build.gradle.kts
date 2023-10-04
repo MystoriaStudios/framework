@@ -8,7 +8,6 @@
  import org.jetbrains.gradle.ext.Gradle
 
 plugins {
-    id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("jvm") version "1.9.10"
@@ -35,7 +34,6 @@ sentry {
 }
 
 allprojects {
-    apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -43,7 +41,7 @@ allprojects {
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
-    group = "net.mystoria.framework"
+    group = "net.revive.framework"
     version = "1.0.11-SNAPSHOT"
 
     repositories {
@@ -51,7 +49,7 @@ allprojects {
         maven("https://repo.aikar.co/content/groups/aikar/")
 
         maven {
-            name = "Mystoria"
+            name = "Revive"
             url = URI("${artifactory_contextUrl}/${artifactory_release}")
             credentials {
                 username = artifactory_user
@@ -98,33 +96,7 @@ allprojects {
         }
     }
 
-    publishing {
-        publications {
-            register(
-                name = "mavenJava",
-                type = MavenPublication::class,
-                configurationAction = shadow::component
-            )
-        }
-
-        repositories {
-            maven {
-                name = "Mystoria"
-                url = uri("$artifactory_contextUrl/$artifactory_release")
-
-                credentials {
-                    username = artifactory_user
-                    password = artifactory_password
-                }
-            }
-        }
-    }
-
-    tasks["build"]
-        .dependsOn(
-            "shadowJar",
-            "publishMavenJavaPublicationToMystoriaRepository"
-        )
+    tasks["build"].dependsOn("shadowJar")
 }
 
 kotlin {
