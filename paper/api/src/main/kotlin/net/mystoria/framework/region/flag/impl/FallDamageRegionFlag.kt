@@ -2,26 +2,25 @@ package net.mystoria.framework.region.flag.impl
 
 import me.lucko.helper.Events
 import net.mystoria.framework.annotation.region.RegionFlag
+import net.mystoria.framework.deathmessage.listener.FallDamageListener
 import net.mystoria.framework.flavor.service.Configure
 import net.mystoria.framework.region.flag.IRegionFlag
 import net.mystoria.framework.region.getAppliedRegions
-import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 
 @RegionFlag
-object PvpRegionFlag : IRegionFlag {
+object FallDamageRegionFlag : IRegionFlag {
 
     @Configure
     fun configure() {
-        Events.subscribe(EntityDamageByEntityEvent::class.java)
+        Events.subscribe(EntityDamageEvent::class.java)
             .filter {
-                it.entity is Player && it.damager is Player
+                it.cause == EntityDamageEvent.DamageCause.FALL
             }
-            .handler { it ->
-                val regions = it.entity.location.getAppliedRegions()
-                regions + it.damager.location.getAppliedRegions()
+            .handler {
+                val loc = it.entity.location
 
-                if (regions.any { it.hasFlag(this) }) {
+                if (loc.getAppliedRegions().any { it.hasFlag(this) }) {
                     it.isCancelled = true
                 }
             }
