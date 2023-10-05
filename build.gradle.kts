@@ -8,6 +8,7 @@
  import org.jetbrains.gradle.ext.Gradle
 
 plugins {
+    id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     kotlin("jvm") version "1.9.10"
@@ -34,6 +35,7 @@ sentry {
 }
 
 allprojects {
+    apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "com.github.johnrengelman.shadow")
@@ -96,7 +98,33 @@ allprojects {
         }
     }
 
-    tasks["build"].dependsOn("shadowJar")
+    publishing {
+        publications {
+            register(
+                name = "mavenJava",
+                type = MavenPublication::class,
+                configurationAction = shadow::component
+            )
+        }
+
+        repositories {
+            maven {
+                name = "Revive"
+                url = uri("$artifactory_contextUrl/$artifactory_release")
+
+                credentials {
+                    username = artifactory_user
+                    password = artifactory_password
+                }
+            }
+        }
+    }
+
+    tasks["build"]
+        .dependsOn(
+            "shadowJar",
+            "publishMavenJavaPublicationToReviveRepository"
+        )
 }
 
 kotlin {
