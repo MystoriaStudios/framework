@@ -3,6 +3,7 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
@@ -15,6 +16,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("me.lucko:spark-api:0.1-SNAPSHOT")
 
     compileOnly("net.kyori:adventure-platform-bukkit:4.1.0")
 

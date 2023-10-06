@@ -3,6 +3,7 @@ package net.revive.framework
 import me.lucko.helper.Events
 import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
+import me.lucko.helper.plugin.ap.PluginDependency
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
@@ -27,6 +28,9 @@ import kotlin.reflect.KClass
     version = "1.0.11-SNAPSHOT",
     authors = ["Revive Studios"],
     website = "https://randomcraft.net/",
+    depends = [
+        PluginDependency("spark")
+    ]
 )
 @HelperImplementationPlugin
 class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
@@ -56,7 +60,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         nmsVersion = getNMSVersion()
 
         UpdaterService.configure(UpdaterPaperPlatform)
-        // bind the menu to the impleemnbtation here O,
+        // bind the menu to the implementation here O,
 
         Tasks.plugin = this
 
