@@ -2,6 +2,10 @@ package net.revive.framework.disguise.events
 
 import net.revive.framework.event.SimpleEvent
 import org.bukkit.entity.Player
-import org.bukkit.event.Cancellable
 
-class UnDisguiseEvent(player: Player) : SimpleEvent()
+/**
+ * Event triggered when a player's disguise is removed.
+ *
+ * @property player The player whose disguise is being removed.
+ */
+class UnDisguiseEvent(val player: Player) : SimpleEvent()
