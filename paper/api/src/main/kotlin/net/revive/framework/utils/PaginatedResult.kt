@@ -11,12 +11,35 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Abstract class to handle paginated results. It's responsible for generating and displaying paginated content
+ * to a given sender, including navigational elements if appropriate.
+ *
+ * @param T Type of the entries to paginate.
+ * @property resultsPerPage Number of results to display per page. Defaults to 20.
+ */
 abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
 
+    /**
+     * Displays the paginated results to a command sender using a collection of results.
+     *
+     * @param sender The command sender to which the results will be displayed.
+     * @param results Collection of results to display.
+     * @param page The desired page number to display.
+     */
     fun display(sender: CommandSender, results: Collection<T>, page: Int) {
         this.display(sender, ArrayList(results), page)
     }
 
+    /**
+     * Displays the paginated results to a command sender using a list of results.
+     *
+     * @param sender The command sender to which the results will be displayed.
+     * @param results List of results to display.
+     * @param page The desired page number to display.
+     * @param command An optional command string used for clickable navigation elements.
+     *                If provided, navigation arrows will be clickable. If not, they will only be indicative.
+     */
     fun display(sender: CommandSender, results: List<T>, page: Int, command: String? = null) {
         if (results.isEmpty()) throw ConditionFailedException("No entries were found.")
 
@@ -96,6 +119,22 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
         }
     }
 
+    /**
+     * Returns a header component to be displayed at the top of the paginated results.
+     *
+     * @param page The current page number.
+     * @param maxPages The total number of available pages.
+     * @return The header component.
+     */
     abstract fun getHeader(page: Int, maxPages: Int): Component
+
+    /**
+     * Transforms a result into a displayable component format. This function should be implemented to
+     * define how each entry in the results list will be displayed.
+     *
+     * @param result The result entry to format.
+     * @param resultIndex The index of the result in the list, used if indexing is desired in the display format.
+     * @return The result entry as a formatted component.
+     */
     abstract fun format(result: T, resultIndex: Int): Component
 }

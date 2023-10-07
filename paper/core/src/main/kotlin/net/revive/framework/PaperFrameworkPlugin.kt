@@ -19,6 +19,8 @@ import net.revive.framework.updater.UpdaterPaperPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
 import net.revive.framework.utils.Tasks
+import net.revive.framework.visibility.FrameworkVisiblityHandler
+import net.revive.framework.visibility.IVisibilityHandler
 import org.bukkit.Bukkit
 import kotlin.reflect.KClass
 
@@ -51,6 +53,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         instance = this
         net.revive.framework.Framework.use { framework ->
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
+            framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
         }
 
         nmsVersion = getNMSVersion()
