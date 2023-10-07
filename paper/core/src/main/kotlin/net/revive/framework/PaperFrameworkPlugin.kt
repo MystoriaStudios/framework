@@ -7,6 +7,8 @@ import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.config.load
+import net.revive.framework.disguise.FrameworkDisguiseHandler
+import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.menu.FrameworkMenuHandler
@@ -49,8 +51,10 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     @ContainerEnable
     fun containerEnable() {
         instance = this
-        net.revive.framework.Framework.use { framework ->
+
+        Framework.use { framework ->
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
+            framework.flavor.bind<IDisguiseHandler>() to FrameworkDisguiseHandler()
         }
 
         nmsVersion = getNMSVersion()
@@ -75,7 +79,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             }
             .forEach { instance ->
                 instance.javaClass.interfaces.forEach { interfaceClass ->
-                    net.revive.framework.Framework.use {
+                    Framework.use {
                         it.flavor.bindRaw(interfaceClass.kotlin) to instance
                     }
                 }
