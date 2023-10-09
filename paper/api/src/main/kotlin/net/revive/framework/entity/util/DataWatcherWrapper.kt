@@ -5,7 +5,7 @@ import net.revive.framework.nms.entity.EntityDataAccessorWrapper
 import net.revive.framework.nms.entity.IDataWatcherHandler
 
 
-inline fun DataWatcherEditor(builder: DataWatcherWrapper.() -> Unit) = DataWatcherWrapper().apply(builder)
+inline fun dataWatcherEditor(builder: DataWatcherWrapper.() -> Unit) = DataWatcherWrapper().apply(builder)
 
 class DataWatcherWrapper {
 

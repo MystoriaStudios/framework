@@ -2,7 +2,6 @@ package net.revive.framework.visibility
 
 import me.lucko.helper.Events
 import net.revive.framework.flavor.service.Configure
-import net.revive.framework.flavor.service.Service
 import net.revive.framework.visibility.override.IOverrideHandler
 import net.revive.framework.visibility.override.OverrideResult
 import org.apache.commons.lang3.StringUtils
@@ -12,16 +11,15 @@ import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatTabCompleteEvent
 import org.bukkit.event.player.PlayerJoinEvent
 
-@Service
-object VisibilityService {
-    
+class FrameworkVisiblityHandler : IVisibilityHandler {
+
     lateinit var providers: MutableMap<String, IVisibilityProvider>
     lateinit var overrides: MutableMap<String, IOverrideHandler>
 
     @Configure
     fun configure() {
         Events.subscribe(PlayerJoinEvent::class.java).handler { update(it.player) }
-        
+
         Events.subscribe(PlayerChatTabCompleteEvent::class.java).handler { event ->
             val token = event.lastToken
             val completions = event.tabCompletions
@@ -29,21 +27,21 @@ object VisibilityService {
             for (target in Bukkit.getOnlinePlayers()) {
                 if (!treatAsOnline(target, event.player)) continue
                 if (!StringUtils.startsWithIgnoreCase(target.name, token)) continue
-                
+
                 completions.add(target.name)
             }
         }
     }
 
-    fun registerProvider(identifier: String, handler: IVisibilityProvider) {
+    override fun registerProvider(identifier: String, handler: IVisibilityProvider) {
         providers[identifier] = handler
     }
 
-    fun registerOverride(identifier: String, handler: IOverrideHandler) {
+    override fun registerOverride(identifier: String, handler: IOverrideHandler) {
         overrides[identifier] = handler
     }
 
-    fun update(player: Player) {
+    override fun update(player: Player) {
         if (providers.isEmpty() && overrides.isEmpty()) {
             return
         }
@@ -52,7 +50,7 @@ object VisibilityService {
     }
 
     @Deprecated("")
-    fun updateAllTo(viewer: Player) {
+    override fun updateAllTo(viewer: Player) {
         for (target in Bukkit.getOnlinePlayers()) {
             if (!shouldSee(target, viewer)) {
                 viewer.hidePlayer(target)
@@ -63,7 +61,7 @@ object VisibilityService {
     }
 
     @Deprecated("")
-    fun updateToAll(target: Player) {
+    override fun updateToAll(target: Player) {
         for (viewer in Bukkit.getOnlinePlayers()) {
             if (!shouldSee(target, viewer)) {
                 viewer.hidePlayer(target)
@@ -73,11 +71,11 @@ object VisibilityService {
         }
     }
 
-    fun treatAsOnline(target: Player, viewer: Player): Boolean {
+    override fun treatAsOnline(target: Player, viewer: Player): Boolean {
         return viewer.canSee(target) || !target.hasMetadata("invisible") || viewer.hasPermission("framework.staff")
     }
 
-    private fun shouldSee(target: Player, viewer: Player): Boolean {
+    override fun shouldSee(target: Player, viewer: Player): Boolean {
         for (handler in overrides.values) {
             if (handler.handle(target, viewer) === OverrideResult.SHOW) {
                 return true
@@ -91,7 +89,7 @@ object VisibilityService {
         return true
     }
 
-    fun getDebugInfo(target: Player, viewer: Player): List<String> {
+    override fun getDebugInfo(target: Player, viewer: Player): List<String> {
         val debug: MutableList<String> = ArrayList()
         var canSee: Boolean? = null
         for ((key, handler) in overrides) {

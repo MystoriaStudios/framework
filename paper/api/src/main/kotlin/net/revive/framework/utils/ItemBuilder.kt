@@ -14,9 +14,9 @@ import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 import java.util.stream.Collectors
 
-inline fun ItemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder(itemStack = itemStack).apply(builder).build()
+inline fun itemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder(itemStack = itemStack).apply(builder).build()
 
-inline fun ItemBuilder(builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder().apply(builder).build()
+inline fun itemBuilder(builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder().apply(builder).build()
 
 class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
 

@@ -14,7 +14,7 @@ class EntityDataAccessorWrapper<T>(
         }
 
         inline fun <reified T> of(bitField: Int, bitFlag: Int): EntityDataAccessorWrapper<T> {
-            return EntityDataAccessorWrapper(T::class.java, bitField, bitField)
+            return EntityDataAccessorWrapper(T::class.java, bitField, bitFlag)
         }
     }
 }
