@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":paper"))
     implementation(project(":independent:independent-api"))
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")

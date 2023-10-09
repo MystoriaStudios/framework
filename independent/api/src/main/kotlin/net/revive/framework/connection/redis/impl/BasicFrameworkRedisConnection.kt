@@ -10,16 +10,16 @@ class BasicFrameworkRedisConnection(
         val uri: String
     ) {
         constructor(
-            hostname: String = "100.67.254.17",
+            hostname: String = "127.0.0.1",
             port: Int = 6379,
         ) : this("redis://$hostname:$port")
 
         constructor(
-            hostname: String = "100.67.254.17",
+            hostname: String = "127.0.0.1",
             port: Int = 6379,
-            username: String,
+            username: String? = null,
             password: String
-        ) : this("redis://$username:$password@$hostname:$port")
+        ) : this("redis://${username.let { "$it:" }}$password@$hostname:$port")
     }
 
     override fun createNewConnection() = RedisClient.create(details.uri)

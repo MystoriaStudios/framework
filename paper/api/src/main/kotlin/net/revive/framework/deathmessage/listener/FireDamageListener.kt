@@ -16,32 +16,33 @@ import java.util.concurrent.TimeUnit
 @Listeners
 object FireDamageListener : Listener {
     @EventHandler(priority = EventPriority.LOW)
-    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) {
-        if (event.cause.cause !== EntityDamageEvent.DamageCause.FIRE_TICK && event.cause.cause !== EntityDamageEvent.DamageCause.LAVA
-        ) return
+    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) =
+        net.revive.framework.event.event(event.player) {
+            if (event.cause.cause !== EntityDamageEvent.DamageCause.FIRE_TICK && event.cause.cause !== EntityDamageEvent.DamageCause.LAVA
+            ) return
 
-        val record: List<AbstractDamage> = DeathMessageService.getDamage(event.player)
-        var knocker: AbstractDamage? = null
-        var knockerTime = 0L
-        for (damage in record) {
-            if (damage !is BurnDamage) {
-                if (damage is BurnDamageByPlayer) continue
-                if (damage !is PlayerAbstractDamage || knocker != null && damage.time <= knockerTime) continue
+            val record: List<AbstractDamage> = DeathMessageService.getDamage(event.player)
+            var knocker: AbstractDamage? = null
+            var knockerTime = 0L
+            for (damage in record) {
+                if (damage !is BurnDamage) {
+                    if (damage is BurnDamageByPlayer) continue
+                    if (damage !is PlayerAbstractDamage || knocker != null && damage.time <= knockerTime) continue
 
-                knocker = damage
-                knockerTime = damage.time
+                    knocker = damage
+                    knockerTime = damage.time
+                }
+            }
+            if (knocker != null && knockerTime + TimeUnit.MINUTES.toMillis(1L) > System.currentTimeMillis()) {
+                event.trackerDamage = BurnDamageByPlayer(
+                    event.player.uniqueId,
+                    event.damage,
+                    (knocker as PlayerAbstractDamage).damager
+                )
+            } else {
+                event.trackerDamage = BurnDamage(event.player.uniqueId, event.damage)
             }
         }
-        if (knocker != null && knockerTime + TimeUnit.MINUTES.toMillis(1L) > System.currentTimeMillis()) {
-            event.trackerDamage = BurnDamageByPlayer(
-                event.player.uniqueId,
-                event.damage,
-                (knocker as PlayerAbstractDamage).damager
-            )
-        } else {
-            event.trackerDamage = BurnDamage(event.player.uniqueId, event.damage)
-        }
-    }
 
     class BurnDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): String {

@@ -1,6 +1,11 @@
 package net.revive.framework.menu
 
+import co.aikar.commands.ConditionFailedException
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
+import net.revive.framework.event.event
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.utils.ItemBuilder
 import net.revive.framework.utils.Tasks
@@ -23,7 +28,7 @@ object FrameworkMenuListeners : Listener {
     lateinit var menuService: MenuService
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onInventoryDrag(event: InventoryDragEvent) {
+    fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
         if (event.whoClicked !is Player) return
         val openMenu = menuService.getOpenedMenu(event.whoClicked as Player) ?: return
 
@@ -41,7 +46,7 @@ object FrameworkMenuListeners : Listener {
     }
 
     @EventHandler
-    fun onButtonPress(event: InventoryClickEvent) {
+    fun onButtonPress(event: InventoryClickEvent) = event(event.whoClicked) {
         val player = event.whoClicked as Player
 
         val openMenu = menuService.getOpenedMenu(player)
@@ -105,8 +110,12 @@ object FrameworkMenuListeners : Listener {
                 event.isCancelled = true
 
 
-                button.onClick(player, event.click)
-                button.onClick(player, event.click, event)
+                try {
+                    button.onClick(player, event.click)
+                    button.onClick(player, event.click, event)
+                } catch (exception: ConditionFailedException) {
+                    player.sendMessage(Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700)))
+                }
 
                 // check if player is still in the same menu and needs to update
                 if (menuService.hasOpenedMenu(player)) {

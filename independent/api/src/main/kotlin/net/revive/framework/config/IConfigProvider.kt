@@ -3,6 +3,7 @@ package net.revive.framework.config
 import net.revive.framework.Framework
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.io.FileNotFoundException
 import kotlin.reflect.KClass
 
 interface IConfigProvider {
@@ -16,7 +17,7 @@ inline fun <reified T : Any> IConfigProvider.load(config: JsonConfig) : T {
         val inst = T::class.java.getConstructor().newInstance()
         save<T>(config, inst)
     } else {
-        net.revive.framework.Framework.useWithReturn {
+        Framework.useWithReturn {
             it.serializer.deserialize(T::class, FileUtils.readFileToString(file, "UTF-8"))
         }
     }
@@ -26,10 +27,9 @@ fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>) : Any {
     val file = File(getBaseFolder(), config.fileName)
 
     return if (!file.exists()) {
-        val inst = clazz::class.java.getConstructor().newInstance()
-        save(config, inst)
+        throw FileNotFoundException()
     } else {
-        net.revive.framework.Framework.useWithReturn {
+        Framework.useWithReturn {
             it.serializer.deserialize(clazz::class, FileUtils.readFileToString(file, "UTF-8"))
         }
     }
@@ -41,7 +41,7 @@ inline fun <reified T : Any> IConfigProvider.save(config: JsonConfig, inst: T) :
 
     if (!file.exists()) file.createNewFile()
 
-    FileUtils.writeStringToFile(file, net.revive.framework.Framework.useWithReturn {
+    FileUtils.writeStringToFile(file, Framework.useWithReturn {
         it.serializer.serialize(inst)
     }, "UTF-8")
 

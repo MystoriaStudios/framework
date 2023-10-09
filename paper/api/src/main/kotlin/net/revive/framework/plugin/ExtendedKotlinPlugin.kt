@@ -18,6 +18,7 @@ import net.revive.framework.command.FrameworkCommandManager
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.config.save
 import net.revive.framework.constants.Deployment
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
@@ -39,6 +40,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.FileNotFoundException
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.reflect.full.hasAnnotation
@@ -133,7 +135,11 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .forEach {
                 kotlin.runCatching {
                     flavor().binders.add(
-                        FlavorBinder(it::class) to load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                        FlavorBinder(it::class) to try {
+                            load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                        } catch (exception: FileNotFoundException) {
+                            save(it.getAnnotation(JsonConfig::class.java), it.getConstructor().newInstance())
+                        }
                     )
                 }.onFailure { throwable ->
                     logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)

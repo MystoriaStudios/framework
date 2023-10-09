@@ -5,7 +5,7 @@ repositories {
 
 dependencies {
     implementation(project(":independent:independent-api"))
-    implementation(project(":paper:paper-api"))
+    implementation(project(":velocity:velocity-api"))
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

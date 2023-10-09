@@ -17,43 +17,44 @@ import java.util.concurrent.TimeUnit
 object GeneralDamageListener : Listener {
     
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) {
-        var message: String? = null
-        message = when (event.cause.cause) {
-            SUFFOCATION -> "suffocated"
-            DROWNING -> "drowned"
-            STARVATION -> "starved to death"
-            LIGHTNING -> "was struck by lightning"
-            POISON -> "was poisoned"
-            WITHER -> "withered away"
-            CONTACT -> "was pricked to death"
-            ENTITY_EXPLOSION, BLOCK_EXPLOSION -> "was blown to smithereens"
-            else -> return
-        }
-        
-        val record: List<AbstractDamage> = DeathMessageService.getDamage(event.player)
-        var knocker: AbstractDamage? = null
-        var knockerTime = 0L
-        for (damage in record) {
-            if (damage !is GeneralDamage) {
-                if (damage is GeneralDamageByPlayer) continue
-                if (damage !is PlayerAbstractDamage || knocker != null && damage.time <= knockerTime) continue
+    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) =
+        net.revive.framework.event.event(event.player) {
+            var message: String? = null
+            message = when (event.cause.cause) {
+                SUFFOCATION -> "suffocated"
+                DROWNING -> "drowned"
+                STARVATION -> "starved to death"
+                LIGHTNING -> "was struck by lightning"
+                POISON -> "was poisoned"
+                WITHER -> "withered away"
+                CONTACT -> "was pricked to death"
+                ENTITY_EXPLOSION, BLOCK_EXPLOSION -> "was blown to smithereens"
+                else -> return
+            }
 
-                knocker = damage
-                knockerTime = damage.time
+            val record: List<AbstractDamage> = DeathMessageService.getDamage(event.player)
+            var knocker: AbstractDamage? = null
+            var knockerTime = 0L
+            for (damage in record) {
+                if (damage !is GeneralDamage) {
+                    if (damage is GeneralDamageByPlayer) continue
+                    if (damage !is PlayerAbstractDamage || knocker != null && damage.time <= knockerTime) continue
+
+                    knocker = damage
+                    knockerTime = damage.time
+                }
+            }
+            if (knocker != null && knockerTime + TimeUnit.MINUTES.toMillis(1L) > System.currentTimeMillis()) {
+                event.trackerDamage = GeneralDamageByPlayer(
+                    event.player.uniqueId,
+                    event.damage,
+                    (knocker as PlayerAbstractDamage).damager,
+                    message
+                )
+            } else {
+                event.trackerDamage = GeneralDamage(event.player.uniqueId, event.damage, message)
             }
         }
-        if (knocker != null && knockerTime + TimeUnit.MINUTES.toMillis(1L) > System.currentTimeMillis()) {
-            event.trackerDamage = GeneralDamageByPlayer(
-                event.player.uniqueId,
-                event.damage,
-                (knocker as PlayerAbstractDamage).damager,
-                message
-            )
-        } else {
-            event.trackerDamage = GeneralDamage(event.player.uniqueId, event.damage, message)
-        }
-    }
 
     class GeneralDamage(damaged: UUID, damage: Double, private val message: String) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): String {

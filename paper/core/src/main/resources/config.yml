@@ -1,0 +1,10 @@
+backend:
+  mongo:
+    host: "localhost"
+    port: 27017
+    username: "root"
+    password: "AfkHSKbJXhkLwR96lKNFp7NGZYHmdtQG2KnG7NzH"
+  redis:
+    host: "127.0.0.1"
+    port: 6379
+    password: "ewoviubDFIBEG28dhsk"

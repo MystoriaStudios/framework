@@ -26,7 +26,7 @@ import kotlin.reflect.KClass
 
 @Plugin(
     name = "Framework",
-    version = "1.0.12-SNAPSHOT",
+    version = "1.0.13-SNAPSHOT",
     authors = ["Revive Studios"],
     website = "https://randomcraft.net/",
 )
@@ -41,17 +41,16 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     @ContainerPreEnable
     fun containerPreEnable() {
-        net.revive.framework.Framework.supply(PaperFramework) {
+        saveDefaultConfig()
+        Framework.supply(PaperFramework) {
             it.flavor = flavor()
         }
-
-        Bukkit.getCommandMap().knownCommands.remove("plugins")
     }
 
     @ContainerEnable
     fun containerEnable() {
         instance = this
-        net.revive.framework.Framework.use { framework ->
+        Framework.use { framework ->
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
         }
@@ -78,7 +77,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             }
             .forEach { instance ->
                 instance.javaClass.interfaces.forEach { interfaceClass ->
-                    net.revive.framework.Framework.use {
+                    Framework.use {
                         it.flavor.bindRaw(interfaceClass.kotlin) to instance
                     }
                 }

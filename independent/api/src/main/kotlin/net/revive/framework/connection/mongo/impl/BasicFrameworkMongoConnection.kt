@@ -10,7 +10,7 @@ class BasicFrameworkMongoConnection(
     private val details: Details
 ) : AbstractFrameworkMongoConnection() {
     data class Details(
-        val uri: String = "mongodb://admin:${URLEncoder.encode("a=@NbvLLa9?!D2tVL#nwt-eEe5CWB\$ky+C&3YxwWxNN")}@100.67.254.17:27017/admin",
+        val uri: String = "mongodb://root:${URLEncoder.encode(System.getProperty("MONGODB_PASSWORD"))}@localhost:27017/admin",
         val database: String = "framework"
     ) {
         constructor(

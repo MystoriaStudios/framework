@@ -5,6 +5,7 @@ import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.event.event
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit
 @Listeners
 object FallDamageListener : Listener {
     @EventHandler(priority = EventPriority.LOW)
-    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) {
+    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
         if (event.cause.cause !== EntityDamageEvent.DamageCause.FALL) {
             return
         }

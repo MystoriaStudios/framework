@@ -6,6 +6,7 @@ import net.revive.framework.deathmessage.damage.MobAbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
+import net.revive.framework.event.event
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -23,7 +24,7 @@ import java.util.*
 @Listeners
 object ArrowDamageListener : Listener {
     @EventHandler
-    fun onEntityShootBow(event: EntityShootBowEvent) {
+    fun onEntityShootBow(event: EntityShootBowEvent) = event(event.entity) {
         if (event.entity is Player) {
             event.projectile.setMetadata(
                 "ShotFromDistance",
@@ -33,7 +34,7 @@ object ArrowDamageListener : Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) {
+    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
         if (event.cause !is EntityDamageByEntityEvent) return
         
         val damageByEntityEvent = event.cause

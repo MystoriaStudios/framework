@@ -5,6 +5,7 @@ import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.event.event
 import org.apache.commons.lang3.text.WordUtils
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -18,17 +19,17 @@ import java.util.*
 @Listeners
 object PlayerDamageListener : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) {
-        if (event.cause !is EntityDamageByEntityEvent) {
-            return
+    fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
+            if (event.cause !is EntityDamageByEntityEvent) {
+                return
+            }
+            val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
+            val damager = damageByEntityEvent.damager
+            if (damager is Player) {
+                val damaged: Player = event.player
+                event.trackerDamage = PvPDamage(damaged.uniqueId, event.damage, damager)
+            }
         }
-        val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
-        val damager = damageByEntityEvent.damager
-        if (damager is Player) {
-            val damaged: Player = event.player
-            event.trackerDamage = PvPDamage(damaged.uniqueId, event.damage, damager)
-        }
-    }
 
     class PvPDamage(damaged: UUID, damage: Double, damager: Player) : PlayerAbstractDamage(damaged, damage, damager.uniqueId) {
         private var itemString: String? = null

@@ -51,7 +51,8 @@ object V1_20_R1MenuHandler : INMSMenuHandler {
 
     }
 
-    private fun getWindowType(size: Int): MenuType<ChestMenu> {
+    private fun getWindowType(size: Int): MenuType<*> {
+        if (size == 5) return MenuType.HOPPER
         return when (size / 9) {
             1 -> MenuType.GENERIC_9x1;
             2 -> MenuType.GENERIC_9x2;
