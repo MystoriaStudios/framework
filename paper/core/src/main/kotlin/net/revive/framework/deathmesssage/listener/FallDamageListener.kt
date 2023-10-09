@@ -1,11 +1,14 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
+import net.revive.framework.utils.buildComponent
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -49,23 +52,21 @@ object FallDamageListener : Listener {
     }
 
     class FallDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
-        override fun getDeathMessage(player: UUID): String {
-            return (wrapName(
+        override fun getDeathMessage(player: UUID): Component {
+            return wrapName(
                 this.damaged,
                 player
-            ) + ChatColor.YELLOW) + " hit the ground too hard."
+            ).append(buildComponent(" hit the ground too hard.", Tailwind.AMBER_400))
         }
     }
 
     class FallDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " hit the ground too hard thanks to " + wrapName(
-                this.damager,
-                player
-            ) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text(" hit the ground too hard thanks to ", Tailwind.AMBER_400)
+                append(wrapName(damager, player))
+                text(".", Tailwind.AMBER_400)
+            }
         }
     }
 }

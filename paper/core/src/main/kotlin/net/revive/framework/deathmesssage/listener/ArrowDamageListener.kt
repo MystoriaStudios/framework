@@ -1,12 +1,15 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.MobAbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
 import net.revive.framework.event.event
+import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -68,31 +71,35 @@ object ArrowDamageListener : Listener {
     }
 
     class ArrowDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
-        override fun getDeathMessage(player: UUID): String {
-            return (wrapName(this.damaged, player) + ChatColor.YELLOW) + " was shot."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text(" was shot.", Tailwind.AMBER_400)
+            }
         }
     }
 
     class ArrowDamageByPlayer(damaged: UUID, damage: Double, damager: UUID, private val distance: Double) :
         PlayerAbstractDamage(damaged, damage, damager) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " was shot by " + wrapName(
-                this.damager,
-                player
-            ) + ChatColor.YELLOW) + " from " + ChatColor.BLUE + distance.toInt() + " blocks" + ChatColor.YELLOW + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text(" was shot by ", Tailwind.AMBER_400)
+                append(wrapName(damager,  player))
+                text(" from ", Tailwind.AMBER_400)
+                text("${distance.toInt()} blocks", Tailwind.TEAL_300)
+                text(".", Tailwind.AMBER_400)
+            }
         }
     }
 
     class ArrowDamageByMob(damaged: UUID, damage: Double, damager: Entity?) :
         MobAbstractDamage(damaged, damage, damager!!.type) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " was shot by a " + ChatColor.RED + EntityUtils.getName(this.mobType) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text(" was shot by a ", Tailwind.AMBER_400)
+                text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
+                text(".", Tailwind.AMBER_400)
+            }
+
         }
     }
 }

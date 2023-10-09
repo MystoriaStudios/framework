@@ -1,10 +1,13 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.utils.buildComponent
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -45,20 +48,24 @@ object FireDamageListener : Listener {
         }
 
     class BurnDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
-        override fun getDeathMessage(player: UUID): String {
-            return (wrapName(this.damaged, player) + ChatColor.YELLOW) + " burned to death."
+        override fun getDeathMessage(player: UUID): Component {
+            return wrapName(this.damaged, player).append(
+                buildComponent {
+                    this.text(" burned to death.") {
+                        it.color(Tailwind.AMBER_400)
+                    }
+                }
+            )
         }
     }
 
     class BurnDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " burned to death thanks to " + wrapName(
-                this.damager,
-                player
-            ) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return wrapName(this.damaged, player).append(buildComponent {
+                text(" burned to death thanks to ") {
+                    it.color(Tailwind.AMBER_400)
+                }
+            }).append(wrapName(this.damager, player)).append(buildComponent(".", Tailwind.AMBER_400))
         }
     }
 }

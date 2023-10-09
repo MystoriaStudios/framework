@@ -1,11 +1,14 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
+import net.revive.framework.utils.buildComponent
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -48,20 +51,18 @@ object VoidDamageListener : Listener {
         }
 
     class VoidDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
-        override fun getDeathMessage(player: UUID): String {
-            return (wrapName(this.damaged, player) + ChatColor.YELLOW) + " fell into the void."
+        override fun getDeathMessage(player: UUID): Component {
+            return wrapName(this.damaged, player).append(buildComponent(" fell into the void.", Tailwind.AMBER_400))
         }
     }
 
     class VoidDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " fell into the void thanks to " + wrapName(
-                this.damager,
-                player
-            ) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                this.text(" fell into the void thanks to ", Tailwind.AMBER_400)
+                this.append(wrapName(damager))
+                this.text(".", Tailwind.AMBER_400)
+            }
         }
     }
 }

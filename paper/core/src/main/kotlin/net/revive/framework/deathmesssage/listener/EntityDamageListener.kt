@@ -1,10 +1,13 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.damage.MobAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
 import net.revive.framework.event.event
+import net.revive.framework.utils.buildComponent
 import org.bukkit.ChatColor
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
@@ -29,11 +32,12 @@ object EntityDamageListener : Listener {
         }
 
     class EntityDamage(damaged: UUID, damage: Double, entity: Entity) : MobAbstractDamage(damaged, damage, entity.type) {
-        override fun getDeathMessage(player: UUID): String {
-            return ((wrapName(
-                this.damaged,
-                player
-            ) + ChatColor.YELLOW) + " was slain by a " + ChatColor.RED + EntityUtils.getName(this.mobType) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text(" was slain by a ", Tailwind.AMBER_400)
+                text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
+                text(".", Tailwind.AMBER_400)
+            }
         }
     }
 }

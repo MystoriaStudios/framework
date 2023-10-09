@@ -1,10 +1,13 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.utils.buildComponent
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -57,21 +60,21 @@ object GeneralDamageListener : Listener {
         }
 
     class GeneralDamage(damaged: UUID, damage: Double, private val message: String) : AbstractDamage(damaged, damage) {
-        override fun getDeathMessage(player: UUID): String {
-            return wrapName(this.damaged, player) + " " + ChatColor.YELLOW + message + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text("$message.", Tailwind.AMBER_400)
+            }
         }
     }
 
     class GeneralDamageByPlayer(damaged: UUID, damage: Double, damager: UUID, private val message: String) :
         PlayerAbstractDamage(damaged, damage, damager) {
-        override fun getDeathMessage(player: UUID): String {
-            return (wrapName(
-                this.damaged,
-                player
-            ) + " " + ChatColor.YELLOW + message + " while fighting " + wrapName(
-                this.damager,
-                player
-            ) + ChatColor.YELLOW) + "."
+        override fun getDeathMessage(player: UUID): Component {
+            return buildComponent(wrapName(damaged, player)) {
+                text("$message whilst fighting", Tailwind.AMBER_400)
+                append(wrapName(damager, player))
+                text(".", Tailwind.AMBER_400)
+            }
         }
     }
 }

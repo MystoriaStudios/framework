@@ -1,4 +1,4 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
@@ -39,14 +39,14 @@ class DeathListener : Listener {
         }
 
         DeathMessageService.clearDamage(event.entity)
-        event.deathMessage = null
+        event.deathMessage(null)
         val configuration = DeathMessageService.configuration
         val diedUuid = event.entity.uniqueId
         val killerUuid = if (event.entity.killer == null) null else event.entity.killer!!.uniqueId
         for (player in Bukkit.getServer().onlinePlayers) {
             val showDeathMessage: Boolean = configuration.shouldShowDeathMessage(player.uniqueId, diedUuid, killerUuid)
             if (showDeathMessage) {
-                val deathMessage: String = deathCause.getDeathMessage(player.uniqueId)
+                val deathMessage = deathCause.getDeathMessage(player.uniqueId)
                 player.sendMessage(deathMessage)
             }
         }

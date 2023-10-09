@@ -1,4 +1,4 @@
-package net.revive.framework.deathmessage.listener
+package net.revive.framework.deathmesssage.listener
 
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.deathmessage.DeathMessageService
