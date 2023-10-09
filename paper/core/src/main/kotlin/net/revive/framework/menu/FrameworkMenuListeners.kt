@@ -21,11 +21,8 @@ import org.bukkit.event.inventory.InventoryDragEvent
 @Listeners
 object FrameworkMenuListeners : Listener {
 
-    @Inject
-    lateinit var menuHandler: IMenuHandler
-
-    @Inject
-    lateinit var menuService: MenuService
+    @Inject lateinit var menuHandler: IMenuHandler
+    @Inject lateinit var menuService: MenuService
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {

@@ -40,7 +40,7 @@ object ArrowDamageListener : Listener {
     fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
         if (event.cause !is EntityDamageByEntityEvent) return
         
-        val damageByEntityEvent = event.cause
+        val damageByEntityEvent = event.cause as  EntityDamageByEntityEvent
         if (damageByEntityEvent.damager !is Arrow) return
         
         val arrow = damageByEntityEvent.damager as Arrow

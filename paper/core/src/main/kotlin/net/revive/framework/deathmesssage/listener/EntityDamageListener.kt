@@ -24,7 +24,7 @@ object EntityDamageListener : Listener {
     fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
             if (event.cause !is EntityDamageByEntityEvent) return
 
-            val damageByEntityEvent = event.cause
+            val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
             val damager = damageByEntityEvent.damager
             if (damager is LivingEntity && damager !is Player) {
                 event.trackerDamage = EntityDamage(event.player.uniqueId, event.damage, damager)
