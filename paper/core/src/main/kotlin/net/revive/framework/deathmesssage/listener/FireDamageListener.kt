@@ -49,23 +49,19 @@ object FireDamageListener : Listener {
 
     class BurnDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
-            return wrapName(this.damaged, player).append(
-                buildComponent {
-                    this.text(" burned to death.") {
-                        it.color(Tailwind.AMBER_400)
-                    }
-                }
-            )
+            return buildComponent(wrapName(this.damaged, player)) {
+                this.text(" burned to death.", Tailwind.AMBER_400)
+            }
         }
     }
 
     class BurnDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
-            return wrapName(this.damaged, player).append(buildComponent {
-                text(" burned to death thanks to ") {
-                    it.color(Tailwind.AMBER_400)
-                }
-            }).append(wrapName(this.damager, player)).append(buildComponent(".", Tailwind.AMBER_400))
+            return buildComponent(wrapName(damaged, player)) {
+                text(" burned to death thanks to ", Tailwind.AMBER_400)
+                append(wrapName(damager, player))
+                text(".", Tailwind.AMBER_400)
+            }
         }
     }
 }
