@@ -1,9 +1,6 @@
 package net.revive.framework.visibility
 
 import net.revive.framework.visibility.override.IOverrideHandler
-import net.revive.framework.visibility.override.OverrideResult
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 /**

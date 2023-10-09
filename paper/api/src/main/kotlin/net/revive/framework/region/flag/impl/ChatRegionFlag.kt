@@ -6,7 +6,6 @@ import net.revive.framework.annotation.region.RegionFlag
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.region.flag.IRegionFlag
 import net.revive.framework.region.getAppliedRegions
-import org.bukkit.event.player.AsyncPlayerChatEvent
 
 @RegionFlag
 object ChatRegionFlag : IRegionFlag {

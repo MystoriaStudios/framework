@@ -1,7 +1,5 @@
 package net.revive.framework.menu
 
-import net.revive.framework.Framework
-import net.revive.framework.PaperFrameworkPlugin
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.nms.menu.INMSMenuHandler

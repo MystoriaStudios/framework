@@ -6,11 +6,8 @@ import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import net.revive.framework.Framework
 import net.revive.framework.annotation.command.AutoRegister
-import net.revive.framework.config.SecurityConfig
 import net.revive.framework.constants.Tailwind
-import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.annotation.Named
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector

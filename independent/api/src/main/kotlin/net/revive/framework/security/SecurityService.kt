@@ -1,7 +1,5 @@
 package net.revive.framework.security
 
-import net.revive.framework.Framework
-
 object SecurityService {
 
     fun configure(

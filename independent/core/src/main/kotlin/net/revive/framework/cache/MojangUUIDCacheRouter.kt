@@ -2,7 +2,6 @@ package net.revive.framework.cache
 
 import express.ExpressRouter
 import express.utils.Status
-import net.revive.framework.Framework
 import net.revive.framework.cache.impl.distribution.DistributedRedisUUIDCache
 
 object MojangUUIDCacheRouter : ExpressRouter() {

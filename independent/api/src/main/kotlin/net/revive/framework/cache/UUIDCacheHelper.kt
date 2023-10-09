@@ -1,10 +1,9 @@
 package net.revive.framework.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import net.revive.framework.Framework
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object UUIDCacheHelper {

@@ -4,7 +4,6 @@ import co.aikar.commands.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.format.TextColor
-import net.revive.framework.Framework
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.plugin.ExtendedKotlinPlugin
 import org.bukkit.Bukkit

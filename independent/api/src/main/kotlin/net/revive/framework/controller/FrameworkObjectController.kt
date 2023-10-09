@@ -1,7 +1,6 @@
 package net.revive.framework.controller
 
 import jdk.jfr.Timestamp
-import net.revive.framework.Framework
 import net.revive.framework.debug
 import net.revive.framework.storage.FrameworkStorageLayer
 import net.revive.framework.storage.impl.CachedFrameworkStorageLayer

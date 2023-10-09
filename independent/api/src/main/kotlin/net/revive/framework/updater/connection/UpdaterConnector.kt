@@ -4,7 +4,6 @@ import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import kong.unirest.GetRequest
 import kong.unirest.Unirest
-import net.revive.framework.Framework
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service

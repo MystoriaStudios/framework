@@ -6,7 +6,6 @@ import me.lucko.helper.plugin.ap.Plugin
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.config.load
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.menu.FrameworkMenuHandler
@@ -21,7 +20,6 @@ import net.revive.framework.updater.connection.UpdaterConnector
 import net.revive.framework.utils.Tasks
 import net.revive.framework.visibility.FrameworkVisiblityHandler
 import net.revive.framework.visibility.IVisibilityHandler
-import org.bukkit.Bukkit
 import kotlin.reflect.KClass
 
 @Plugin(

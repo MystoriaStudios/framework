@@ -1,10 +1,9 @@
 package net.revive.framework.module
 
-import net.revive.framework.annotation.custom.CustomAnnotationProcessors
 import express.ExpressRouter
-import net.revive.framework.Framework
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
+import net.revive.framework.annotation.custom.CustomAnnotationProcessors
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions

@@ -1,6 +1,5 @@
 package net.revive.framework.updater
 
-import net.revive.framework.Framework
 import net.revive.framework.updater.authentication.UpdaterAuthenticationService
 import net.revive.framework.updater.discovery.UpdaterDiscoveryService
 import java.io.File

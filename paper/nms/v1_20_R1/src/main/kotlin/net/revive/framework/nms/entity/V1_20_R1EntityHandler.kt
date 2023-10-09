@@ -1,6 +1,5 @@
 package net.revive.framework.nms.entity
 
-import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.protocol.Packet

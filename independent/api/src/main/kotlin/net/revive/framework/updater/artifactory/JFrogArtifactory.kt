@@ -1,6 +1,5 @@
 package net.revive.framework.updater.artifactory
 
-import net.revive.framework.Framework
 import net.revive.framework.updater.artifactory.artifact.ArtifactMetadata
 import net.revive.framework.updater.artifactory.artifact.component.ArtifactComponentMetadata
 import net.revive.framework.updater.connection.UpdaterConnector

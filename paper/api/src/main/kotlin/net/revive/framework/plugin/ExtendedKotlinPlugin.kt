@@ -4,7 +4,6 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.revive.framework.Framework
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.annotation.command.AutoRegister
 import net.revive.framework.annotation.command.ManualRegister

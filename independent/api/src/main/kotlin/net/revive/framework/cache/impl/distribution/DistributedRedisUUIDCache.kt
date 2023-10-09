@@ -1,16 +1,10 @@
 package net.revive.framework.cache.impl.distribution
 
-import io.lettuce.core.ExpireArgs
-import net.revive.framework.Framework
 import net.revive.framework.cache.IUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCacheHelper
-import net.revive.framework.connection.redis.impl.BasicFrameworkRedisConnection
-import net.revive.framework.flavor.annotation.Inject
-import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
-import kotlin.math.exp
 
 object DistributedRedisUUIDCache : IUUIDCacheTranslator
 {

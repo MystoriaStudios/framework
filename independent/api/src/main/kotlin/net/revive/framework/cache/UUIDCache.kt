@@ -1,6 +1,5 @@
 package net.revive.framework.cache
 
-import net.revive.framework.Framework
 import net.revive.framework.cache.impl.ILocalUUIDCacheTranslator
 import net.revive.framework.cache.impl.distribution.DistributedRedisUUIDCache
 import net.revive.framework.flavor.annotation.Inject

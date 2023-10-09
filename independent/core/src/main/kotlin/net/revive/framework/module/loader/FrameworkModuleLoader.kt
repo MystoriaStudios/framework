@@ -1,7 +1,6 @@
 package net.revive.framework.module.loader
 
 import express.ExpressRouter
-import net.revive.framework.Framework
 import net.revive.framework.FrameworkApp
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.module.FrameworkModule

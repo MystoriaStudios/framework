@@ -7,7 +7,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.revive.framework.Framework
 import net.revive.framework.annotation.command.AutoRegister
 import net.revive.framework.config.SecurityConfig
 import net.revive.framework.constants.Deployment

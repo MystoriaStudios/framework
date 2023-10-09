@@ -1,11 +1,10 @@
- import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
- import org.jetbrains.dokka.DokkaConfiguration
- import org.jetbrains.dokka.gradle.DokkaTaskPartial
- import org.jetbrains.gradle.ext.settings
- import java.net.URI
- import org.jetbrains.gradle.ext.runConfigurations
- import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
- import org.jetbrains.gradle.ext.Gradle
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.gradle.ext.Gradle
+import org.jetbrains.gradle.ext.runConfigurations
+import org.jetbrains.gradle.ext.settings
+import java.net.URI
 
 plugins {
     id("maven-publish")

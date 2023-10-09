@@ -1,6 +1,5 @@
 package net.revive.framework.storage.impl
 
-import net.revive.framework.Framework
 import net.revive.framework.connection.redis.AbstractFrameworkRedisConnection
 import net.revive.framework.controller.FrameworkObjectController
 import net.revive.framework.storage.FrameworkStorageLayer

@@ -3,7 +3,6 @@ package net.revive.framework.storage.impl
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
-import net.revive.framework.Framework
 import net.revive.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.revive.framework.controller.FrameworkObjectController
 import net.revive.framework.storage.FrameworkStorageLayer

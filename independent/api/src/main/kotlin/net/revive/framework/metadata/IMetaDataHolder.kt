@@ -1,7 +1,5 @@
 package net.revive.framework.metadata
 
-import net.revive.framework.Framework
-
 interface IMetaDataHolder {
 
     val metaData: MutableMap<String, String>

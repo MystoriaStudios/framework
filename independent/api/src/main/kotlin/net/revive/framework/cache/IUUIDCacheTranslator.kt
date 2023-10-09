@@ -1,6 +1,6 @@
 package net.revive.framework.cache
 
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.CompletionStage
 
 interface IUUIDCacheTranslator

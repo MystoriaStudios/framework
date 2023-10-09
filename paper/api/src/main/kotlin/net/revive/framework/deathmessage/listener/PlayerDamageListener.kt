@@ -2,11 +2,9 @@ package net.revive.framework.deathmessage.listener
 
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.deathmessage.DeathMessageService
-import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
-import org.apache.commons.lang3.text.WordUtils
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
