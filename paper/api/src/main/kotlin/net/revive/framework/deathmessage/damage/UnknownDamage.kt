@@ -15,6 +15,6 @@ class UnknownDamage(
     damage
 ) {
     override fun getDeathMessage(player: UUID) = buildComponent(wrapName(damaged, player)) {
-        text(" died.", Tailwind.AMBER_400)
+        text(" died.", Tailwind.ORANGE_400)
     }
 }

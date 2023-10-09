@@ -17,30 +17,26 @@ class ComponentBuilder(var component: Component = Component.empty()) {
 
     fun build(): Component = component
 
-    fun append(child: Component) : ComponentBuilder {
-        component.append(child)
-        return this
+    fun append(child: Component) = apply {
+        component = component.append(child)
     }
 
-    fun text(string: String, lambda: (TextComponentBuilder) -> Unit) : ComponentBuilder {
-        val builder = TextComponentBuilder(string, this)
+    fun text(string: String, lambda: (TextComponentBuilder) -> Unit) = apply {
+        val builder = TextComponentBuilder(string)
         lambda.invoke(builder)
         append(builder.component)
-        return this
     }
 
-    fun text(string: String, color: String) : ComponentBuilder {
+    fun text(string: String, color: String) = apply {
         append(Component.text(string).color(TextColor.fromHexString(color)))
-        return this
     }
 }
 
-class TextComponentBuilder(string: String, val builder: ComponentBuilder) {
+class TextComponentBuilder(string: String) {
 
     val component: TextComponent = Component.text(string)
 
-    fun color(hex: String) : TextComponentBuilder {
+    fun color(hex: String) = apply {
         component.color(TextColor.fromHexString(hex))
-        return this
     }
 }

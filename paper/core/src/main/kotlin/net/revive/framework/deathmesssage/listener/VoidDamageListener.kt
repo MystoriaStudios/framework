@@ -53,7 +53,7 @@ object VoidDamageListener : Listener {
     class VoidDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(this.damaged, player)) {
-                text(" fell into the void.", Tailwind.AMBER_400)
+                text(" fell into the void.", Tailwind.ORANGE_400)
             }
         }
     }
@@ -61,9 +61,9 @@ object VoidDamageListener : Listener {
     class VoidDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                this.text(" fell into the void thanks to ", Tailwind.AMBER_400)
+                this.text(" fell into the void thanks to ", Tailwind.ORANGE_400)
                 this.append(wrapName(damager))
-                this.text(".", Tailwind.AMBER_400)
+                this.text(".", Tailwind.ORANGE_400)
             }
         }
     }

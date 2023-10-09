@@ -48,13 +48,13 @@ object PlayerDamageListener : Listener {
 
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was slain by ", Tailwind.AMBER_400)
+                text(" was slain by ", Tailwind.ORANGE_400)
                 append(wrapName(damager, player))
                 if (!DeathMessageService.configuration.hideWeapons()) {
-                    text(" using ", Tailwind.AMBER_400)
+                    text(" using ", Tailwind.ORANGE_400)
                     text(itemString!!.trim { it <= ' ' }, Tailwind.RED_400)
                 }
-                text(".", Tailwind.AMBER_400)
+                text(".", Tailwind.ORANGE_400)
             }
         }
     }

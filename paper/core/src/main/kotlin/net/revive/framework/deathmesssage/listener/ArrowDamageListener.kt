@@ -73,7 +73,7 @@ object ArrowDamageListener : Listener {
     class ArrowDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot.", Tailwind.AMBER_400)
+                text(" was shot.", Tailwind.ORANGE_400)
             }
         }
     }
@@ -82,11 +82,11 @@ object ArrowDamageListener : Listener {
         PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot by ", Tailwind.AMBER_400)
+                text(" was shot by ", Tailwind.ORANGE_400)
                 append(wrapName(damager,  player))
-                text(" from ", Tailwind.AMBER_400)
+                text(" from ", Tailwind.ORANGE_400)
                 text("${distance.toInt()} blocks", Tailwind.TEAL_300)
-                text(".", Tailwind.AMBER_400)
+                text(".", Tailwind.ORANGE_400)
             }
         }
     }
@@ -95,9 +95,9 @@ object ArrowDamageListener : Listener {
         MobAbstractDamage(damaged, damage, damager!!.type) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot by a ", Tailwind.AMBER_400)
+                text(" was shot by a ", Tailwind.ORANGE_400)
                 text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
-                text(".", Tailwind.AMBER_400)
+                text(".", Tailwind.ORANGE_400)
             }
 
         }

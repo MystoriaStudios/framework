@@ -42,7 +42,7 @@ class FrameworkCommandManager(
                         )
                     }
 
-                    Bukkit.getPlayer(sender.uniqueId)?.sendMessage(message)
+                    (Bukkit.getPlayer(sender.uniqueId) ?: if (!sender.isPlayer) Bukkit.getConsoleSender() else null)?.sendMessage(message)
                 }
             }
 
