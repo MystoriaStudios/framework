@@ -16,6 +16,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.2")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
+    compileOnly("net.luckperms:api:5.4")
     compileOnly("net.kyori:adventure-platform-bukkit:4.1.0")
 
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
