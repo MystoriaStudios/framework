@@ -3,6 +3,7 @@ package net.revive.framework.utils
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 
 inline fun buildComponent(component: Component, builder: ComponentBuilder.() -> Unit): Component = ComponentBuilder(component = component).apply(builder).build()
 
@@ -34,9 +35,13 @@ class ComponentBuilder(var component: Component = Component.empty()) {
 
 class TextComponentBuilder(string: String) {
 
-    val component: TextComponent = Component.text(string)
+    var component: TextComponent = Component.text(string)
 
     fun color(hex: String) = apply {
-        component.color(TextColor.fromHexString(hex))
+        component = component.color(TextColor.fromHexString(hex))
+    }
+
+    fun decorate(decoration: TextDecoration) = apply {
+        component = component.decorate(decoration)
     }
 }

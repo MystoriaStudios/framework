@@ -1,7 +1,10 @@
 package net.revive.framework.command
 
+import co.aikar.commands.CommandHelp
 import co.aikar.commands.annotation.CommandAlias
 import co.aikar.commands.annotation.CommandPermission
+import co.aikar.commands.annotation.Default
+import co.aikar.commands.annotation.HelpCommand
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
@@ -16,8 +19,10 @@ import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.menu.test.TestMenu
 import net.revive.framework.scoreboard.IScoreboard
 import net.revive.framework.scoreboard.ScoreboardService
+import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
 @AutoRegister
@@ -28,6 +33,22 @@ object FrameworkTestCommand : FrameworkCommand() {
     @Inject lateinit var scoreboardService: ScoreboardService
     @Inject lateinit var menuHandler: IMenuHandler
     @Inject lateinit var config: SecurityConfig
+
+    @HelpCommand @Default fun help(help: CommandHelp) = help.showHelp()
+
+    @Subcommand("test-component")
+    fun testComponent(sender: CommandSender) {
+        sender.sendMessage(buildComponent {
+            text("test ", Tailwind.RED_400)
+            text("this is a test of the component builder frfr", Tailwind.LIME_600)
+            text("you are ", Tailwind.GRAY_100)
+            if (sender is Player) {
+                append(sender.displayName())
+            } else {
+                text("CONSOLE", Tailwind.ROSE_900)
+            }
+        })
+    }
 
     @Subcommand("config-security")
     fun config(sender: CommandSender) {

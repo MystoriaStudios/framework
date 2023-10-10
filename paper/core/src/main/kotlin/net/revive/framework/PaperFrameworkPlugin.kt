@@ -5,9 +5,15 @@ import me.lucko.helper.Events
 import me.lucko.helper.internal.HelperImplementationPlugin
 import me.lucko.helper.plugin.ap.Plugin
 import me.lucko.helper.plugin.ap.PluginDependency
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import net.luckperms.api.actionlog.Action
+import net.revive.framework.adapters.ComponentAdapter
+import net.revive.framework.adapters.ItemStackAdapter
+import net.revive.framework.adapters.LocationAdapter
+import net.revive.framework.adapters.WorldAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
@@ -20,6 +26,9 @@ import net.revive.framework.nms.annotation.NMSHandler
 import net.revive.framework.permission.impl.LuckPermsPermissionProvider
 import net.revive.framework.plugin.ExtendedKotlinPlugin
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
+import net.revive.framework.scoreboard.FrameworkScoreboardProvider
+import net.revive.framework.scoreboard.ScoreboardService
+import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.updater.UpdaterPaperPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
@@ -27,6 +36,9 @@ import net.revive.framework.utils.Tasks
 import net.revive.framework.visibility.FrameworkVisiblityHandler
 import net.revive.framework.visibility.IVisibilityHandler
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.World
+import org.bukkit.inventory.ItemStack
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -57,6 +69,17 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         saveDefaultConfig()
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
+
+            if (it.serializer is GsonSerializer) {
+                (it.serializer as GsonSerializer).useGsonBuilderThenRebuild { gson ->
+                    gson.registerTypeAdapter(Component::class.java, ComponentAdapter)
+                    gson.registerTypeAdapter(TextComponent::class.java, ComponentAdapter)
+                    gson.registerTypeAdapter(ItemStack::class.java, ItemStackAdapter)
+                    gson.registerTypeAdapter(Location::class.java, LocationAdapter)
+                    gson.registerTypeAdapter(World::class.java, WorldAdapter)
+                    it.log("Framework", "hehehhe sso so so right so, i just did the gson things hjehehe")
+                }
+            }
         }
     }
 
@@ -74,6 +97,8 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         // bind the menu to the impleemnbtation here O,
 
         Tasks.plugin = this
+
+        ScoreboardService.updatePrimaryProvider(FrameworkScoreboardProvider)
 
         // uses the event from the plugin so we can just do extra logic as required :D
         Events.subscribe(KotlinPluginEnableEvent::class.java).handler { event ->

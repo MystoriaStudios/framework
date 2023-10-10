@@ -5,6 +5,7 @@ import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.annotation.Scoreboard
 import net.revive.framework.annotation.command.AutoRegister
 import net.revive.framework.annotation.command.ManualRegister
 import net.revive.framework.annotation.container.ContainerDisable
@@ -25,6 +26,8 @@ import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
+import net.revive.framework.scoreboard.IScoreboard
+import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
 import net.revive.framework.serializer.impl.GsonSerializer
@@ -86,7 +89,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             return
         }
 
-        this.flavor = Flavor.create(this::class, FlavorOptions(logger))
+        this.flavor = Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
 
         if (this::class.hasAnnotation<UsesRetrofit>()) {
             retrofit = Retrofit.Builder()
@@ -133,6 +136,8 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .getTypesAnnotatedWith<JsonConfig>()
             .forEach {
                 kotlin.runCatching {
+                    logger.log(Level.INFO, "Loading config ${it.name}")
+
                     flavor().binders.add(
                         FlavorBinder(it::class) to try {
                             load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
@@ -210,6 +215,17 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 this.flavor.inject(it)
 
                 this.server.pluginManager.registerEvents(it as Listener, this)
+            }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<Scoreboard>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }.filterIsInstance<IScoreboard>()
+            .forEach {
+                this.flavor.inject(it)
+
+                ScoreboardService.updatePrimaryProvider(it)
             }
 
         if (this::class.java.getAnnotation(LazyStartup::class.java) == null) Tasks.async {
