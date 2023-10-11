@@ -95,7 +95,7 @@ object FrameworkMenuHandler : IMenuHandler {
         menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
-            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
+            player.openInventory(inventory)
             updateMenu(player, menu)
 
             player.updateInventory()
@@ -105,8 +105,7 @@ object FrameworkMenuHandler : IMenuHandler {
 
         Tasks.delayed(1L)
         {
-
-            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
+            player.openInventory(inventory)
             updateMenu(player, menu)
 
             player.updateInventory()
