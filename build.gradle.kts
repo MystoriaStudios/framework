@@ -72,6 +72,8 @@ allprojects {
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
 
+        testImplementation(kotlin("test"))
+
         // Generate documentation
         dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
     }
