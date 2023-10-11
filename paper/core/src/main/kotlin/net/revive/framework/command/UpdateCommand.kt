@@ -14,6 +14,7 @@ import net.revive.framework.updater.connection.UpdaterConnector
 import net.revive.framework.utils.PaginatedResult
 import net.revive.framework.utils.buildComponent
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
 @AutoRegister
 @CommandAlias("update")
