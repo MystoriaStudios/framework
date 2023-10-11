@@ -1,11 +1,7 @@
 package net.revive.framework.command
 
 import co.aikar.commands.CommandHelp
-import co.aikar.commands.annotation.CommandAlias
-import co.aikar.commands.annotation.CommandPermission
-import co.aikar.commands.annotation.Default
-import co.aikar.commands.annotation.HelpCommand
-import co.aikar.commands.annotation.Subcommand
+import co.aikar.commands.annotation.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
@@ -22,7 +18,6 @@ import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
 @AutoRegister
@@ -30,11 +25,16 @@ import org.bukkit.entity.Player
 @CommandPermission("framework.command.admin")
 object FrameworkTestCommand : FrameworkCommand() {
 
-    @Inject lateinit var scoreboardService: ScoreboardService
-    @Inject lateinit var menuHandler: IMenuHandler
-    @Inject lateinit var config: SecurityConfig
+    @Inject
+    lateinit var scoreboardService: ScoreboardService
+    @Inject
+    lateinit var menuHandler: IMenuHandler
+    @Inject
+    lateinit var config: SecurityConfig
 
-    @HelpCommand @Default fun help(help: CommandHelp) = help.showHelp()
+    @HelpCommand
+    @Default
+    fun help(help: CommandHelp) = help.showHelp()
 
     @Subcommand("test-component")
     fun testComponent(sender: CommandSender) {
@@ -59,6 +59,7 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Subcommand("test-sentry")
     fun testSentry(sender: CommandSender) {
+        sender.sendMessage(buildComponent("testing sentry you will get error dw.", Tailwind.GREEN_400))
         throw RuntimeException("This is a test of the auto sentry system.")
     }
 
@@ -67,12 +68,13 @@ object FrameworkTestCommand : FrameworkCommand() {
         if (scoreboardService.primaryScoreboard != null) throw RuntimeException("There is already a primary scoreboard provider.")
 
         scoreboardService.updatePrimaryProvider(object : IScoreboard {
-            override fun getTitle(player: Player) : Component {
+            override fun getTitle(player: Player): Component {
                 return Component
                     .text(Deployment.SERVER_NAME)
-                    .style(Style
-                        .style(TextDecoration.BOLD)
-                        .color(TextColor.fromHexString(Tailwind.ORANGE_400))
+                    .style(
+                        Style
+                            .style(TextDecoration.BOLD)
+                            .color(TextColor.fromHexString(Tailwind.ORANGE_400))
                     )
             }
 

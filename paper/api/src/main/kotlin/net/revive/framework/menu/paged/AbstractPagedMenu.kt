@@ -7,6 +7,7 @@ import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.distribution.MenuDistributionRow
 import org.bukkit.entity.Player
 import kotlin.math.ceil
+
 /**
  * An abstract class representing a paged menu that extends the IMenu interface.
  */
@@ -47,9 +48,11 @@ abstract class AbstractPagedMenu : IMenu {
             if (this != null) {
                 val pages = getPages(player)
 
-                return this.append(Component.text(
-                    if (pages > 1) " ($page/$pages)" else ""
-                ))
+                return this.append(
+                    Component.text(
+                        if (pages > 1) " ($page/$pages)" else ""
+                    )
+                )
             } else {
                 return getUnPaginatedTitle(player)
             }

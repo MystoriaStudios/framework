@@ -4,7 +4,6 @@ import co.aikar.commands.ConditionFailedException
 import net.luckperms.api.LuckPerms
 import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.PaperPermissionProvider
-import org.bukkit.ChatColor
 import java.util.*
 
 class LuckPermsPermissionProvider(
@@ -30,7 +29,7 @@ class LuckPermsPermissionProvider(
                 PaperPermissionProvider.evaluate(uuid, test)
                 null
             } ?: return
-            throw ConditionFailedException("You require the ${group.displayName}${ChatColor.RED} group to do this.")
+            throw ConditionFailedException("You require the ${group.displayName}§c group to do this.")
         }
     }
 }

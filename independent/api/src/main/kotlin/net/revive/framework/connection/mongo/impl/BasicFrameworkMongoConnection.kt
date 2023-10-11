@@ -10,7 +10,7 @@ class BasicFrameworkMongoConnection(
     private val details: Details
 ) : AbstractFrameworkMongoConnection() {
     data class Details(
-        val uri: String = "mongodb://root:${URLEncoder.encode(System.getProperty("MONGODB_PASSWORD"))}@localhost:27017/admin",
+        val uri: String = "mongodb://root:${URLEncoder.encode(System.getProperty("MONGODB_PASSWORD"), "UTF-8")}@localhost:27017/admin",
         val database: String = "framework"
     ) {
         constructor(
@@ -26,8 +26,7 @@ class BasicFrameworkMongoConnection(
         ) : this("mongodb://$username:$password@$hostname:$port/admin")
     }
 
-    override fun getAppliedResource() : MongoDatabase
-    {
+    override fun getAppliedResource(): MongoDatabase {
         return try {
             getConnection().getDatabase(details.database)
         } catch (ignoRED: Exception) {
@@ -37,6 +36,11 @@ class BasicFrameworkMongoConnection(
         }
     }
 
-    override fun getConnection() = try { handle } catch (e: Exception) { createNewConnection() }
+    override fun getConnection() = try {
+        handle
+    } catch (e: Exception) {
+        createNewConnection()
+    }
+
     override fun createNewConnection() = MongoClient(MongoClientURI(details.uri))
 }

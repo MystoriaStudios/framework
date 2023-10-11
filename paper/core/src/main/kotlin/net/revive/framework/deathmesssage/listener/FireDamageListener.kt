@@ -8,7 +8,6 @@ import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.utils.buildComponent
-import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -50,17 +49,18 @@ object FireDamageListener : Listener {
     class BurnDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(this.damaged, player)) {
-                this.text(" burned to death.", Tailwind.ORANGE_400)
+                this.text(" burned to death.", Tailwind.GREEN_500)
             }
         }
     }
 
-    class BurnDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
+    class BurnDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) :
+        PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" burned to death thanks to ", Tailwind.ORANGE_400)
+                text(" burned to death thanks to ", Tailwind.GREEN_500)
                 append(wrapName(damager, player))
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
         }
     }

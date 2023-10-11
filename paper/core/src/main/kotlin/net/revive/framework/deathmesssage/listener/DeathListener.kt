@@ -1,6 +1,6 @@
 package net.revive.framework.deathmesssage.listener
 
-import net.revive.framework.Framework
+import net.revive.framework.annotation.Listeners
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
@@ -14,7 +14,9 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class DeathListener : Listener {
+@Listeners
+object DeathListener : Listener {
+
     @EventHandler(priority = EventPriority.LOWEST)
     fun onPlayerDeathEarly(event: PlayerDeathEvent) = event(event.entity) {
         val record: List<AbstractDamage> = DeathMessageService.getDamage(event.entity)
@@ -48,9 +50,6 @@ class DeathListener : Listener {
             val showDeathMessage: Boolean = configuration.shouldShowDeathMessage(player.uniqueId, diedUuid, killerUuid)
             if (showDeathMessage) {
                 val deathMessage = deathCause.getDeathMessage(player.uniqueId)
-                deathMessage.children().forEach {
-                    player.sendMessage(it)
-                }
                 player.sendMessage(deathMessage)
             }
         }

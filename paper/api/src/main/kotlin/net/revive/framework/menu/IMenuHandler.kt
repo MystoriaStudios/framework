@@ -1,4 +1,5 @@
 package net.revive.framework.menu
+
 import net.revive.framework.menu.button.IButton
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory

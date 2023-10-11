@@ -12,7 +12,10 @@ inline fun event(receiver: CommandSender = Bukkit.getConsoleSender(), lambda: ()
     try {
         lambda.invoke()
     } catch (failed: ConditionFailedException) {
-        receiver.sendMessage(Component.text(failed.message ?: failed.stackTraceToString()).color(TextColor.fromHexString(Tailwind.RED_400)))
+        receiver.sendMessage(
+            Component.text(failed.message ?: failed.stackTraceToString())
+                .color(TextColor.fromHexString(Tailwind.RED_400))
+        )
         if (receiver is ConsoleCommandSender) failed.printStackTrace()
     }
 }

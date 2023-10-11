@@ -21,8 +21,7 @@ class FrameworkObjectController<D : IStorable>(
     private var timestampField: Field? = null
     private var timestampThreshold = 2000L
 
-    fun preLoadResources()
-    {
+    fun preLoadResources() {
         net.revive.framework.Framework.use {
             localLayerCache[FrameworkStorageType.MONGO] = MongoFrameworkStorageLayer(
                 it.constructNewMongoConnection(), this, dataType
@@ -37,8 +36,7 @@ class FrameworkObjectController<D : IStorable>(
         localLayerCache[FrameworkStorageType.CACHE] = CachedFrameworkStorageLayer()
     }
 
-    fun localCache(): ConcurrentHashMap<UUID, D>
-    {
+    fun localCache(): ConcurrentHashMap<UUID, D> {
         return useLayerWithReturn<CachedFrameworkStorageLayer<D>, ConcurrentHashMap<UUID, D>>(
             FrameworkStorageType.CACHE
         ) {
@@ -48,8 +46,7 @@ class FrameworkObjectController<D : IStorable>(
 
     inline fun <reified T : FrameworkStorageLayer<*, D, *>, U> useLayerWithReturn(
         type: FrameworkStorageType, lambda: T.() -> U
-    ): U
-    {
+    ): U {
         type.validate()
 
         val layer = localLayerCache[type]
@@ -60,8 +57,7 @@ class FrameworkObjectController<D : IStorable>(
 
     inline fun <reified T : FrameworkStorageLayer<*, D, *>> useLayer(
         type: FrameworkStorageType, lambda: T.() -> Unit
-    )
-    {
+    ) {
         type.validate()
 
         localLayerCache[type]?.let {
@@ -72,8 +68,7 @@ class FrameworkObjectController<D : IStorable>(
     fun loadOptimalCopy(
         identifier: UUID,
         ifAbsent: () -> D
-    ): CompletableFuture<D>
-    {
+    ): CompletableFuture<D> {
         val debugFrom = "${identifier}-${dataType.simpleName}"
         val start = System.currentTimeMillis()
 
@@ -100,14 +95,12 @@ class FrameworkObjectController<D : IStorable>(
             if (
                 this.timestampField != null &&
                 fetched != null
-            )
-            {
+            ) {
                 val timestamp = this
                     .timestampField!!
                     .get(fetched)
 
-                if (timestamp != null)
-                {
+                if (timestamp != null) {
                     "Found timestamp from copy".debug(debugFrom)
 
                     val difference =
@@ -116,8 +109,7 @@ class FrameworkObjectController<D : IStorable>(
                     val exceedsThreshold =
                         difference >= this.timestampThreshold
 
-                    if (exceedsThreshold)
-                    {
+                    if (exceedsThreshold) {
                         "Timestamp exceeds threshold, retrieving from mongo".debug(debugFrom)
 
                         fetched = this.load(
@@ -131,8 +123,7 @@ class FrameworkObjectController<D : IStorable>(
             val data = if (
                 fetched == null &&
                 this.timestampField != null
-            )
-            {
+            ) {
                 "Attempting to retrieve from MONGO".debug(debugFrom)
 
                 this.load(
@@ -156,8 +147,7 @@ class FrameworkObjectController<D : IStorable>(
     fun save(
         data: D,
         type: FrameworkStorageType = FrameworkStorageType.ALL
-    ): CompletableFuture<Void>
-    {
+    ): CompletableFuture<Void> {
         var properType = type
 
         // updating the last-saved timestamp
@@ -171,8 +161,7 @@ class FrameworkObjectController<D : IStorable>(
 
         val layer = localLayerCache[properType]
 
-        return if (layer == null)
-        {
+        return if (layer == null) {
             val status = CompletableFuture
                 .runAsync {
                     localLayerCache.values.forEach { storageLayer ->
@@ -181,8 +170,7 @@ class FrameworkObjectController<D : IStorable>(
                 }
 
             status
-        } else
-        {
+        } else {
             layer.save(data)
         }
     }
@@ -190,8 +178,7 @@ class FrameworkObjectController<D : IStorable>(
     fun load(
         identifier: UUID,
         type: FrameworkStorageType
-    ): CompletableFuture<D?>
-    {
+    ): CompletableFuture<D?> {
         type.validate()
 
         val layer = localLayerCache[type]!!
@@ -201,8 +188,7 @@ class FrameworkObjectController<D : IStorable>(
     fun delete(
         identifier: UUID,
         type: FrameworkStorageType
-    ): CompletableFuture<Void>
-    {
+    ): CompletableFuture<Void> {
         type.validate()
 
         val layer = localLayerCache[type]!!
@@ -211,8 +197,7 @@ class FrameworkObjectController<D : IStorable>(
 
     fun loadAll(
         type: FrameworkStorageType
-    ): CompletableFuture<Map<UUID, D>>
-    {
+    ): CompletableFuture<Map<UUID, D>> {
         type.validate()
 
         val layer = localLayerCache[type]!!
@@ -222,8 +207,7 @@ class FrameworkObjectController<D : IStorable>(
     fun loadMultiple(
         type: FrameworkStorageType,
         vararg identifiers: UUID
-    ): CompletableFuture<Map<UUID, D?>>
-    {
+    ): CompletableFuture<Map<UUID, D?>> {
         type.validate()
 
         val layer = localLayerCache[type]!!
@@ -233,8 +217,7 @@ class FrameworkObjectController<D : IStorable>(
     fun saveMultiple(
         type: FrameworkStorageType,
         vararg objects: D
-    ): CompletableFuture<Void>
-    {
+    ): CompletableFuture<Void> {
         type.validate()
 
         val layer = localLayerCache[type]!!
@@ -244,8 +227,7 @@ class FrameworkObjectController<D : IStorable>(
     fun deleteMultiple(
         type: FrameworkStorageType,
         vararg identifiers: UUID
-    ): CompletableFuture<Void>
-    {
+    ): CompletableFuture<Void> {
         type.validate()
 
         val layer = localLayerCache[type]!!

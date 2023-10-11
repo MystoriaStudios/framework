@@ -22,7 +22,7 @@ object Tailwind {
     const val BLUE_700 = "#1D4ED8"
     const val BLUE_800 = "#1E40AF"
     const val BLUE_900 = "#1E3A8A"
-    
+
     const val CYAN_50 = "#ECFEFF"
     const val CYAN_100 = "#CFFAFE"
     const val CYAN_200 = "#A5F3FC"
@@ -176,7 +176,7 @@ object Tailwind {
     const val TEAL_700 = "#147D64"
     const val TEAL_800 = "#0C6B58"
     const val TEAL_900 = "#014D40"
-    
+
     const val VIOLET_50 = "#F5F3FF"
     const val VIOLET_100 = "#EDE9FE"
     const val VIOLET_200 = "#DDD6FE"

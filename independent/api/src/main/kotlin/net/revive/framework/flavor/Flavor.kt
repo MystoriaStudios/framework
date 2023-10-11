@@ -17,10 +17,8 @@ import kotlin.reflect.KClass
 class Flavor(
     val initializer: KClass<*>,
     val options: FlavorOptions
-)
-{
-    companion object
-    {
+) {
+    companion object {
         /**
          * Creates a new [Flavor] instance using [T]'s [KClass],
          * and the [options], if any are given.
@@ -28,8 +26,7 @@ class Flavor(
         @JvmStatic
         inline fun <reified T> create(
             options: FlavorOptions = FlavorOptions()
-        ): Flavor
-        {
+        ): Flavor {
             return Flavor(T::class, options)
         }
 
@@ -37,8 +34,7 @@ class Flavor(
         fun create(
             initializer: KClass<*>,
             options: FlavorOptions = FlavorOptions()
-        ): Flavor
-        {
+        ): Flavor {
             return Flavor(initializer, options)
         }
     }
@@ -53,8 +49,7 @@ class Flavor(
 
     inline fun <reified T : Annotation> listen(
         noinline lambda: (Method, Any) -> Unit
-    )
-    {
+    ) {
         scanners[T::class] = lambda
     }
 
@@ -62,8 +57,7 @@ class Flavor(
      * Inherit an arbitrary [FlavorBinderContainer]
      * and populate our binders with its ones.
      */
-    fun inherit(container: FlavorBinderContainer): Flavor
-    {
+    fun inherit(container: FlavorBinderContainer): Flavor {
         container.javaClass.methods
             .filter {
                 AnnotationMappings.matchesAny(AnnotationType.Extract, it.annotations)
@@ -93,8 +87,7 @@ class Flavor(
      * @throws RuntimeException if there is
      * no service matching type [T].
      */
-    inline fun <reified T> service(): T
-    {
+    inline fun <reified T> service(): T {
         val service = services[T::class]
             ?: throw RuntimeException("A non-service class was provided.")
 
@@ -104,16 +97,14 @@ class Flavor(
     /**
      * Creates a new [FlavorBinder] for type [T].
      */
-    inline fun <reified T : Any> bind(): FlavorBinder<T>
-    {
+    inline fun <reified T : Any> bind(): FlavorBinder<T> {
         val binder = FlavorBinder(T::class)
         binders.add(binder)
 
         return binder
     }
 
-    inline fun <reified A : Annotation> findSingletons(): List<Any>
-    {
+    inline fun <reified A : Annotation> findSingletons(): List<Any> {
         return reflections.getTypesAnnotatedWith<A>()
             .mapNotNull { it.objectInstance() }
             .filter {
@@ -124,8 +115,7 @@ class Flavor(
     /**
      * Creates & inject a new injected instance of [T].
      */
-    inline fun <reified T : Any> injected(): T
-    {
+    inline fun <reified T : Any> injected(): T {
         val boundClasses = this.binders.map { it.kClass.java }
 
         val constructor = T::class.java.constructors
@@ -168,8 +158,7 @@ class Flavor(
     /**
      * Injects fields into a pre-existing class, [any].
      */
-    fun inject(any: Any)
-    {
+    fun inject(any: Any) {
         scanAndInject(any::class, any)
     }
 
@@ -177,8 +166,7 @@ class Flavor(
      * Scans & injects any services and/or singletons (kt objects)
      * that contain fields annotated with [Inject].
      */
-    fun startup()
-    {
+    fun startup() {
         val classes = reflections
             .getTypesAnnotatedWith<Service>()
             .sortedByDescending {
@@ -186,15 +174,13 @@ class Flavor(
                     ?.priority ?: 1
             }
 
-        for (clazz in classes)
-        {
+        for (clazz in classes) {
             val ignoreAutoScan = clazz
                 .getAnnotation(
                     IgnoreAutoScan::class.java
                 )
 
-            if (ignoreAutoScan == null)
-            {
+            if (ignoreAutoScan == null) {
                 kotlin.runCatching {
                     scanAndInject(clazz.kotlin, clazz.objectInstance())
                 }.onFailure {
@@ -208,10 +194,8 @@ class Flavor(
      * Invokes the `close` method in all registered services. If a
      * service does not have a close method, the service will be skipped.
      */
-    fun close()
-    {
-        for (entry in services.entries)
-        {
+    fun close() {
+        for (entry in services.entries) {
             val close = entry.key.java.declaredMethods
                 .firstOrNull {
                     AnnotationMappings.matchesAny(AnnotationType.PreDestroy, it.annotations)
@@ -224,8 +208,7 @@ class Flavor(
                 close?.invoke(entry.value)
             }
 
-            if (milli != -1L)
-            {
+            if (milli != -1L) {
                 options.logger.info {
                     "[Services] Shutdown [${
                         service.name.ifEmpty {
@@ -233,8 +216,7 @@ class Flavor(
                         }
                     }] in ${milli}ms."
                 }
-            } else
-            {
+            } else {
                 options.logger.info {
                     "[Services] Failed to shutdown [${
                         service.name.ifEmpty {
@@ -253,15 +235,12 @@ class Flavor(
      * Any exception thrown within the lambda will be printed,
      * and `-1` will be returned.
      */
-    private fun tracked(lambda: () -> Unit): Long
-    {
+    private fun tracked(lambda: () -> Unit): Long {
         val start = System.currentTimeMillis()
 
-        try
-        {
+        try {
             lambda.invoke()
-        } catch (exception: Exception)
-        {
+        } catch (exception: Exception) {
             exception.printStackTrace()
             return -1
         }
@@ -269,26 +248,22 @@ class Flavor(
         return System.currentTimeMillis() - start
     }
 
-    fun findInstanceForInjection(type: Class<*>, annotations: Array<Annotation>): Any
-    {
+    fun findInstanceForInjection(type: Class<*>, annotations: Array<Annotation>): Any {
         // trying to find [FlavorBinder]s
         // of the field's type
         val bindersOfType = binders
             .filter { it.kClass.java == type }
             .toMutableList()
 
-        for (flavorBinder in bindersOfType)
-        {
-            for (annotation in annotations)
-            {
+        for (flavorBinder in bindersOfType) {
+            for (annotation in annotations) {
                 // making sure if there are any annotation
                 // checks, that the field passes the check
                 flavorBinder.annotationChecks[annotation::class]
                     ?.let {
                         val passesCheck = it.invoke(annotation)
 
-                        if (!passesCheck)
-                        {
+                        if (!passesCheck) {
                             bindersOfType.remove(flavorBinder)
                         }
                     }
@@ -296,7 +271,7 @@ class Flavor(
         }
 
         return bindersOfType.firstOrNull()?.instance
-            ?: type.kotlin.objectInstance ?: type.newInstance() ?: println(
+            ?: type.kotlin.objectInstance ?: type.getDeclaredConstructor().newInstance() ?: println(
                 "Did not find any binder for type ${type.simpleName} that satisfies $annotations"
             )
     }
@@ -305,16 +280,14 @@ class Flavor(
      * Scans & injects a provided [KClass], along with its
      * singleton instance if there is one.
      */
-    private fun scanAndInject(clazz: KClass<*>, instance: Any? = null)
-    {
+    private fun scanAndInject(clazz: KClass<*>, instance: Any? = null) {
         // use the provided instance, or the singleton
         // we got through KClass#objectInstance.
-        var singleton = instance
+        val singleton = instance
             ?: clazz.java.objectInstance()
             ?: return
 
-        for (field in clazz.java.declaredFields)
-        {
+        for (field in clazz.java.declaredFields) {
             print(field.name)
             // making sure this field is annotated with
             // Inject before modifying its value.
@@ -324,23 +297,21 @@ class Flavor(
                         field.type, field.annotations
                     )
 
-                val accessibility = field.isAccessible
+                val accessibility = field.canAccess(this)
 
-                field.isAccessible = false
+                field.isAccessible = true
                 field.set(singleton, injectionInstance)
                 field.isAccessible = accessibility
 
             }
         }
 
-        for (method in clazz.java.declaredMethods)
-        {
+        for (method in clazz.java.declaredMethods) {
             if (
                 AnnotationMappings.matchesAny(
                     AnnotationType.Inject, method.annotations
                 ) && method.parameterCount == 1
-            )
-            {
+            ) {
                 val injectionInstance = this
                     .findInstanceForInjection(
                         method.parameterTypes.first(),
@@ -355,14 +326,11 @@ class Flavor(
                     scanners[it::class] != null
                 }
 
-            for (annotation in annotations)
-            {
-                try
-                {
+            for (annotation in annotations) {
+                try {
                     scanners[annotation::class]
                         ?.invoke(method, singleton)
-                } catch (exception: Exception)
-                {
+                } catch (exception: Exception) {
                     options.logger.log(
                         Level.SEVERE,
                         "Error occurred while invoking function",
@@ -376,8 +344,7 @@ class Flavor(
         val isServiceClazz = clazz.java
             .isAnnotationPresent(Service::class.java)
 
-        if (isServiceClazz)
-        {
+        if (isServiceClazz) {
             val configure = clazz.java.declaredMethods
                 .firstOrNull {
                     AnnotationMappings.matchesAny(AnnotationType.PostConstruct, it.annotations)
@@ -395,8 +362,7 @@ class Flavor(
 
             // making sure an exception wasn't thrown
             // while trying to configure the service
-            if (milli != -1L)
-            {
+            if (milli != -1L) {
                 options.logger.info {
                     "[Services] Loaded [${
                         service.name.ifEmpty {
@@ -404,8 +370,7 @@ class Flavor(
                         }
                     }] in ${milli}ms."
                 }
-            } else
-            {
+            } else {
                 options.logger.info {
                     "[Services] Failed to load [${
                         service.name.ifEmpty {
@@ -417,8 +382,7 @@ class Flavor(
         }
     }
 
-    fun Class<*>.objectInstance(): Any?
-    {
+    fun Class<*>.objectInstance(): Any? {
         return kotlin
             .runCatching {
                 getDeclaredField("INSTANCE").get(null)

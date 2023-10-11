@@ -41,8 +41,7 @@ abstract class ProfileOrchestrator<T : IStorable> {
         }
     }
 
-    open fun postLoad(uniqueId: UUID)
-    {
+    open fun postLoad(uniqueId: UUID) {
 
     }
 

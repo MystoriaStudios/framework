@@ -15,8 +15,7 @@ class RedisDataStoreStorageLayer<D : IStorable>(
     connection: AbstractFrameworkRedisConnection,
     private val container: FrameworkObjectController<D>,
     private val dataType: KClass<D>
-) : FrameworkStorageLayer<AbstractFrameworkRedisConnection, D, (D) -> Boolean>(connection)
-{
+) : FrameworkStorageLayer<AbstractFrameworkRedisConnection, D, (D) -> Boolean>(connection) {
     private var section = "DataStore:${dataType.simpleName}"
 
     /**
@@ -27,8 +26,7 @@ class RedisDataStoreStorageLayer<D : IStorable>(
      */
     fun withCustomSection(
         section: StringBuilder.() -> Unit
-    )
-    {
+    ) {
         val builder = StringBuilder()
             .append("DataStore:")
             .apply(section)
@@ -38,22 +36,19 @@ class RedisDataStoreStorageLayer<D : IStorable>(
 
     override fun loadAllWithFilterSync(
         filter: (D) -> Boolean
-    ): Map<UUID, D>
-    {
+    ): Map<UUID, D> {
         return loadAllSync().filter {
             filter.invoke(it.value)
         }
     }
 
-    override fun loadWithFilterSync(filter: (D) -> Boolean): D?
-    {
+    override fun loadWithFilterSync(filter: (D) -> Boolean): D? {
         return loadAllSync().filter {
             filter.invoke(it.value)
         }.values.firstOrNull()
     }
 
-    override fun saveSync(data: D)
-    {
+    override fun saveSync(data: D) {
         runSafely {
             connection.useResource {
                 sync().hset(
@@ -64,8 +59,7 @@ class RedisDataStoreStorageLayer<D : IStorable>(
         }
     }
 
-    override fun loadSync(identifier: UUID): D?
-    {
+    override fun loadSync(identifier: UUID): D? {
         return runSafelyReturn {
             val serialized = connection.useResourceWithReturn {
                 sync().hget(section, identifier.toString())
@@ -75,8 +69,7 @@ class RedisDataStoreStorageLayer<D : IStorable>(
         }
     }
 
-    override fun loadAllSync(): Map<UUID, D>
-    {
+    override fun loadAllSync(): Map<UUID, D> {
         return runSafelyReturn {
             val serialized = connection.useResourceWithReturn {
                 sync().hgetall(section)
@@ -84,17 +77,16 @@ class RedisDataStoreStorageLayer<D : IStorable>(
 
             val deserialized = mutableMapOf<UUID, D>()
 
-            for (mutableEntry in serialized)
-            {
-                deserialized[UUID.fromString(mutableEntry.key)] = net.revive.framework.Framework.instance.serializer.deserialize(dataType, mutableEntry.value)
+            for (mutableEntry in serialized) {
+                deserialized[UUID.fromString(mutableEntry.key)] =
+                    net.revive.framework.Framework.instance.serializer.deserialize(dataType, mutableEntry.value)
             }
 
             return@runSafelyReturn deserialized
         }
     }
 
-    override fun deleteSync(identifier: UUID)
-    {
+    override fun deleteSync(identifier: UUID) {
         runSafely {
             connection.useResource {
                 sync().hdel(section, identifier.toString())

@@ -9,7 +9,8 @@ import java.io.IOException;
 public final class Middleware {
 
     // Don't allow instantiating this class
-    private Middleware() {}
+    private Middleware() {
+    }
 
     /**
      * Create an new cookie-session middleware.

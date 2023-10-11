@@ -82,7 +82,7 @@ abstract class FrameworkModule {
             this.packageIndexer.reflections
                 .getTypesAnnotatedWith(processor.key.java)
                 .map {
-                    it.objectInstance() ?: it.newInstance()
+                    it.objectInstance() ?: it.getDeclaredConstructor().newInstance()
                 }
                 .forEach {
                     this.logger.info(

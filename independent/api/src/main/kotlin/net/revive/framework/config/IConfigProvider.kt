@@ -7,10 +7,10 @@ import java.io.FileNotFoundException
 import kotlin.reflect.KClass
 
 interface IConfigProvider {
-    fun getBaseFolder() : File
+    fun getBaseFolder(): File
 }
 
-inline fun <reified T : Any> IConfigProvider.load(config: JsonConfig) : T {
+inline fun <reified T : Any> IConfigProvider.load(config: JsonConfig): T {
     val file = File(getBaseFolder(), config.fileName)
 
     return if (!file.exists()) {
@@ -23,7 +23,7 @@ inline fun <reified T : Any> IConfigProvider.load(config: JsonConfig) : T {
     }
 }
 
-fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>) : Any {
+fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>): Any {
     val file = File(getBaseFolder(), config.fileName)
 
     return if (!file.exists()) {
@@ -35,7 +35,7 @@ fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>) : Any {
     }
 }
 
-inline fun <reified T : Any> IConfigProvider.save(config: JsonConfig, inst: T) : T {
+inline fun <reified T : Any> IConfigProvider.save(config: JsonConfig, inst: T): T {
     if (!getBaseFolder().exists()) getBaseFolder().mkdirs()
     val file = File(getBaseFolder(), config.fileName)
 

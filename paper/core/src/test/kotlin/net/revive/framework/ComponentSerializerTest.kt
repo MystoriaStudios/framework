@@ -5,7 +5,6 @@ import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.utils.buildComponent
-import kotlin.test.DefaultAsserter.assertEquals
 import kotlin.test.Test
 
 internal class ComponentSerializerTest {

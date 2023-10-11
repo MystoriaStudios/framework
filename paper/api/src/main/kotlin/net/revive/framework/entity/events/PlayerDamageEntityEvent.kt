@@ -8,8 +8,7 @@ import org.bukkit.event.Cancellable
 class PlayerDamageEntityEvent(
     val player: Player,
     val entity: AbstractNMSEntity
-) : SimpleEvent(), Cancellable
-{
+) : SimpleEvent(), Cancellable {
 
     private var cancelled: Boolean = false
 

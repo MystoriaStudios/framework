@@ -169,7 +169,7 @@ public class Response {
         try {
             this.body.write(s.getBytes());
         } catch (IOException e) {
-            log.error("Failed to write char sequence to client.",e );
+            log.error("Failed to write char sequence to client.", e);
         }
 
         close();

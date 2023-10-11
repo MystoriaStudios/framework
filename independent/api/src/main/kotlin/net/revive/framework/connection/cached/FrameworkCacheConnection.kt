@@ -10,7 +10,8 @@ class FrameworkCacheConnection<K, V>(
     override fun useResource(lambda: ConcurrentHashMap<K, V>.() -> Unit) = lambda.invoke(handle)
     override fun <T> useResourceWithReturn(lambda: ConcurrentHashMap<K, V>.() -> T) = lambda.invoke(handle)
     override fun getConnection(): ConcurrentHashMap<K, V> = handle
-    override fun setConnection(connection: ConcurrentHashMap<K, V>) = throw IllegalCallerException("You cannot set the connection of a cached storage layer.")
+    override fun setConnection(connection: ConcurrentHashMap<K, V>) =
+        throw IllegalCallerException("You cannot set the connection of a cached storage layer.")
 
     override fun createNewConnection(): ConcurrentHashMap<K, V> {
         val newMap = ConcurrentHashMap<K, V>()

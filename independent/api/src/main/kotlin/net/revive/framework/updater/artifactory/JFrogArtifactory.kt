@@ -5,12 +5,10 @@ import net.revive.framework.updater.artifactory.artifact.component.ArtifactCompo
 import net.revive.framework.updater.connection.UpdaterConnector
 import net.revive.framework.updater.discovery.UpdaterDiscoveryService
 
-object JFrogArtifactory
-{
+object JFrogArtifactory {
     fun findComponentMetadata(
         path: String, repositoryOverride: String? = null
-    ): ArtifactComponentMetadata
-    {
+    ): ArtifactComponentMetadata {
         val assets = UpdaterDiscoveryService.discoverable
 
         val body = UpdaterConnector
@@ -28,8 +26,7 @@ object JFrogArtifactory
 
     fun findMetadata(
         path: String, repositoryOverride: String? = null
-    ): ArtifactMetadata
-    {
+    ): ArtifactMetadata {
         val assets = UpdaterDiscoveryService.discoverable
 
         val body = UpdaterConnector
@@ -41,7 +38,7 @@ object JFrogArtifactory
             .asString().body
 
         return net.revive.framework.Framework.useWithReturn {
-            it.serializer.deserialize(ArtifactMetadata::class , body)
+            it.serializer.deserialize(ArtifactMetadata::class, body)
         }
     }
 }

@@ -39,7 +39,7 @@ object Chance {
             return list.first()
         }
 
-        val totalWeight = list.sumByDouble { chance.invoke(it) }
+        val totalWeight = list.sumOf { chance.invoke(it) }
 
         var randomIndex = -1
         var random = Math.random() * totalWeight

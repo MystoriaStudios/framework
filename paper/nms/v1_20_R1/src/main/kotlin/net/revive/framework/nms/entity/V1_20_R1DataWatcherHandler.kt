@@ -53,8 +53,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
-    override fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any)
-    {
+    override fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any) {
         dataWatcher as SynchedEntityData
         getAccessor(wrapper)?.let {
             dataWatcher
@@ -65,8 +64,7 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
-    override fun setFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any, value: Boolean)
-    {
+    override fun setFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any, value: Boolean) {
         dataWatcher as SynchedEntityData
         getAccessor(wrapper)?.let {
             dataWatcher
@@ -81,16 +79,14 @@ object V1_20_R1DataWatcherHandler : IDataWatcherHandler {
         }
     }
 
-    override fun getFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any): Boolean
-    {
+    override fun getFlag(wrapper: EntityDataAccessorWrapper<Byte>, dataWatcher: Any): Boolean {
         dataWatcher as SynchedEntityData
         return (dataWatcher.get(getAccessor(wrapper)!!) as Byte).toInt() and wrapper.bitField != 0
     }
 
     private fun <T> getSerializer(
         wrapper: EntityDataAccessorWrapper<T>
-    ): EntityDataSerializer<T>?
-    {
+    ): EntityDataSerializer<T>? {
         var foundSerializer: EntityDataSerializer<T>? = null
         EntityDataSerializers::class.java.declaredFields
             .filter { it.type == EntityDataSerializer::class.java }

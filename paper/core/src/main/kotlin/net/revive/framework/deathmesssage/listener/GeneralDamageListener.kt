@@ -8,7 +8,6 @@ import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.utils.buildComponent
-import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -18,19 +17,28 @@ import java.util.concurrent.TimeUnit
 
 @Listeners
 object GeneralDamageListener : Listener {
-    
+
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) =
         net.revive.framework.event.event(event.player) {
-            var message: String? = null
-            message = when (event.cause.cause) {
+            var message: String = when (event.cause.cause) {
                 SUFFOCATION -> "suffocated"
                 DROWNING -> "drowned"
+                SUICIDE -> "committed suicide"
+                MAGIC -> "was killed by magic"
+                FLY_INTO_WALL -> "crashed into a wall"
+                HOT_FLOOR -> "stood on something hot"
+                DRYOUT -> "froze to death"
+                FALLING_BLOCK -> "was crushed."
+                CRAMMING -> "was stuck in a tight space"
+                SONIC_BOOM -> "was obliterated by a sonic boom"
+                DRAGON_BREATH -> "met the foul stench of the dragon"
                 STARVATION -> "starved to death"
                 LIGHTNING -> "was struck by lightning"
                 POISON -> "was poisoned"
                 WITHER -> "withered away"
                 CONTACT -> "was pricked to death"
+                WORLD_BORDER -> "tried to escape the border"
                 ENTITY_EXPLOSION, BLOCK_EXPLOSION -> "was blown to smithereens"
                 else -> return
             }
@@ -62,7 +70,7 @@ object GeneralDamageListener : Listener {
     class GeneralDamage(damaged: UUID, damage: Double, private val message: String) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text("$message.", Tailwind.ORANGE_400)
+                text(" $message.", Tailwind.GREEN_500)
             }
         }
     }
@@ -71,9 +79,9 @@ object GeneralDamageListener : Listener {
         PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text("$message whilst fighting", Tailwind.ORANGE_400)
+                text(" $message whilst fighting ", Tailwind.GREEN_500)
                 append(wrapName(damager, player))
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
         }
     }

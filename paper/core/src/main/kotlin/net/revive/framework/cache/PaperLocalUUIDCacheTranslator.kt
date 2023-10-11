@@ -6,13 +6,16 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 
-class PaperLocalUUIDCacheTranslator : ILocalUUIDCacheTranslator()
-{
+class PaperLocalUUIDCacheTranslator : ILocalUUIDCacheTranslator() {
     override fun configure(): CompletionStage<Void> {
         return CompletableFuture.completedFuture(null)
     }
 
     override fun preLoadCache(async: Boolean) {
+
+    }
+
+    override fun update(username: String, uuid: UUID) {
 
     }
 

@@ -36,7 +36,7 @@ dependencies {
     implementation(project(":paper:nms:nms-v1_19_R4", "reobf"))
     implementation(project(":paper:nms:nms-v1_18_R2", "reobf"))
     implementation(project(":paper:nms:nms-v1_17_R1", "reobf"))
-    
+
     //These don't use deobf because Official Mojang Mappings didn't exist for these.
     implementation(project(":paper:nms:nms-v1_12_R2"))
     implementation(project(":paper:nms:nms-v1_8_R8"))

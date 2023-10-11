@@ -22,6 +22,7 @@ object FrameworkApp {
     val modules: MutableMap<String, FrameworkModule> = mutableMapOf()
 
     fun setup(args: Array<String>) {
+        println(args)
         Framework.supply(IndependentFramework) {
             val port = Integer.parseInt(System.getProperty("port") ?: "8080")
             express = Express("0.0.0.0")
@@ -29,8 +30,8 @@ object FrameworkApp {
 
             express.use(MojangUUIDCacheRouter)
 
-            express.get("/") { req, res ->
-                res.send("its online si si si")
+            express.get("/") { _, res ->
+                res.send("{api: true}")
             }
 
             it.log("Framework", "Starting express server on port ${port}.")

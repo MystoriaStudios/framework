@@ -24,6 +24,7 @@ import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
+import net.revive.framework.flavor.reflections.PackageIndexer
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
 import net.revive.framework.scoreboard.IScoreboard
@@ -59,10 +60,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
     /**
      * START FLAVOR INJECTION AND HANDLING
      */
-    val packageIndexer by lazy {
-        this.flavor.reflections
-    }
-
+    lateinit var packageIndexer: PackageIndexer
     private lateinit var flavor: Flavor
 
     private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
@@ -74,6 +72,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
 
         flavor.lambda()
     }
+
     /**
      * END FLAVOUR INJECTION AND HANDLING
      */
@@ -90,6 +89,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
         }
 
         this.flavor = Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
+        packageIndexer = PackageIndexer(this::class, FlavorOptions(), listOf(this.classLoader))
 
         if (this::class.hasAnnotation<UsesRetrofit>()) {
             retrofit = Retrofit.Builder()
@@ -182,7 +182,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .getTypesAnnotatedWith<AutoRegister>()
             .forEach {
                 kotlin.runCatching {
-                    val instance = it.objectInstance() ?: it.newInstance()
+                    val instance = it.objectInstance() ?: it.getDeclaredConstructor().newInstance()
 
                     this.flavor.inject(instance)
 

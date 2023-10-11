@@ -27,22 +27,29 @@ class FrameworkCommandManager(
             for (i in 1 until 3) getFormat(it).setColor(i, ChatColor.RED)
         }
 
-        defaultExceptionHandler = ExceptionHandler { command, _, sender, _, throwable ->
+        defaultExceptionHandler = ExceptionHandler { _, _, sender, _, throwable ->
             net.revive.framework.Framework.use {
                 it.sentryService.log(throwable) { id ->
-                    var message = Component.text("Whoops! we ran into an error whilst trying to do that. ").color(TextColor.fromHexString(Tailwind.RED_600))
-                    message.append(Component.text(if (id != null) {
-                        "Please report the following error code to a platform administrator"
-                    } else "Please try again later.")).color(TextColor.fromHexString(Tailwind.RED_600))
+                    val message = Component.text("Whoops! we ran into an error whilst trying to do that. ")
+                        .color(TextColor.fromHexString(Tailwind.RED_600))
+                    message.append(
+                        Component.text(
+                            if (id != null) {
+                                "Please report the following error code to a platform administrator"
+                            } else "Please try again later."
+                        )
+                    ).color(TextColor.fromHexString(Tailwind.RED_600))
                     if (id != null) {
-                        message.append(Component
-                            .text("$id")
-                            .color(TextColor.fromHexString(Tailwind.ORANGE_400))
-                            .clickEvent(ClickEvent.openUrl("$id"))
+                        message.append(
+                            Component
+                                .text("$id")
+                                .color(TextColor.fromHexString(Tailwind.ORANGE_400))
+                                .clickEvent(ClickEvent.openUrl("$id"))
                         )
                     }
 
-                    (Bukkit.getPlayer(sender.uniqueId) ?: if (!sender.isPlayer) Bukkit.getConsoleSender() else null)?.sendMessage(message)
+                    (Bukkit.getPlayer(sender.uniqueId)
+                        ?: if (!sender.isPlayer) Bukkit.getConsoleSender() else null)?.sendMessage(message)
                 }
             }
 

@@ -11,7 +11,6 @@ import net.revive.framework.entity.util.EntityUtils
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Entity
@@ -31,7 +30,10 @@ object ArrowDamageListener : Listener {
         if (event.entity is Player) {
             event.projectile.setMetadata(
                 "ShotFromDistance",
-                FixedMetadataValue(Bukkit.getPluginManager().getPlugin("Framework") ?: return, event.projectile.location)
+                FixedMetadataValue(
+                    Bukkit.getPluginManager().getPlugin("Framework") ?: return,
+                    event.projectile.location
+                )
             )
         }
     }
@@ -39,10 +41,10 @@ object ArrowDamageListener : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
         if (event.cause !is EntityDamageByEntityEvent) return
-        
-        val damageByEntityEvent = event.cause as  EntityDamageByEntityEvent
+
+        val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
         if (damageByEntityEvent.damager !is Arrow) return
-        
+
         val arrow = damageByEntityEvent.damager as Arrow
         if (arrow.shooter is Player) {
             val shooter = arrow.shooter as Player?
@@ -58,7 +60,7 @@ object ArrowDamageListener : Listener {
             }
         } else if (arrow.shooter != null) {
             if (arrow.shooter is Entity) {
-                event.trackerDamage = 
+                event.trackerDamage =
                     ArrowDamageByMob(
                         event.player.uniqueId,
                         event.damage,
@@ -73,7 +75,7 @@ object ArrowDamageListener : Listener {
     class ArrowDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot.", Tailwind.ORANGE_400)
+                text(" was shot.", Tailwind.GREEN_500)
             }
         }
     }
@@ -82,11 +84,11 @@ object ArrowDamageListener : Listener {
         PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot by ", Tailwind.ORANGE_400)
-                append(wrapName(damager,  player))
-                text(" from ", Tailwind.ORANGE_400)
+                text(" was shot by ", Tailwind.GREEN_500)
+                append(wrapName(damager, player))
+                text(" from ", Tailwind.GREEN_500)
                 text("${distance.toInt()} blocks", Tailwind.TEAL_300)
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
         }
     }
@@ -95,9 +97,9 @@ object ArrowDamageListener : Listener {
         MobAbstractDamage(damaged, damage, damager!!.type) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was shot by a ", Tailwind.ORANGE_400)
+                text(" was shot by a ", Tailwind.GREEN_500)
                 text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
 
         }

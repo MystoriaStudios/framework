@@ -5,14 +5,12 @@ import net.revive.framework.cache.impl.distribution.DistributedRedisUUIDCache
 import net.revive.framework.flavor.annotation.Inject
 import java.util.*
 
-object UUIDCache
-{
+object UUIDCache {
     @Inject
     private lateinit var localTranslator: ILocalUUIDCacheTranslator
     private var translator: IUUIDCacheTranslator = DistributedRedisUUIDCache
 
-    fun configure(translator: ILocalUUIDCacheTranslator)
-    {
+    fun configure(translator: ILocalUUIDCacheTranslator) {
         this.translator = translator
 
         net.revive.framework.Framework.use {
@@ -27,8 +25,7 @@ object UUIDCache
         }
     }
 
-    fun uniqueId(username: String): UUID?
-    {
+    fun uniqueId(username: String): UUID? {
         var translated = localTranslator
             .uniqueId(username)
 
@@ -63,8 +60,7 @@ object UUIDCache
         return null
     }
 
-    fun username(uniqueId: UUID): String?
-    {
+    fun username(uniqueId: UUID): String? {
         val translated = translator
             .username(uniqueId)
 
@@ -74,8 +70,7 @@ object UUIDCache
         val mojang = UUIDCacheHelper
             .fetchFromMojang(uniqueId)
 
-        if (mojang != null)
-        {
+        if (mojang != null) {
             translator.update(mojang, commit = true)
 
             return mojang.name

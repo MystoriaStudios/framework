@@ -71,9 +71,11 @@ object Numbers {
                 number > LONG_MAX_BIG_INT -> {
                     number.toString()
                 }
+
                 number > DOUBLE_MAX_BIG_INT -> {
                     format(number.toLong(), forceAbbreviation)
                 }
+
                 else -> {
                     format(number.toDouble(), forceAbbreviation)
                 }
@@ -83,9 +85,11 @@ object Numbers {
                 number > LONG_MAX_BIG_DEC -> {
                     number.toString()
                 }
+
                 number > DOUBLE_MAX_BIG_DEC -> {
                     format(number.toLong(), forceAbbreviation)
                 }
+
                 else -> {
                     format(number.toDouble(), forceAbbreviation)
                 }
@@ -158,7 +162,7 @@ object Numbers {
         }
 
         if (matchingSuffix != null) {
-            val filteredInput = input.trim().toLowerCase().replace(matchingSuffix.second, "")
+            val filteredInput = input.trim().lowercase().replace(matchingSuffix.second, "")
 
             val hasDecimal = filteredInput.contains(".")
             if (hasDecimal) {
@@ -221,15 +225,19 @@ object Numbers {
             is BigInteger -> {
                 return number
             }
+
             is BigDecimal -> {
                 return number.toBigInteger()
             }
+
             is Float -> {
                 BigInteger(round(number).toInt().toString())
             }
+
             is Double -> {
                 BigInteger(round(number).toInt().toString())
             }
+
             else -> {
                 BigInteger(number.toString())
             }

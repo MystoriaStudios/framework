@@ -11,6 +11,7 @@ object GsonSerializer : IFrameworkSerializer {
     private val gsonBuilder = GsonBuilder()
         .setLongSerializationPolicy(LongSerializationPolicy.STRING)
         .setPrettyPrinting()
+        .disableHtmlEscaping()
         .serializeNulls()
 
     var gson = gsonBuilder.create()

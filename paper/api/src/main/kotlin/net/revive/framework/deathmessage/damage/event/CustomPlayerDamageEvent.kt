@@ -10,5 +10,5 @@ class CustomPlayerDamageEvent(
     val cause: EntityDamageEvent
 ) : SimpleEvent() {
     var trackerDamage: AbstractDamage? = null
-    val damage: Double get() = cause.getDamage(EntityDamageEvent.DamageModifier.BASE)
+    val damage: Double get() = cause.finalDamage // should fix that dep coz DamageModifiers are deprecated since 2016 lol.
 }

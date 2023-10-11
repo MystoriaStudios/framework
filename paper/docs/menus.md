@@ -1,7 +1,9 @@
 # Menus
+
 A guide on how to implement both `IMenu`'s and `AbstractPagedMenu`'s.
 
 ## `IMenu`
+
 ```kt
 import net.revive.framework.menu.IMenu
 
@@ -40,6 +42,7 @@ class TestMenu : IMenu {
 ```
 
 ## `IButton`
+
 ```kt
 import net.revive.framework.menu.button.IButton
 

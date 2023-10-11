@@ -92,10 +92,12 @@ allprojects {
 
     tasks.withType<DokkaTaskPartial>().configureEach {
         dokkaSourceSets.configureEach {
-            documentedVisibilities.set(setOf(
-                DokkaConfiguration.Visibility.PUBLIC,
-                DokkaConfiguration.Visibility.PROTECTED
-            ))
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED
+                )
+            )
         }
     }
 

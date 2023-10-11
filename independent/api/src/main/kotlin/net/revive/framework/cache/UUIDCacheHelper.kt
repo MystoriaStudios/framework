@@ -40,7 +40,9 @@ object UUIDCacheHelper {
 
     fun fetchFromMojang(uuid: UUID): MojangResponse? {
         runCatching {
-            val request = Request.Builder().url("https://sessionserver.mojang.com/session/minecraft/profile/${uuid.toString().replace("-", "")}").build()
+            val request = Request.Builder()
+                .url("https://sessionserver.mojang.com/session/minecraft/profile/${uuid.toString().replace("-", "")}")
+                .build()
             val response = client.newCall(request).execute()
 
             if (response.isSuccessful) {

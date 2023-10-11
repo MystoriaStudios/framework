@@ -6,7 +6,16 @@ import kotlin.math.roundToInt
 
 object AngleUtils {
 
-    private val RADIAL = arrayOf(BlockFace.WEST, BlockFace.NORTH_WEST, BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST)
+    private val RADIAL = arrayOf(
+        BlockFace.WEST,
+        BlockFace.NORTH_WEST,
+        BlockFace.NORTH,
+        BlockFace.NORTH_EAST,
+        BlockFace.EAST,
+        BlockFace.SOUTH_EAST,
+        BlockFace.SOUTH,
+        BlockFace.SOUTH_WEST
+    )
     private val NOTCHES: MutableMap<BlockFace, Int> = EnumMap(BlockFace::class.java)
 
     init {
@@ -31,8 +40,8 @@ object AngleUtils {
     }
 
     @JvmStatic
-    fun wrapAngle(angle: Int): Int {
-        var angle = angle
+    fun wrapAngle(input: Int): Int {
+        var angle = input
 
         // reduce the angle
         angle %= 360;

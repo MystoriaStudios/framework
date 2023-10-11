@@ -54,6 +54,7 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
 
                 XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player)
             }
+
             else -> {
                 XSound.BLOCK_GRAVEL_BREAK.play(player)
             }

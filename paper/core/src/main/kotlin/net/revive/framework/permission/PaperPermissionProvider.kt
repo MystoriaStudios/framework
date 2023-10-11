@@ -6,7 +6,8 @@ import java.util.*
 
 object PaperPermissionProvider : IPermissionProvider {
 
-    override fun hasPermission(uuid: UUID, permission: String) = Bukkit.getPlayer(uuid)?.hasPermission(permission) ?: false
+    override fun hasPermission(uuid: UUID, permission: String) =
+        Bukkit.getPlayer(uuid)?.hasPermission(permission) ?: false
 
     override fun getPermissions(uuid: UUID) = Bukkit.getPlayer(uuid)?.effectivePermissions?.map {
         it.permission

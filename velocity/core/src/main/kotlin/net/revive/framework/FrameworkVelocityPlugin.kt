@@ -9,5 +9,5 @@ import com.velocitypowered.api.plugin.Plugin
     authors = ["Revive Studios"],
     url = "https://randomcraft.net/",
 )
-class FrameworkVelocityPlugin  {
+class FrameworkVelocityPlugin {
 }

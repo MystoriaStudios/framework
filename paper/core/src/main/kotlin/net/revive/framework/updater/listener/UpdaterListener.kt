@@ -16,13 +16,11 @@ object UpdaterListener : Listener {
     var filterPlayerCanReceiveNotifications = { _: Player -> true }
 
     @EventHandler
-    fun onJoin(event: PlayerJoinEvent)
-    {
+    fun onJoin(event: PlayerJoinEvent) {
         if (
             event.player.hasPermission("framework.updater.login.notifications") &&
             filterPlayerCanReceiveNotifications.invoke(event.player)
-        )
-        {
+        ) {
             val start = System.currentTimeMillis()
             val pendingUpdates = mutableListOf<Pair<String, String>>()
 
@@ -31,18 +29,19 @@ object UpdaterListener : Listener {
                     pendingUpdates += name to asset.version
                 }
                 .thenRun {
-                    if (pendingUpdates.isNotEmpty())
-                    {
-                        event.player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
-                        ))
+                    if (pendingUpdates.isNotEmpty()) {
+                        event.player.sendMessage(
+                            ChatColor.translateAlternateColorCodes(
+                                '&',
+                                UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
+                            )
+                        )
                     }
 
                     if (
                         System.currentTimeMillis() - start >= TimeUnit.SECONDS.toMillis(5L) &&
                         pendingUpdates.isEmpty()
-                    )
-                    {
+                    ) {
                         event.player.sendMessage(
                             "${ChatColor.RED}This process took more than 5 seconds, is the artifactory alright?"
                         )

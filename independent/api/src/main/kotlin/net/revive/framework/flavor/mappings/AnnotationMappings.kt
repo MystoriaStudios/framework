@@ -6,8 +6,7 @@ import net.revive.framework.flavor.annotation.Named
  * @author Dash
  * @since 9/14/2022
  */
-object AnnotationMappings
-{
+object AnnotationMappings {
     private val mappings = mutableMapOf(
         AnnotationType.Inject to listOf(
             net.revive.framework.flavor.annotation.Inject::class
@@ -29,8 +28,7 @@ object AnnotationMappings
     fun matchesAny(
         type: AnnotationType,
         annotations: Array<Annotation>
-    ): Boolean
-    {
+    ): Boolean {
         val mapping = this.mappings[type]!!
         return annotations.any { it.annotationClass in mapping }
     }

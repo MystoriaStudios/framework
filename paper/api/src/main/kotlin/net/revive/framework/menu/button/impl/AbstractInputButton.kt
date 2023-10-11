@@ -10,5 +10,5 @@ abstract class AbstractInputButton : IButton {
         builder(player).open(player)
     }
 
-    abstract fun builder(player: Player) : AnvilGUI.Builder
+    abstract fun builder(player: Player): AnvilGUI.Builder
 }

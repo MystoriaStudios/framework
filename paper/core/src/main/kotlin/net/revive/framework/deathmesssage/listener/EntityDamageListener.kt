@@ -8,7 +8,6 @@ import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
-import org.bukkit.ChatColor
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -22,21 +21,22 @@ import java.util.*
 object EntityDamageListener : Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     fun onCustomPlayerDamage(event: CustomPlayerDamageEvent) = event(event.player) {
-            if (event.cause !is EntityDamageByEntityEvent) return
+        if (event.cause !is EntityDamageByEntityEvent) return
 
-            val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
-            val damager = damageByEntityEvent.damager
-            if (damager is LivingEntity && damager !is Player) {
-                event.trackerDamage = EntityDamage(event.player.uniqueId, event.damage, damager)
-            }
+        val damageByEntityEvent = event.cause as EntityDamageByEntityEvent
+        val damager = damageByEntityEvent.damager
+        if (damager is LivingEntity && damager !is Player) {
+            event.trackerDamage = EntityDamage(event.player.uniqueId, event.damage, damager)
         }
+    }
 
-    class EntityDamage(damaged: UUID, damage: Double, entity: Entity) : MobAbstractDamage(damaged, damage, entity.type) {
+    class EntityDamage(damaged: UUID, damage: Double, entity: Entity) :
+        MobAbstractDamage(damaged, damage, entity.type) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was slain by a ", Tailwind.ORANGE_400)
+                text(" was slain by a ", Tailwind.GREEN_500)
                 text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
         }
     }

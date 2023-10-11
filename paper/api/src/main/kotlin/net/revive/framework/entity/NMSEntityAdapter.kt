@@ -16,7 +16,11 @@ object NMSEntityAdapter : JsonSerializer<AbstractNMSEntity>, JsonDeserializer<Ab
         return json
     }
 
-    override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): AbstractNMSEntity? {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): AbstractNMSEntity? {
         val jsonObject = json.asJsonObject
         val type = jsonObject.get("type").asString
         val properties = jsonObject.get("properties")

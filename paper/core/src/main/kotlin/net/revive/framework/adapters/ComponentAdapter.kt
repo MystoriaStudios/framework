@@ -3,7 +3,6 @@ package net.revive.framework.adapters
 import com.google.gson.*
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.revive.framework.serializer.impl.GsonSerializer
 import java.lang.reflect.Type
 
 object ComponentAdapter : JsonSerializer<Component>, JsonDeserializer<Component> {

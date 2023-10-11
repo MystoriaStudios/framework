@@ -6,8 +6,7 @@ import net.revive.framework.cache.impl.distribution.DistributedRedisUUIDCache
 
 object MojangUUIDCacheRouter : ExpressRouter() {
 
-    init
-    {
+    init {
         post("/uuid-cache/uuid/:uuid") { req, res ->
             val uuid = req.getParam("uuid")
                 ?: return@post res.sendStatus(Status._400)

@@ -20,51 +20,45 @@ class PackageIndexer(
     private val clazz: KClass<*>,
     options: FlavorOptions,
     loaders: List<ClassLoader> = emptyList(),
-)
-{
+) {
     val reflections = Reflections(
-            ConfigurationBuilder()
-                .forPackage(
-                    options.`package` ?: this.clazz.java.`package`.name,
-                    *loaders.toTypedArray()
-                )
-                .addScanners(
-                    MethodAnnotationsScanner(),
-                    TypeAnnotationsScanner(),
-                    SubTypesScanner()
-                )
-        )
+        ConfigurationBuilder()
+            .forPackage(
+                options.`package` ?: this.clazz.java.`package`.name,
+                *loaders.toTypedArray()
+            )
+            .addScanners(
+                Scanners.MethodsAnnotated,
+                Scanners.TypesAnnotated,
+                Scanners.SubTypes
+            )
+    )
 
-    inline fun <reified T> getSubTypes(): List<Class<*>>
-    {
+    inline fun <reified T> getSubTypes(): List<Class<*>> {
         return reflections
             .get(subTypes<T>())
             .toList()
     }
 
-    inline fun <reified T : Annotation> getMethodsAnnotatedWith(): List<Method>
-    {
+    inline fun <reified T : Annotation> getMethodsAnnotatedWith(): List<Method> {
         return reflections
             .get(annotated<T>())
             .toList()
     }
 
-    inline fun <reified T : Annotation> getTypesAnnotatedWith(): List<Class<*>>
-    {
+    inline fun <reified T : Annotation> getTypesAnnotatedWith(): List<Class<*>> {
         return reflections
             .getTypesAnnotatedWith(T::class.java)
             .toList()
     }
 
-    inline fun <reified T> annotated(): QueryFunction<Store, Method>
-    {
+    inline fun <reified T> annotated(): QueryFunction<Store, Method> {
         return Scanners.MethodsAnnotated
             .with(T::class.java)
             .`as`(Method::class.java)
     }
 
-    inline fun <reified T> subTypes(): QueryFunction<Store, Class<*>>
-    {
+    inline fun <reified T> subTypes(): QueryFunction<Store, Class<*>> {
         return Scanners.SubTypes
             .with(T::class.java)
             .`as`(Class::class.java)

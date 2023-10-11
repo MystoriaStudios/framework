@@ -18,67 +18,54 @@ abstract class FrameworkStorageLayer<C : AbstractFrameworkConnection<*, *>, D : 
 
     abstract fun deleteSync(identifier: UUID)
 
-    fun save(data: D): CompletableFuture<Void>
-    {
+    fun save(data: D): CompletableFuture<Void> {
         return CompletableFuture.runAsync { saveSync(data) }
     }
 
-    fun load(identifier: UUID): CompletableFuture<D?>
-    {
+    fun load(identifier: UUID): CompletableFuture<D?> {
         return CompletableFuture.supplyAsync { loadSync(identifier) }
     }
 
-    fun delete(identifier: UUID): CompletableFuture<Void>
-    {
+    fun delete(identifier: UUID): CompletableFuture<Void> {
         return CompletableFuture.runAsync { deleteSync(identifier) }
     }
 
-    fun loadAll(): CompletableFuture<Map<UUID, D>>
-    {
+    fun loadAll(): CompletableFuture<Map<UUID, D>> {
         return CompletableFuture.supplyAsync { loadAllSync() }
     }
 
-    fun loadAllWithFilter(filter: F): CompletableFuture<Map<UUID, D>>
-    {
+    fun loadAllWithFilter(filter: F): CompletableFuture<Map<UUID, D>> {
         return CompletableFuture.supplyAsync { loadAllWithFilterSync(filter) }
     }
 
-    fun loadWithFilter(filter: F): CompletableFuture<D?>
-    {
+    fun loadWithFilter(filter: F): CompletableFuture<D?> {
         return CompletableFuture.supplyAsync { loadWithFilterSync(filter) }
     }
 
-    fun saveMultiple(vararg data: D): CompletableFuture<Void>
-    {
+    fun saveMultiple(vararg data: D): CompletableFuture<Void> {
         return CompletableFuture.runAsync { saveMultipleSync(*data) }
     }
 
-    fun deleteMultiple(vararg identifiers: UUID): CompletableFuture<Void>
-    {
+    fun deleteMultiple(vararg identifiers: UUID): CompletableFuture<Void> {
         return CompletableFuture.runAsync { deleteMultipleSync(*identifiers) }
     }
 
-    fun loadMultiple(vararg identifiers: UUID): CompletableFuture<Map<UUID, D?>>
-    {
+    fun loadMultiple(vararg identifiers: UUID): CompletableFuture<Map<UUID, D?>> {
         return CompletableFuture.supplyAsync { loadMultipleSync(*identifiers) }
     }
 
-    fun saveMultipleSync(vararg data: D)
-    {
-        for (instance in data)
-        {
+    fun saveMultipleSync(vararg data: D) {
+        for (instance in data) {
             runSafely { saveSync(instance) }
         }
     }
 
     fun loadMultipleSync(
         vararg identifiers: UUID
-    ): Map<UUID, D?>
-    {
+    ): Map<UUID, D?> {
         val mutableMap = mutableMapOf<UUID, D?>()
 
-        for (identifier in identifiers)
-        {
+        for (identifier in identifiers) {
             mutableMap[identifier] =
                 runSafelyReturn {
                     loadSync(identifier)
@@ -90,25 +77,20 @@ abstract class FrameworkStorageLayer<C : AbstractFrameworkConnection<*, *>, D : 
 
     fun deleteMultipleSync(
         vararg identifiers: UUID
-    )
-    {
-        for (identifier in identifiers)
-        {
+    ) {
+        for (identifier in identifiers) {
             runSafely { deleteSync(identifier) }
         }
     }
 
     fun <T> runSafelyReturn(
         lambda: () -> T
-    ): T
-    {
-        try
-        {
+    ): T {
+        try {
             kotlin.run {
                 return lambda.invoke()
             }
-        } catch (exception: Exception)
-        {
+        } catch (exception: Exception) {
             exception.printStackTrace()
             throw RuntimeException("Uncaught exception in CompletableFuture chain")
         }
@@ -118,12 +100,10 @@ abstract class FrameworkStorageLayer<C : AbstractFrameworkConnection<*, *>, D : 
     fun runSafely(
         printTrace: Boolean = true,
         lambda: () -> Unit
-    )
-    {
+    ) {
         runCatching(lambda)
             .onFailure {
-                if (printTrace)
-                {
+                if (printTrace) {
                     it.printStackTrace()
                 }
             }

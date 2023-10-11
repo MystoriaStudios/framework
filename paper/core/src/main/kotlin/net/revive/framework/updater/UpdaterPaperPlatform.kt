@@ -7,8 +7,7 @@ import java.io.File
 
 object UpdaterPaperPlatform : IUpdaterPlatform {
 
-    override fun configure()
-    {
+    override fun configure() {
         // bukkit file container
         UpdaterService.pluginContainer = File(
             Bukkit.getWorldContainer(), "plugins"

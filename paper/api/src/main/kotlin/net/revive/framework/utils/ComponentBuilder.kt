@@ -4,12 +4,14 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.revive.framework.constants.Tailwind
 
-inline fun buildComponent(component: Component, builder: ComponentBuilder.() -> Unit): Component = ComponentBuilder(component = component).apply(builder).build()
+inline fun buildComponent(component: Component, builder: ComponentBuilder.() -> Unit): Component =
+    ComponentBuilder(component = component).apply(builder).build()
 
 inline fun buildComponent(builder: ComponentBuilder.() -> Unit): Component = ComponentBuilder().apply(builder).build()
 
-fun buildComponent(string: String, color: String) : Component = buildComponent {
+fun buildComponent(string: String, color: String): Component = buildComponent {
     this.text(string, color)
     return build()
 }

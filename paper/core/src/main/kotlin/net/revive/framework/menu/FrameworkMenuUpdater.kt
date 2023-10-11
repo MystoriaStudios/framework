@@ -24,49 +24,39 @@ class FrameworkMenuUpdater : Runnable, Listener {
     private val updateTimestamps: MutableMap<UUID, Long> = ConcurrentHashMap()
 
     @Configure
-    fun configure()
-    {
+    fun configure() {
         Tasks.asyncTimer(this, 2L, 2L)
     }
 
-    override fun run()
-    {
-        for ((uuid, openMenu) in menuService.getAllOpenedMenus().entries)
-        {
-            try
-            {
+    override fun run() {
+        for ((uuid, openMenu) in menuService.getAllOpenedMenus().entries) {
+            try {
                 val player = Bukkit.getPlayer(uuid)
-                if (player == null || !player.isOnline)
-                {
+                if (player == null || !player.isOnline) {
                     menuService.removeOpenedMenu(uuid)
                     continue
                 }
 
-                if (openMenu.metaData.closed)
-                {
+                if (openMenu.metaData.closed) {
                     continue
                 }
 
-                if (openMenu.autoUpdate)
-                {
+                if (openMenu.autoUpdate) {
                     updateTimestamps.putIfAbsent(player.uniqueId, System.currentTimeMillis())
 
-                    if (System.currentTimeMillis() - updateTimestamps[player.uniqueId]!! >= openMenu.autoUpdateInterval)
-                    {
+                    if (System.currentTimeMillis() - updateTimestamps[player.uniqueId]!! >= openMenu.autoUpdateInterval) {
                         updateTimestamps[player.uniqueId] = System.currentTimeMillis()
                         menuHandler.openMenu(player, openMenu)
                     }
                 }
-            } catch (e: Exception)
-            {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
     @EventHandler
-    fun onPlayerQuitEvent(event: PlayerQuitEvent)
-    {
+    fun onPlayerQuitEvent(event: PlayerQuitEvent) {
         updateTimestamps.remove(event.player.uniqueId)
     }
 

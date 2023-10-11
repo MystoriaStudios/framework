@@ -21,8 +21,10 @@ import org.bukkit.event.inventory.InventoryDragEvent
 @Listeners
 object FrameworkMenuListeners : Listener {
 
-    @Inject lateinit var menuHandler: IMenuHandler
-    @Inject lateinit var menuService: MenuService
+    @Inject
+    lateinit var menuHandler: IMenuHandler
+    @Inject
+    lateinit var menuService: MenuService
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
@@ -69,7 +71,7 @@ object FrameworkMenuListeners : Listener {
             }
 
             // handle items being inserted via cursor
-            if (event.cursor != null && event.cursor.type != Material.AIR && (event.click == ClickType.LEFT || event.click == ClickType.RIGHT || event.click == ClickType.MIDDLE)) {
+            if (!event.cursor.isEmpty && event.cursor.type != Material.AIR && (event.click == ClickType.LEFT || event.click == ClickType.RIGHT || event.click == ClickType.MIDDLE)) {
                 if (event.clickedInventory == event.view.topInventory) {
                     event.isCancelled = true
 
@@ -77,13 +79,16 @@ object FrameworkMenuListeners : Listener {
                         ClickType.LEFT -> {
                             event.cursor
                         }
+
                         ClickType.RIGHT -> {
                             ItemBuilder.copyOf(event.cursor).amount(1).build()
                         }
+
                         ClickType.MIDDLE -> {
                             val half = (event.cursor.amount / 2).coerceAtLeast(1)
                             ItemBuilder.copyOf(event.cursor).amount(half).build()
                         }
+
                         else -> {
                             event.cursor
                         }
@@ -111,7 +116,9 @@ object FrameworkMenuListeners : Listener {
                     button.onClick(player, event.click)
                     button.onClick(player, event.click, event)
                 } catch (exception: ConditionFailedException) {
-                    player.sendMessage(Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700)))
+                    player.sendMessage(
+                        Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700))
+                    )
                 }
 
                 // check if player is still in the same menu and needs to update

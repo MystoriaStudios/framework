@@ -27,10 +27,12 @@ object AuthenticationRouter : ExpressRouter() {
                 return@post
             }
 
-            res.setCookie(Cookie(
-                "",
-                ""
-            ))
+            res.setCookie(
+                Cookie(
+                    "",
+                    ""
+                )
+            )
 
         }
     }

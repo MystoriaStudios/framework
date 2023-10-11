@@ -1,4 +1,5 @@
 # Getting Started
+
 How setup the Framework Paper API with a gradle project.
 
 `build.gradle.kts`

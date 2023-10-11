@@ -11,8 +11,7 @@ open class AbstractNMSHologram(
     private var text: String,
     location: Location,
     var parent: AbstractNMSEntity? = null
-) : AbstractNMSEntity(location)
-{
+) : AbstractNMSEntity(location) {
     private var childHolograms: LinkedList<AbstractNMSHologram> = LinkedList()
 
     @Transient
@@ -94,7 +93,9 @@ open class AbstractNMSHologram(
 
         for (childHologram in childHolograms) {
             childHologram.parent = this
-            childHologram.updateLocation(startLocation.subtract(0.0, 0.24, 0.0).clone()) // each iteration subtracts 0.24 from startLoc
+            childHologram.updateLocation(
+                startLocation.subtract(0.0, 0.24, 0.0).clone()
+            ) // each iteration subtracts 0.24 from startLoc
         }
     }
 
@@ -126,7 +127,7 @@ open class AbstractNMSHologram(
     }
 
     override fun sendRepositionPackets(player: Player) {
-  //      MinecraftProtocol.send(player, MinecraftProtocol.buildEntityTeleportPacket(id, getAdjustedLocation(player)))
+        //      MinecraftProtocol.send(player, MinecraftProtocol.buildEntityTeleportPacket(id, getAdjustedLocation(player)))
     }
 
     override fun isMultiPartEntity(): Boolean {
@@ -198,12 +199,14 @@ open class AbstractNMSHologram(
                 removedChildren.addAll(childHolograms)
                 childHolograms.clear()
             }
+
             lines.size >= childHolograms.size -> {
                 lines.forEachIndexed { index, line ->
                     if (index < childHolograms.size) {
                         childHolograms[index].updateText(line)
                     } else {
-                        val newChildHologram = AbstractNMSHologram(text = line, parent = this@AbstractNMSHologram, location = location)
+                        val newChildHologram =
+                            AbstractNMSHologram(text = line, parent = this@AbstractNMSHologram, location = location)
                         newChildHologram.initializeData()
                         newChildHologram.persistent = false
                         newChildHologram.root = false
@@ -214,6 +217,7 @@ open class AbstractNMSHologram(
                     }
                 }
             }
+
             lines.size < childHolograms.size -> {
                 lines.forEachIndexed { index, line ->
                     childHolograms[index].updateText(line)

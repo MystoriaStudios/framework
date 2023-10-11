@@ -3,12 +3,12 @@ package net.revive.framework.cache
 import java.util.*
 import java.util.concurrent.CompletionStage
 
-interface IUUIDCacheTranslator
-{
-    fun configure() : CompletionStage<Void>
+interface IUUIDCacheTranslator {
+    fun configure(): CompletionStage<Void>
 
     fun preLoadCache(async: Boolean = true)
 
+    fun update(username: String, uuid: UUID)
     fun update(response: UUIDCacheHelper.MojangResponse, commit: Boolean = true)
 
     fun uniqueId(username: String): UUID?

@@ -51,12 +51,15 @@ class FrameworkModuleLoader(private val directory: File) {
                     loadModule(file)
 
                     val jarFile = JarFile(file)
-                    val entry = jarFile.getJarEntry("module.json") ?: throw RuntimeException("Unable to load module from class ${file.name} as there is no module.json present.")
+                    val entry = jarFile.getJarEntry("module.json")
+                        ?: throw RuntimeException("Unable to load module from class ${file.name} as there is no module.json present.")
 
                     val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
                     val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
 
-                    val module = getModuleClass(file, details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule? ?: return@use
+                    val module =
+                        getModuleClass(file, details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule?
+                            ?: return@use
                     FrameworkApp.use {
                         it.modules[details.name.lowercase()] = module
                         module.load(details)
@@ -74,10 +77,12 @@ class FrameworkModuleLoader(private val directory: File) {
                         val entry = entries.nextElement()
                         if (entry.name.endsWith(".class")) {
                             runCatching {
-                                val clazz = getModuleClass(file, entry.name.replace("/", ".").replace(".class", "")) ?: throw RuntimeException("Class not found in loader.")
+                                val clazz = getModuleClass(file, entry.name.replace("/", ".").replace(".class", ""))
+                                    ?: throw RuntimeException("Class not found in loader.")
 
                                 if (clazz.superclass == ExpressRouter::class.java) {
-                                    val obj = clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
+                                    val obj =
+                                        clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
                                     module.routers.add(obj as ExpressRouter)
                                     framework.log(details.name, "Registered router from class ${entry.name}")
                                 }

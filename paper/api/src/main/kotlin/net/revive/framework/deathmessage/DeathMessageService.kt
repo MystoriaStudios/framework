@@ -9,11 +9,11 @@ import java.util.*
 
 @Service
 object DeathMessageService {
-    
+
     var configuration: IDeathMessageConfiguration = IDeathMessageConfiguration.DEFAULT_CONFIGURATION
     private val damage: MutableMap<UUID, MutableList<AbstractDamage>> = mutableMapOf()
 
-    fun getDamage(player: Player):  MutableList<AbstractDamage> {
+    fun getDamage(player: Player): MutableList<AbstractDamage> {
         return if (damage.containsKey(player.uniqueId)) damage[player.uniqueId]!! else mutableListOf()
     }
 

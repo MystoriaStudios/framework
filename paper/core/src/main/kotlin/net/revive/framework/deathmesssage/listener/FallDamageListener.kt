@@ -9,7 +9,6 @@ import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
-import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -53,18 +52,19 @@ object FallDamageListener : Listener {
 
     class FallDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
-           return buildComponent(wrapName(damaged, player)) {
-               text(" hit the ground too hard.", Tailwind.ORANGE_400)
-           }
+            return buildComponent(wrapName(damaged, player)) {
+                text(" hit the ground too hard.", Tailwind.GREEN_500)
+            }
         }
     }
 
-    class FallDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) : PlayerAbstractDamage(damaged, damage, damager) {
+    class FallDamageByPlayer(damaged: UUID, damage: Double, damager: UUID) :
+        PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" hit the ground too hard thanks to ", Tailwind.ORANGE_400)
+                text(" hit the ground too hard thanks to ", Tailwind.GREEN_500)
                 append(wrapName(damager, player))
-                text(".", Tailwind.ORANGE_400)
+                text(".", Tailwind.GREEN_500)
             }
         }
     }

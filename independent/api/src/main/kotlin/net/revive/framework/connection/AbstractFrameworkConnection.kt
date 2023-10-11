@@ -12,12 +12,12 @@ abstract class AbstractFrameworkConnection<C, R> {
     }
 
     abstract fun useResource(lambda: R.() -> Unit)
-    abstract fun <T> useResourceWithReturn(lambda: R.() -> T) : T?
+    abstract fun <T> useResourceWithReturn(lambda: R.() -> T): T?
 
-    abstract fun getConnection() : C
+    abstract fun getConnection(): C
     abstract fun setConnection(connection: C)
 
-    abstract fun createNewConnection() : C
+    abstract fun createNewConnection(): C
 
     abstract fun close()
 }
