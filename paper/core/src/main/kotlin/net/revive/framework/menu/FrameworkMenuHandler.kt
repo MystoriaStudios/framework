@@ -1,12 +1,13 @@
 package net.revive.framework.menu
 
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.nms.menu.INMSMenuHandler
 import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.Tasks
+import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -57,11 +58,11 @@ class FrameworkMenuHandler : IMenuHandler {
         }.onFailure { throwable ->
             net.revive.framework.Framework.use {
                 it.sentryService.log(throwable) { id ->
-                    var message = "${ChatColor.RED}Whoops! we ran into an error whilst trying to do that. "
+                    var message = "Whoops! we ran into an error whilst trying to do that. "
                     message += if (id != null) {
-                        "Please report the following error code to a platform administrator ${ChatColor.YELLOW}$id"
+                        "Please report the following error code to a platform administrator $id"
                     } else "Please try again later."
-                    player.sendMessage(message)
+                    player.sendMessage(buildComponent(message, Tailwind.RED_400))
                 }
             }
         }

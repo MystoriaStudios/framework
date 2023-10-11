@@ -41,7 +41,7 @@ import kotlin.reflect.KClass
 
 @Plugin(
     name = "Framework",
-    version = "1.0.13-SNAPSHOT",
+    version = "1.0.14-SNAPSHOT",
     authors = ["Revive Studios"],
     website = "https://randomcraft.net/",
     depends = [

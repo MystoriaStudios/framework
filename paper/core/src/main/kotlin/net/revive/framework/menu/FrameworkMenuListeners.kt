@@ -29,7 +29,7 @@ object FrameworkMenuListeners : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
         if (event.whoClicked !is Player) return
-        val openMenu = menuService.getOpenedMenu(event.whoClicked as Player) ?: return
+        menuService.getOpenedMenu(event.whoClicked as Player) ?: return
 
         if (event.inventory != event.view.topInventory) {
             event.isCancelled = true
@@ -75,7 +75,7 @@ object FrameworkMenuListeners : Listener {
                 if (event.clickedInventory == event.view.topInventory) {
                     event.isCancelled = true
 
-                    val itemInserted = when (event.click) {
+                    when (event.click) {
                         ClickType.LEFT -> {
                             event.cursor
                         }

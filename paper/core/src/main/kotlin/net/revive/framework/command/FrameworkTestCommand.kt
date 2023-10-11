@@ -65,6 +65,7 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Subcommand("test-scoreboard")
     fun testScoreboard(player: Player) {
+        player.sendMessage(buildComponent("testing scoreboard", Tailwind.GREEN_600))
         if (scoreboardService.primaryScoreboard != null) throw RuntimeException("There is already a primary scoreboard provider.")
 
         scoreboardService.updatePrimaryProvider(object : IScoreboard {

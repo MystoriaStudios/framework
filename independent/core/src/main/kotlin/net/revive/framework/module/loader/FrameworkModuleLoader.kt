@@ -74,8 +74,8 @@ class FrameworkModuleLoader(private val directory: File) {
 
                     val entries = jarFile.entries()
                     while (entries.hasMoreElements()) {
-                        val entry = entries.nextElement()
-                        if (entry.name.endsWith(".class")) {
+                        val e = entries.nextElement()
+                        if (e.name.endsWith(".class")) {
                             runCatching {
                                 val clazz = getModuleClass(file, entry.name.replace("/", ".").replace(".class", ""))
                                     ?: throw RuntimeException("Class not found in loader.")
@@ -84,7 +84,7 @@ class FrameworkModuleLoader(private val directory: File) {
                                     val obj =
                                         clazz.kotlin.objectInstance ?: clazz.getDeclaredConstructor().newInstance()
                                     module.routers.add(obj as ExpressRouter)
-                                    framework.log(details.name, "Registered router from class ${entry.name}")
+                                    framework.log(details.name, "Registered router from class ${e.name}")
                                 }
                             }
                         }

@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package net.revive.framework.nms.entity
 
 import net.minecraft.network.syncher.EntityDataAccessor

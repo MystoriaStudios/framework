@@ -53,6 +53,7 @@ import kotlin.reflect.full.hasAnnotation
  * support for our custom annotation-based
  * plugin framework.
  */
+@Suppress("DEPRECATION")
 open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
 
     override fun getBaseFolder() = dataFolder

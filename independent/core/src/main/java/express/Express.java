@@ -267,7 +267,7 @@ public class Express implements Router {
                 }
 
                 // Make private method accessible
-                if (!method.isAccessible()) {
+                if (!method.canAccess(this)) {
                     method.setAccessible(true);
                 }
 

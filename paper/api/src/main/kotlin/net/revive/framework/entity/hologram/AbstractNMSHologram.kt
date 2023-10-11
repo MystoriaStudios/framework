@@ -2,7 +2,6 @@ package net.revive.framework.entity.hologram
 
 import net.revive.framework.entity.AbstractNMSEntity
 import net.revive.framework.entity.IEntityHandler
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
 import java.util.*
@@ -99,14 +98,15 @@ open class AbstractNMSHologram(
         }
     }
 
+    // alrrr soooo u wanna change ethis ticompoentsn and make sure is leik yk yap
     override fun spawn(player: Player) {
-        if (!text.equals("{empty}", true) || ChatColor.stripColor(text)!!.isNotEmpty()) {
+        if (!text.equals("{empty}", true) || text.isNotEmpty()) {
             super.spawn(player)
         }
     }
 
     override fun destroy(player: Player) {
-        if (!text.equals("{empty}", true) || ChatColor.stripColor(text)!!.isNotEmpty()) {
+        if (!text.equals("{empty}", true) || text.isNotEmpty()) {
             super.destroy(player)
         }
     }
@@ -259,6 +259,6 @@ open class AbstractNMSHologram(
 
         return text
             .replace("{playerName}", player.name)
-            .replace("{playerDisplayName}", player.displayName)
+            .replace("{playerDisplayName}", player.displayName().toString()) // remove this .tosstring once its updated to components
     }
 }

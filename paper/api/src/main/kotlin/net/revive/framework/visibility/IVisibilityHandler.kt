@@ -66,13 +66,4 @@ interface IVisibilityHandler {
      * @return True if the viewer should see the target, false otherwise.
      */
     fun shouldSee(target: Player, viewer: Player): Boolean
-
-    /**
-     * Retrieves debug information regarding the visibility of a target player with respect to a viewer.
-     *
-     * @param target The player in question.
-     * @param viewer The player for whom the information is being retrieved.
-     * @return A list of strings containing debug information.
-     */
-    fun getDebugInfo(target: Player, viewer: Player): List<String>
 }

@@ -26,7 +26,7 @@ object UpdaterService {
 
     fun createLoginMessage(
         vararg updates: Pair<String, String>,
-        theme: String = "&6",
+        theme: String = "§6",
     ): String {
         var loginMessage =
             "${theme}Plugin updates are available for: "
@@ -39,7 +39,7 @@ object UpdaterService {
                 loginMessage += "and "
             }
 
-            loginMessage += "&f${pair.first} &7(${pair.second})${theme}${
+            loginMessage += "§f${pair.first} §7(${pair.second})${theme}${
                 if (index == updates.size - 1) "." else ", "
             }"
         }

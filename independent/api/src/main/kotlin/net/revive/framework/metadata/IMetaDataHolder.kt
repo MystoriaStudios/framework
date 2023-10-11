@@ -1,3 +1,5 @@
+@file:Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+
 package net.revive.framework.metadata
 
 interface IMetaDataHolder {
@@ -25,6 +27,6 @@ inline fun <reified T : Any> IMetaDataHolder.getMetadata(key: String): T? =
     } else null
 
 inline fun <reified T : Any> IMetaDataHolder.setMetadata(key: String, value: T) = net.revive.framework.Framework.use {
-    it.serializer.serialize(value)
+    setMetadata(key, it.serializer.serialize(value))
 }
 

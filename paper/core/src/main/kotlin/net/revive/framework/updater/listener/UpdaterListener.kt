@@ -1,9 +1,11 @@
 package net.revive.framework.updater.listener
 
+import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
-import org.bukkit.ChatColor
+import net.revive.framework.utils.buildComponent
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -30,21 +32,19 @@ object UpdaterListener : Listener {
                 }
                 .thenRun {
                     if (pendingUpdates.isNotEmpty()) {
-                        event.player.sendMessage(
-                            ChatColor.translateAlternateColorCodes(
-                                '&',
-                                UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
-                            )
-                        )
+                        event.player.sendMessage(Component.text(
+                            UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
+                        ))
                     }
 
                     if (
                         System.currentTimeMillis() - start >= TimeUnit.SECONDS.toMillis(5L) &&
                         pendingUpdates.isEmpty()
                     ) {
-                        event.player.sendMessage(
-                            "${ChatColor.RED}This process took more than 5 seconds, is the artifactory alright?"
-                        )
+                        event.player.sendMessage(buildComponent(
+                            "This process took more than 5 seconds, is the artifactory alright?",
+                            Tailwind.RED_400
+                        ))
                     }
                 }
         }

@@ -8,7 +8,7 @@ object HololgramProtocol {
     fun sendSpawnPackets(player: Player, hologram: AbstractNMSHologram) {
         val hologramText = hologram.processPlaceholders(player, hologram.getText())
 
-        val dataWatcher = dataWatcherEditor {
+         dataWatcherEditor {
             register(1, 0.toShort())
             register(2, hologramText)
             register(3, true)

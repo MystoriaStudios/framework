@@ -3,10 +3,7 @@ package net.revive.framework.flavor.reflections
 import net.revive.framework.flavor.FlavorOptions
 import org.reflections.Reflections
 import org.reflections.Store
-import org.reflections.scanners.MethodAnnotationsScanner
 import org.reflections.scanners.Scanners
-import org.reflections.scanners.SubTypesScanner
-import org.reflections.scanners.TypeAnnotationsScanner
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.QueryFunction
 import java.lang.reflect.Method

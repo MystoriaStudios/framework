@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package net.revive.framework.command
 
 import co.aikar.commands.*

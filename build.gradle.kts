@@ -43,7 +43,7 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.revive.framework"
-    version = "1.0.13-SNAPSHOT"
+    version = "1.0.14-SNAPSHOT"
 
     repositories {
         mavenCentral()

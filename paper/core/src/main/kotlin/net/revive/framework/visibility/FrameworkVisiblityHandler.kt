@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package net.revive.framework.visibility
 
 import me.lucko.helper.Events
@@ -6,7 +8,6 @@ import net.revive.framework.visibility.override.IOverrideHandler
 import net.revive.framework.visibility.override.OverrideResult
 import org.apache.commons.lang3.StringUtils
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChatTabCompleteEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -87,32 +88,5 @@ class FrameworkVisiblityHandler : IVisibilityHandler {
             }
         }
         return true
-    }
-
-    override fun getDebugInfo(target: Player, viewer: Player): List<String> {
-        val debug: MutableList<String> = ArrayList()
-        var canSee: Boolean? = null
-        for ((key, handler) in overrides) {
-            val action: OverrideResult = handler.handle(target, viewer)
-            var color = ChatColor.GRAY
-            if (action === OverrideResult.SHOW && canSee == null) {
-                canSee = true
-                color = ChatColor.GREEN
-            }
-            debug.add(color.toString() + "Overriding Handler: \"" + key + "\": " + action)
-        }
-        for ((key, handler2) in providers) {
-            val action2: VisibilityResult = handler2.handle(target, viewer)
-            var color = ChatColor.GRAY
-            if (action2 === VisibilityResult.HIDE && canSee == null) {
-                canSee = false
-                color = ChatColor.GREEN
-            }
-            debug.add(color.toString() + "Normal Handler: \"" + key + "\": " + action2)
-        }
-        if (canSee == null) canSee = true
-
-        debug.add(ChatColor.AQUA.toString() + "Result: " + viewer.name + " " + (if (canSee) "can" else "cannot") + " see " + target.name)
-        return debug
     }
 }

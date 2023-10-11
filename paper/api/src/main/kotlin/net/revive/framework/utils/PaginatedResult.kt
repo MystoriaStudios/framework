@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package net.revive.framework.utils
 
 import co.aikar.commands.ConditionFailedException
