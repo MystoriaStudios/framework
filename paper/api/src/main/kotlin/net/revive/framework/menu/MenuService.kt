@@ -1,5 +1,6 @@
 package net.revive.framework.menu
 
+import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
@@ -21,7 +22,7 @@ object MenuService {
     lateinit var clickCooldown: MutableMap<UUID, Long>
 
     // A reference to the menu handler used by the service.
-    lateinit var menuHandler: IMenuHandler
+    @Inject lateinit var menuHandler: IMenuHandler
 
     /**
      * Initializes the `openedMenus` map when configuring the service.

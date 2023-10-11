@@ -19,7 +19,7 @@ class BasicFrameworkRedisConnection(
             port: Int = 6379,
             username: String? = null,
             password: String
-        ) : this("redis://${username.let { "$it:" }}$password@$hostname:$port")
+        ) : this("redis://${username ?: ""}:$password@$hostname:$port")
     }
 
     override fun createNewConnection() = RedisClient.create(details.uri)

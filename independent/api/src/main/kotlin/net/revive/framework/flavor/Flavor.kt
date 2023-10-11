@@ -1,5 +1,6 @@
 package net.revive.framework.flavor
 
+import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.binder.FlavorBinderContainer
 import net.revive.framework.flavor.mappings.AnnotationMappings
 import net.revive.framework.flavor.mappings.AnnotationType
@@ -271,7 +272,7 @@ class Flavor(
         }
 
         return bindersOfType.firstOrNull()?.instance
-            ?: type.kotlin.objectInstance ?: type.getDeclaredConstructor().newInstance() ?: println(
+            ?: type.kotlin.objectInstance ?: type.newInstance() ?: println(
                 "Did not find any binder for type ${type.simpleName} that satisfies $annotations"
             )
     }
@@ -288,7 +289,6 @@ class Flavor(
             ?: return
 
         for (field in clazz.java.declaredFields) {
-            print(field.name)
             // making sure this field is annotated with
             // Inject before modifying its value.
             if (AnnotationMappings.matchesAny(AnnotationType.Inject, field.annotations)) {
@@ -297,9 +297,11 @@ class Flavor(
                         field.type, field.annotations
                     )
 
-                val accessibility = field.canAccess(this)
+                println("right fucking you im injecting. ${field.name} right now.")
 
-                field.isAccessible = true
+                val accessibility = field.isAccessible
+
+                field.isAccessible = false
                 field.set(singleton, injectionInstance)
                 field.isAccessible = accessibility
 

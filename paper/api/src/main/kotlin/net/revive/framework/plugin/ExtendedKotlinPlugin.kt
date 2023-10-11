@@ -12,6 +12,7 @@ import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.annotation.container.flavor.LazyStartup
+import net.revive.framework.annotation.inject.AutoBind
 import net.revive.framework.annotation.retrofit.RetrofitService
 import net.revive.framework.annotation.retrofit.UsesRetrofit
 import net.revive.framework.command.FrameworkCommandManager
@@ -24,7 +25,9 @@ import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
+import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.reflections.PackageIndexer
+import net.revive.framework.menu.IMenu
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
 import net.revive.framework.scoreboard.IScoreboard
@@ -205,6 +208,34 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 }.onFailure {
                     logger.log(Level.WARNING, "Failed to manually register command", it)
                 }
+            }
+
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<AutoBind>()
+            .mapNotNull {
+                it.kotlin.objectInstance ?: it.newInstance()
+            }
+            .forEach {
+                this.flavor.binders.add(FlavorBinder(it::class) to it)
+            }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<Inject>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .forEach {
+                this.flavor.inject(it)
+            }
+
+        this.packageIndexer
+            .getSubTypes<IMenu>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .forEach {
+                this.flavor.inject(it)
             }
 
         this.packageIndexer

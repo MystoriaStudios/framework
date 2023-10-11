@@ -6,6 +6,7 @@ import org.reflections.Store
 import org.reflections.scanners.Scanners
 import org.reflections.util.ConfigurationBuilder
 import org.reflections.util.QueryFunction
+import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 
@@ -27,6 +28,7 @@ class PackageIndexer(
             .addScanners(
                 Scanners.MethodsAnnotated,
                 Scanners.TypesAnnotated,
+                Scanners.FieldsAnnotated,
                 Scanners.SubTypes
             )
     )
@@ -46,6 +48,13 @@ class PackageIndexer(
     inline fun <reified T : Annotation> getTypesAnnotatedWith(): List<Class<*>> {
         return reflections
             .getTypesAnnotatedWith(T::class.java)
+            .toList()
+    }
+
+
+    inline fun <reified T : Annotation> getFieldsAnnotatedWith(): List<Field> {
+        return reflections
+            .getFieldsAnnotatedWith(T::class.java)
             .toList()
     }
 

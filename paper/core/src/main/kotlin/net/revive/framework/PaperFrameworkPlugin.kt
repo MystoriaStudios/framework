@@ -82,12 +82,12 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     @ContainerEnable
     fun containerEnable() {
         instance = this
+        nmsVersion = NMSVersion.V1_20_R1
+
         Framework.use { framework ->
-            framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler()
+            framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
         }
-
-        nmsVersion = getNMSVersion()
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
@@ -127,11 +127,10 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             .forEach { instance ->
                 instance.javaClass.interfaces.forEach { interfaceClass ->
                     Framework.use {
-                        it.flavor.bindRaw(interfaceClass.kotlin) to instance
+                        it.flavor.binders.add(FlavorBinder(interfaceClass.kotlin) to instance)
                     }
                 }
             }
-
     }
 
     @ContainerDisable
@@ -146,11 +145,4 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
         return NMSVersion.valueOf(packageName.uppercase())
     }
-
-    private fun Flavor.bindRaw(klass: KClass<*>): FlavorBinder<Any> {
-        val binder = FlavorBinder(klass)
-        binders.add(binder)
-        return binder
-    }
-
 }

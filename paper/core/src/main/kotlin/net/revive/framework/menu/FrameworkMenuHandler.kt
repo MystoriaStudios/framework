@@ -2,6 +2,7 @@ package net.revive.framework.menu
 
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
+import net.revive.framework.flavor.service.Service
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.nms.menu.INMSMenuHandler
 import net.revive.framework.utils.ItemStackBuilder
@@ -12,14 +13,14 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import kotlin.jvm.Throws
 
-class FrameworkMenuHandler : IMenuHandler {
+@Service
+object FrameworkMenuHandler : IMenuHandler {
 
-    @Inject
-    lateinit var menuService: MenuService
+    @Inject lateinit var menuService: MenuService
 
-    @Inject
-    lateinit var nmsMenuHandler: INMSMenuHandler
+    @Inject lateinit var nmsMenuHandler: INMSMenuHandler
 
     /**
      * Creates an inventory for the given player and menu.
@@ -62,7 +63,15 @@ class FrameworkMenuHandler : IMenuHandler {
                     message += if (id != null) {
                         "Please report the following error code to a platform administrator $id"
                     } else "Please try again later."
-                    player.sendMessage(buildComponent(message, Tailwind.RED_400))
+                    player.sendMessage(buildComponent(message, Tailwind.RED_600))
+                    if (id == null) {
+                        throwable.printStackTrace()
+                        if (player.isOp) {
+                            throwable.stackTrace.forEach {
+                                player.sendMessage(buildComponent(it.toString(), Tailwind.RED_400))
+                            }
+                        }
+                    }
                 }
             }
         }
