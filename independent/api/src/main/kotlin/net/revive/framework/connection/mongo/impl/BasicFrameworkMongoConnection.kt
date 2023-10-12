@@ -23,7 +23,7 @@ class BasicFrameworkMongoConnection(
             port: Int,
             username: String,
             password: String
-        ) : this("mongodb://$username:$password@$hostname:$port/admin")
+        ) : this("mongodb${if (hostname.endsWith("mongodb.net")) "+srv" else ""}://$username:$password@$hostname:$port/admin")
     }
 
     override fun getAppliedResource(): MongoDatabase {
