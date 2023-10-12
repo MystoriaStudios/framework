@@ -15,12 +15,6 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.0"
     kotlin("kapt") version "1.9.10"
 }
-
-val artifactory_contextUrl: String by project
-val artifactory_release: String by project
-val artifactory_user: String by project
-val artifactory_password: String by project
-
 val sentry_auth: String by project
 
 sentry {
@@ -48,15 +42,6 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://repo.aikar.co/content/groups/aikar/")
-
-        maven {
-            name = "Revive"
-            url = URI("${artifactory_contextUrl}/${artifactory_release}")
-            credentials {
-                username = artifactory_user
-                password = artifactory_password
-            }
-        }
     }
 
     dependencies {
@@ -111,22 +96,14 @@ allprojects {
         }
 
         repositories {
-            maven {
-                name = "Revive"
-                url = uri("$artifactory_contextUrl/$artifactory_release")
-
-                credentials {
-                    username = artifactory_user
-                    password = artifactory_password
-                }
-            }
+            mavenLocal()
         }
     }
 
     tasks["build"]
         .dependsOn(
             "shadowJar",
-            "publishMavenJavaPublicationToReviveRepository"
+            "publishMavenJavaPublicationToMavenLocalRepository"
         )
 }
 
