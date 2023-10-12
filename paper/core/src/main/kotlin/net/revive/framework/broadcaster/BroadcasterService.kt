@@ -20,7 +20,7 @@ object BroadcasterService {
                 config.messages[index].forEach(Bukkit::broadcast)
 
                 index++
-                if (index > config.messages.size) index = 0
+                if (index >= config.messages.size) index = 0
             }
         }
     }
