@@ -4,7 +4,6 @@ import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.gradle.ext.Gradle
 import org.jetbrains.gradle.ext.runConfigurations
 import org.jetbrains.gradle.ext.settings
-import java.net.URI
 
 plugins {
     id("maven-publish")

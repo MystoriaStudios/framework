@@ -13,13 +13,14 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import kotlin.jvm.Throws
 
 @Service
 object FrameworkMenuHandler : IMenuHandler {
 
-    @Inject lateinit var menuService: MenuService
-    @Inject lateinit var nmsMenuHandler: INMSMenuHandler
+    @Inject
+    lateinit var menuService: MenuService
+    @Inject
+    lateinit var nmsMenuHandler: INMSMenuHandler
 
     /**
      * Creates an inventory for the given player and menu.

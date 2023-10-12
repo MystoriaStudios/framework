@@ -22,7 +22,8 @@ object MenuService {
     lateinit var clickCooldown: MutableMap<UUID, Long>
 
     // A reference to the menu handler used by the service.
-    @Inject lateinit var menuHandler: IMenuHandler
+    @Inject
+    lateinit var menuHandler: IMenuHandler
 
     /**
      * Initializes the `openedMenus` map when configuring the service.

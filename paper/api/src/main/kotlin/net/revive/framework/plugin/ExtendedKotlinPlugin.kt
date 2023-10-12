@@ -66,6 +66,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
      */
     lateinit var packageIndexer: PackageIndexer
     private lateinit var flavor: Flavor
+    var trackedConfigs = mutableMapOf<JsonConfig, Any>()
 
     private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
 
@@ -93,7 +94,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
         }
 
         this.flavor = Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
-        packageIndexer = PackageIndexer(this::class, FlavorOptions(), listOf(this.classLoader))
+        packageIndexer = PackageIndexer(this::class, FlavorOptions(logger), listOf(this.classLoader))
 
         if (this::class.hasAnnotation<UsesRetrofit>()) {
             retrofit = Retrofit.Builder()
@@ -142,13 +143,16 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 kotlin.runCatching {
                     logger.log(Level.INFO, "Loading config ${it.name}")
 
+                    val config = try {
+                        load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                    } catch (exception: FileNotFoundException) {
+                        save(it.getAnnotation(JsonConfig::class.java), it.getConstructor().newInstance())
+                    }
+
                     flavor().binders.add(
-                        FlavorBinder(it::class) to try {
-                            load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
-                        } catch (exception: FileNotFoundException) {
-                            save(it.getAnnotation(JsonConfig::class.java), it.getConstructor().newInstance())
-                        }
+                        FlavorBinder(it::class) to config
                     )
+                    trackedConfigs[it.getAnnotation(JsonConfig::class.java)] = config
                 }.onFailure { throwable ->
                     logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)
                 }
@@ -283,6 +287,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                     logger.log(Level.WARNING, "Failed to disable container part!", it)
                 }
             }
+
+        trackedConfigs.filter {
+            it.key.autoSave
+        }.forEach(this::save)
 
         this.commandManager.unregisterCommands()
         this.flavor.close()

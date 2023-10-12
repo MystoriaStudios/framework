@@ -3,7 +3,6 @@ package net.revive.framework.deathmessage.configuration
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.HoverEvent
 import net.revive.framework.cache.UUIDCache
-import net.revive.framework.cache.impl.distribution.DistributedRedisUUIDCache
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit

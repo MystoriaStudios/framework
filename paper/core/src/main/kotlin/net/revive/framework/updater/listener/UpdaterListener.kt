@@ -32,19 +32,23 @@ object UpdaterListener : Listener {
                 }
                 .thenRun {
                     if (pendingUpdates.isNotEmpty()) {
-                        event.player.sendMessage(Component.text(
-                            UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
-                        ))
+                        event.player.sendMessage(
+                            Component.text(
+                                UpdaterService.createLoginMessage(*pendingUpdates.toTypedArray())
+                            )
+                        )
                     }
 
                     if (
                         System.currentTimeMillis() - start >= TimeUnit.SECONDS.toMillis(5L) &&
                         pendingUpdates.isEmpty()
                     ) {
-                        event.player.sendMessage(buildComponent(
-                            "This process took more than 5 seconds, is the artifactory alright?",
-                            Tailwind.RED_400
-                        ))
+                        event.player.sendMessage(
+                            buildComponent(
+                                "This process took more than 5 seconds, is the artifactory alright?",
+                                Tailwind.RED_400
+                            )
+                        )
                     }
                 }
         }

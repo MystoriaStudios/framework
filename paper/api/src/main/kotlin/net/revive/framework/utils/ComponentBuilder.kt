@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.revive.framework.constants.Tailwind
 
 inline fun buildComponent(component: Component, builder: ComponentBuilder.() -> Unit): Component =
     ComponentBuilder(component = component).apply(builder).build()

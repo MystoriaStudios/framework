@@ -1,7 +1,6 @@
 package net.revive.framework.utils
 
 import com.google.common.base.Preconditions
-import com.google.common.collect.Lists
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -11,8 +10,6 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
-import java.util.*
-import java.util.stream.Collectors
 
 inline fun itemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack =
     ItemStackBuilder(itemStack = itemStack).apply(builder).build()

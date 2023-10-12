@@ -10,7 +10,8 @@ import org.bukkit.Bukkit
 @Service
 object BroadcasterService {
 
-    @Inject lateinit var config: BroadcastConfig
+    @Inject
+    lateinit var config: BroadcastConfig
     var index = 0
 
     @Configure

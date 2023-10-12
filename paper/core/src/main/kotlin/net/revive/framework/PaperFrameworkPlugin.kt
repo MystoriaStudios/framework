@@ -17,7 +17,7 @@ import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.cache.PaperLocalUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCache
-import net.revive.framework.flavor.Flavor
+import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
@@ -37,7 +37,6 @@ import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.inventory.ItemStack
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.KClass
 
 @Plugin(
     name = "Framework",
@@ -137,6 +136,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     fun containerDisable() {
         UpdaterService.reload()
         UpdaterConnector.applyPendingUpdates()
+        FrameworkObjectControllerCache.closeAll()
     }
 
     private fun getNMSVersion(): NMSVersion {

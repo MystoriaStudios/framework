@@ -7,28 +7,24 @@ import net.revive.framework.storage.storable.IStorable
 import java.util.*
 import kotlin.reflect.KClass
 
-/**
- * @author GrowlyX
- * @since 12/30/2021
- */
-class RedisDataStoreStorageLayer<D : IStorable>(
+class RedisFrameworkStoreStorageLayer<D : IStorable>(
     connection: AbstractFrameworkRedisConnection,
     private val container: FrameworkObjectController<D>,
     private val dataType: KClass<D>
 ) : FrameworkStorageLayer<AbstractFrameworkRedisConnection, D, (D) -> Boolean>(connection) {
-    private var section = "DataStore:${dataType.simpleName}"
+    private var section = "Framework:${dataType.simpleName}"
 
     /**
      * Allow a user to build their own
      * custom section with our Redis cache.
      *
-     * All sections must start with `DataStore:`
+     * All sections must start with `Framework:`
      */
     fun withCustomSection(
         section: StringBuilder.() -> Unit
     ) {
         val builder = StringBuilder()
-            .append("DataStore:")
+            .append("Framework:")
             .apply(section)
 
         this.section = builder.toString()

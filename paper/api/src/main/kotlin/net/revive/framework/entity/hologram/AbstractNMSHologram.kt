@@ -259,6 +259,9 @@ open class AbstractNMSHologram(
 
         return text
             .replace("{playerName}", player.name)
-            .replace("{playerDisplayName}", player.displayName().toString()) // remove this .tosstring once its updated to components
+            .replace(
+                "{playerDisplayName}",
+                player.displayName().toString()
+            ) // remove this .tosstring once its updated to components
     }
 }

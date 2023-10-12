@@ -21,12 +21,12 @@ class CachedFrameworkStorageLayer<D : IStorable> :
     ): Map<UUID, D> {
         return connection.getConnection()
             .apply {
-                val filteRED = this.values
+                val filtered = this.values
                     .filter(filter)
 
                 mutableMapOf<UUID, D>()
                     .also { map ->
-                        filteRED.forEach { map[it.identifier] = it }
+                        filtered.forEach { map[it.identifier] = it }
                     }
             }
     }

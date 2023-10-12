@@ -3,6 +3,7 @@ package net.revive.framework.storage.impl
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
+import net.revive.framework.Framework
 import net.revive.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.revive.framework.controller.FrameworkObjectController
 import net.revive.framework.storage.FrameworkStorageLayer
@@ -43,7 +44,7 @@ class MongoFrameworkStorageLayer<D : IStorable>(
         val entries = mutableMapOf<UUID, D>()
 
         for (document in collection.find(filter)) {
-            net.revive.framework.Framework.use {
+            Framework.use {
                 entries[UUID.fromString(document.getString("_id"))!!] =
                     it.serializer.deserialize(dataType, document.toJson())
             }
@@ -56,23 +57,29 @@ class MongoFrameworkStorageLayer<D : IStorable>(
         val document = collection.find(filter)
             .first() ?: return null
 
-        return net.revive.framework.Framework.useWithReturn {
+        return Framework.useWithReturn {
             it.serializer.deserialize(dataType, document.toJson())
         }
     }
 
     override fun saveSync(data: D) {
-        collection.updateOne(
-            Filters.eq(
-                "_id", data.identifier.toString()
-            ),
+        val filter = Filters.eq(
+            "_id", data.identifier.toString()
+        )
+
+        val document = Document.parse(
+            Framework.useWithReturn {
+                it.serializer.serialize(data)
+            }
+        )
+
+        if (collection.find(filter).first() != null) {
+            collection.insertOne(document)
+        } else collection.updateOne(
+            filter,
             Document(
                 "\$set",
-                Document.parse(
-                    net.revive.framework.Framework.useWithReturn {
-                        it.serializer.serialize(data)
-                    }
-                )
+                document
             ),
             upsetOptions
         )
@@ -83,7 +90,7 @@ class MongoFrameworkStorageLayer<D : IStorable>(
             Filters.eq("_id", identifier.toString())
         ).first() ?: return null
 
-        return net.revive.framework.Framework.useWithReturn {
+        return Framework.useWithReturn {
             it.serializer.deserialize(dataType, document.toJson())
         }
     }
@@ -92,7 +99,7 @@ class MongoFrameworkStorageLayer<D : IStorable>(
         val entries = mutableMapOf<UUID, D>()
 
         for (document in collection.find()) {
-            entries[UUID.fromString(document.getString("_id"))!!] = net.revive.framework.Framework.useWithReturn {
+            entries[UUID.fromString(document.getString("_id"))!!] = Framework.useWithReturn {
                 it.serializer.deserialize(dataType, document.toJson())
             }
         }

@@ -27,8 +27,10 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Inject
     lateinit var scoreboardService: ScoreboardService
+
     @Inject
     lateinit var menuHandler: IMenuHandler
+
     @Inject
     lateinit var config: SecurityConfig
 

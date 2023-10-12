@@ -43,7 +43,9 @@ object PlayerDamageListener : Listener {
                 hand.itemMeta.displayName()!!
             } else {
                 buildComponent(hand.type.name.replace('_', ' ')
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }, Tailwind.RED_400)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                    Tailwind.RED_400
+                )
             }
         }
 

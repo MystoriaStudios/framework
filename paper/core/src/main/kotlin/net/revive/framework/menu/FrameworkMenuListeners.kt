@@ -23,6 +23,7 @@ object FrameworkMenuListeners : Listener {
 
     @Inject
     lateinit var menuHandler: IMenuHandler
+
     @Inject
     lateinit var menuService: MenuService
 

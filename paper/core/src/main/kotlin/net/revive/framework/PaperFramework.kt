@@ -11,7 +11,7 @@ import net.revive.framework.permission.PaperPermissionRegistry
 import net.revive.framework.plugin.ExtendedKotlinPlugin
 import org.bukkit.Bukkit
 
-object PaperFramework : net.revive.framework.Framework() {
+object PaperFramework : Framework() {
 
     var registeredKotlinPlugins = mutableListOf<ExtendedKotlinPlugin>()
     override var logger = Bukkit.getLogger()
@@ -39,8 +39,8 @@ object PaperFramework : net.revive.framework.Framework() {
             BasicFrameworkMongoConnection.Details(
                 config.getString("backend.mongo.host") ?: "localhost",
                 config.getInt("backend.mongo.port", 27017),
-                config.getString("backend.mongo.username") ?: "root",
-                config.getString("backend.mongo.password") ?: System.getProperty("MONGODB_PASSWORD")
+                config.getString("backend.mongo.username"),
+                config.getString("backend.mongo.password") ?: System.getProperty("MONGODB_PASSWORD") ?: null
             )
         )
     }
