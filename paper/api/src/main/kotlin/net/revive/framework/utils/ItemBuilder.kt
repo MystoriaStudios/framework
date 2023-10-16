@@ -2,6 +2,7 @@ package net.revive.framework.utils
 
 import com.google.common.base.Preconditions
 import net.kyori.adventure.text.Component
+import net.revive.framework.component.IFrameworkComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -28,6 +29,16 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
         meta.displayName(name)
         itemStack.itemMeta = meta
+    }
+
+    @JvmName("fLore")
+    fun lore(lore: List<IFrameworkComponent>) = apply {
+        lore(lore.map(IFrameworkComponent::build))
+    }
+
+    @JvmName("fLore")
+    fun lore(vararg lore: IFrameworkComponent) = apply {
+        lore(lore.map(IFrameworkComponent::build))
     }
 
     fun lore(lore: List<Component>) = apply {

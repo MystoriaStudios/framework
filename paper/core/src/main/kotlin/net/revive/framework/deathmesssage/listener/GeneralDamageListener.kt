@@ -70,7 +70,7 @@ object GeneralDamageListener : Listener {
     class GeneralDamage(damaged: UUID, damage: Double, private val message: String) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" $message.", Tailwind.GREEN_500)
+                text(" $message.", Tailwind.AMBER_400)
             }
         }
     }
@@ -79,9 +79,9 @@ object GeneralDamageListener : Listener {
         PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" $message whilst fighting ", Tailwind.GREEN_500)
+                text(" $message whilst fighting ", Tailwind.AMBER_400)
                 append(wrapName(damager, player))
-                text(".", Tailwind.GREEN_500)
+                text(".", Tailwind.AMBER_400)
             }
         }
     }

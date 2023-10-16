@@ -34,9 +34,9 @@ object EntityDamageListener : Listener {
         MobAbstractDamage(damaged, damage, entity.type) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was slain by a ", Tailwind.GREEN_500)
+                text(" was slain by a ", Tailwind.AMBER_400)
                 text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
-                text(".", Tailwind.GREEN_500)
+                text(".", Tailwind.AMBER_400)
             }
         }
     }

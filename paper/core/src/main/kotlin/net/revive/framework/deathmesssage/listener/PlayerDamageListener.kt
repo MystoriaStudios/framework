@@ -42,8 +42,9 @@ object PlayerDamageListener : Listener {
             } else if (hand.itemMeta.hasDisplayName()) {
                 hand.itemMeta.displayName()!!
             } else {
-                buildComponent(hand.type.name.replace('_', ' ')
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                buildComponent(
+                    hand.type.name.replace('_', ' ')
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                     Tailwind.RED_400
                 )
             }
@@ -51,13 +52,13 @@ object PlayerDamageListener : Listener {
 
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" was slain by ", Tailwind.GREEN_500)
+                text(" was slain by ", Tailwind.AMBER_400)
                 append(wrapName(damager, player))
                 if (!DeathMessageService.configuration.hideWeapons()) {
-                    text(" using ", Tailwind.GREEN_500)
+                    text(" using ", Tailwind.AMBER_400)
                     append(item)
                 }
-                text(".", Tailwind.GREEN_500)
+                text(".", Tailwind.AMBER_400)
             }
         }
     }

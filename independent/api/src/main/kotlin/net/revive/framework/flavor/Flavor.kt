@@ -288,6 +288,7 @@ class Flavor(
             ?: clazz.java.objectInstance()
             ?: return
 
+
         for (field in clazz.java.declaredFields) {
             // making sure this field is annotated with
             // Inject before modifying its value.
@@ -296,8 +297,6 @@ class Flavor(
                     .findInstanceForInjection(
                         field.type, field.annotations
                     )
-
-                println("right fucking you im injecting. ${field.name} right now.")
 
                 val accessibility = field.isAccessible
 
@@ -389,6 +388,6 @@ class Flavor(
             .runCatching {
                 getDeclaredField("INSTANCE").get(null)
             }
-            .getOrNull()
+            .getOrNull() ?: kotlin.objectInstance
     }
 }

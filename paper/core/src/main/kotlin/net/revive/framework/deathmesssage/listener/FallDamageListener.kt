@@ -53,7 +53,7 @@ object FallDamageListener : Listener {
     class FallDamage(damaged: UUID, damage: Double) : AbstractDamage(damaged, damage) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" hit the ground too hard.", Tailwind.GREEN_500)
+                text(" hit the ground too hard.", Tailwind.AMBER_400)
             }
         }
     }
@@ -62,9 +62,9 @@ object FallDamageListener : Listener {
         PlayerAbstractDamage(damaged, damage, damager) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
-                text(" hit the ground too hard thanks to ", Tailwind.GREEN_500)
+                text(" hit the ground too hard thanks to ", Tailwind.AMBER_400)
                 append(wrapName(damager, player))
-                text(".", Tailwind.GREEN_500)
+                text(".", Tailwind.AMBER_400)
             }
         }
     }

@@ -19,6 +19,8 @@ abstract class AbstractPagedMenu : IMenu {
     // The distribution type for menu buttons.
     private var distribution = MenuDistributionRow.NONE
 
+    override fun size(buttons: Map<Int, IButton>) = 4 * 9
+
     /**
      * Retrieves the title of the menu with pagination for the given player.
      *
@@ -177,5 +179,5 @@ abstract class AbstractPagedMenu : IMenu {
      *
      * @return A list of custom button slots, or an empty list for automatic distribution.
      */
-    open fun getAllPagesButtonSlots(): List<Int> = emptyList()
+    open fun getAllPagesButtonSlots(): List<Int> = (9..35).toList()
 }

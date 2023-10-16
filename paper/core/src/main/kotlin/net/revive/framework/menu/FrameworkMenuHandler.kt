@@ -19,6 +19,7 @@ object FrameworkMenuHandler : IMenuHandler {
 
     @Inject
     lateinit var menuService: MenuService
+
     @Inject
     lateinit var nmsMenuHandler: INMSMenuHandler
 
