@@ -105,7 +105,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                     .plugin(Bukkit.getPluginManager().getPlugin("Framework"))
                     .text(it.value)
                     .onClick { _, event ->
-                        holder.setMetadata(it.key, it.value)
+                        holder + (it.key to event.text)
                         save.invoke(holder)
 
                         player.openMenu(this@EditMetaDataMenu)
