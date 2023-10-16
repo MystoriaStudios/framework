@@ -5,12 +5,9 @@ import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.inventory.MenuType
 import net.revive.framework.nms.NMSVersion
 import net.revive.framework.nms.annotation.NMSHandler
-import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftHumanEntity
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_20_R1.event.CraftEventFactory
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftContainer
@@ -51,7 +48,8 @@ object V1_20_R1MenuHandler : INMSMenuHandler {
 
     }
 
-    private fun getWindowType(size: Int): MenuType<ChestMenu> {
+    private fun getWindowType(size: Int): MenuType<*> {
+        if (size == 5) return MenuType.HOPPER
         return when (size / 9) {
             1 -> MenuType.GENERIC_9x1;
             2 -> MenuType.GENERIC_9x2;

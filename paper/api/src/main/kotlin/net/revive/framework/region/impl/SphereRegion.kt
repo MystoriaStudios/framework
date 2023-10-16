@@ -26,7 +26,7 @@ class SphereRegion(
 
     override fun getCenter(): Point = center
 
-    override fun getVolume(): Double = (4.0/3.0) * Math.PI * radius * radius * radius
+    override fun getVolume(): Double = (4.0 / 3.0) * Math.PI * radius * radius * radius
 
     override fun getBoundary(): Boundary = Boundary.Sphere(center, radius)
 

@@ -9,7 +9,8 @@ import java.util.HashMap;
  */
 public final class CookieFactory {
 
-    private CookieFactory() {}
+    private CookieFactory() {
+    }
 
     /**
      * Parse an cookie string.

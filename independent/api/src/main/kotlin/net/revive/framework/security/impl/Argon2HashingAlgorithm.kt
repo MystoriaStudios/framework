@@ -1,9 +1,8 @@
 package net.revive.framework.security.impl
 
-import net.revive.framework.security.IHashingAlgorithm
-
 import de.mkammerer.argon2.Argon2
 import de.mkammerer.argon2.Argon2Factory
+import net.revive.framework.security.IHashingAlgorithm
 
 object Argon2HashingAlgorithm : IHashingAlgorithm {
 

@@ -1,6 +1,11 @@
 package net.revive.framework.menu
 
+import co.aikar.commands.ConditionFailedException
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.constants.Tailwind
+import net.revive.framework.event.event
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.utils.ItemBuilder
 import net.revive.framework.utils.Tasks
@@ -23,9 +28,9 @@ object FrameworkMenuListeners : Listener {
     lateinit var menuService: MenuService
 
     @EventHandler(priority = EventPriority.MONITOR)
-    fun onInventoryDrag(event: InventoryDragEvent) {
+    fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
         if (event.whoClicked !is Player) return
-        val openMenu = menuService.getOpenedMenu(event.whoClicked as Player) ?: return
+        menuService.getOpenedMenu(event.whoClicked as Player) ?: return
 
         if (event.inventory != event.view.topInventory) {
             event.isCancelled = true
@@ -41,7 +46,7 @@ object FrameworkMenuListeners : Listener {
     }
 
     @EventHandler
-    fun onButtonPress(event: InventoryClickEvent) {
+    fun onButtonPress(event: InventoryClickEvent) = event(event.whoClicked) {
         val player = event.whoClicked as Player
 
         val openMenu = menuService.getOpenedMenu(player)
@@ -67,21 +72,24 @@ object FrameworkMenuListeners : Listener {
             }
 
             // handle items being inserted via cursor
-            if (event.cursor != null && event.cursor.type != Material.AIR && (event.click == ClickType.LEFT || event.click == ClickType.RIGHT || event.click == ClickType.MIDDLE)) {
+            if (!event.cursor.isEmpty && event.cursor.type != Material.AIR && (event.click == ClickType.LEFT || event.click == ClickType.RIGHT || event.click == ClickType.MIDDLE)) {
                 if (event.clickedInventory == event.view.topInventory) {
                     event.isCancelled = true
 
-                    val itemInserted = when (event.click) {
+                    when (event.click) {
                         ClickType.LEFT -> {
                             event.cursor
                         }
+
                         ClickType.RIGHT -> {
                             ItemBuilder.copyOf(event.cursor).amount(1).build()
                         }
+
                         ClickType.MIDDLE -> {
                             val half = (event.cursor.amount / 2).coerceAtLeast(1)
                             ItemBuilder.copyOf(event.cursor).amount(half).build()
                         }
+
                         else -> {
                             event.cursor
                         }
@@ -105,8 +113,14 @@ object FrameworkMenuListeners : Listener {
                 event.isCancelled = true
 
 
-                button.onClick(player, event.click)
-                button.onClick(player, event.click, event)
+                try {
+                    button.onClick(player, event.click)
+                    button.onClick(player, event.click, event)
+                } catch (exception: ConditionFailedException) {
+                    player.sendMessage(
+                        Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700))
+                    )
+                }
 
                 // check if player is still in the same menu and needs to update
                 if (menuService.hasOpenedMenu(player)) {

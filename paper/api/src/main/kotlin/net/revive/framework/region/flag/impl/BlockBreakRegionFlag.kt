@@ -6,7 +6,6 @@ import net.revive.framework.flavor.service.Configure
 import net.revive.framework.region.flag.IRegionFlag
 import net.revive.framework.region.getAppliedRegions
 import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockPlaceEvent
 
 @RegionFlag
 object BlockBreakRegionFlag : IRegionFlag {

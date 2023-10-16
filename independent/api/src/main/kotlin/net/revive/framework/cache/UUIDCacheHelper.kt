@@ -1,10 +1,9 @@
 package net.revive.framework.cache
 
 import com.github.benmanes.caffeine.cache.Caffeine
-import net.revive.framework.Framework
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object UUIDCacheHelper {
@@ -41,7 +40,9 @@ object UUIDCacheHelper {
 
     fun fetchFromMojang(uuid: UUID): MojangResponse? {
         runCatching {
-            val request = Request.Builder().url("https://sessionserver.mojang.com/session/minecraft/profile/${uuid.toString().replace("-", "")}").build()
+            val request = Request.Builder()
+                .url("https://sessionserver.mojang.com/session/minecraft/profile/${uuid.toString().replace("-", "")}")
+                .build()
             val response = client.newCall(request).execute()
 
             if (response.isSuccessful) {

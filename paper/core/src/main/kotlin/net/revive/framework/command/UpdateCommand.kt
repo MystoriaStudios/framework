@@ -6,15 +6,13 @@ import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.Subcommand
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
-import net.revive.framework.Framework
 import net.revive.framework.annotation.command.AutoRegister
-import net.revive.framework.config.SecurityConfig
 import net.revive.framework.constants.Tailwind
-import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.annotation.Named
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
 import net.revive.framework.utils.PaginatedResult
+import net.revive.framework.utils.buildComponent
 import org.bukkit.command.CommandSender
 
 @AutoRegister
@@ -24,6 +22,7 @@ object UpdateCommand : FrameworkCommand() {
 
     @Subcommand("force")
     fun force(sender: CommandSender) {
+        sender.sendMessage(buildComponent("We are forcing an update for you please wait.", Tailwind.GREEN_600))
         UpdaterService.reload()
         UpdaterConnector.applyPendingUpdates()
     }
@@ -39,7 +38,7 @@ object UpdateCommand : FrameworkCommand() {
             .color(TextColor.fromHexString(Tailwind.EMERALD_400))
 
         override fun format(result: String, resultIndex: Int) = Component
-            .text("$result")
+            .text(result)
             .color(TextColor.fromHexString(Tailwind.EMERALD_300))
     }
 }

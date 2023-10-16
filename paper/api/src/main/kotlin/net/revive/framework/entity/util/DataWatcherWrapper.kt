@@ -5,7 +5,7 @@ import net.revive.framework.nms.entity.EntityDataAccessorWrapper
 import net.revive.framework.nms.entity.IDataWatcherHandler
 
 
-inline fun DataWatcherEditor(builder: DataWatcherWrapper.() -> Unit) = DataWatcherWrapper().apply(builder)
+inline fun dataWatcherEditor(builder: DataWatcherWrapper.() -> Unit) = DataWatcherWrapper().apply(builder)
 
 class DataWatcherWrapper {
 
@@ -13,7 +13,8 @@ class DataWatcherWrapper {
 
     fun register(key: Int, value: Any) = dataWatcherHandler.register(getAccessor(key), dataWatcher, value)
     operator fun set(key: Int, value: Any) = dataWatcherHandler.register(getAccessor(key), dataWatcher, value)
-    fun flag(bitField: Int, bitFlag: Int, flag: Boolean) = dataWatcherHandler.getFlag(getAccessor(bitField, bitFlag), flag)
+    fun flag(bitField: Int, bitFlag: Int, flag: Boolean) =
+        dataWatcherHandler.getFlag(getAccessor(bitField, bitFlag), flag)
 
     private inline fun <reified T> getAccessor(key: Int): EntityDataAccessorWrapper<T> {
         return EntityDataAccessorWrapper.of(key)

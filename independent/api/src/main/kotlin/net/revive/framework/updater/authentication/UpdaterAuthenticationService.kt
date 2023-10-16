@@ -6,8 +6,7 @@ import net.revive.framework.serializer.IAbstractTypeSerializable
 import net.revive.framework.updater.UpdaterService
 
 @Service(priority = 50)
-object UpdaterAuthenticationService
-{
+object UpdaterAuthenticationService {
     var authentication: MystoriaConnectionAuthenticationWrapper = MystoriaConnectionAuthenticationWrapper()
 
     @Configure

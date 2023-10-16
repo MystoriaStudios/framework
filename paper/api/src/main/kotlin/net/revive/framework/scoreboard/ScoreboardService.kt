@@ -53,6 +53,7 @@ object ScoreboardService {
         } ?: return
 
         val scoreboard = playerScoreboards.getOrDefault(player.uniqueId, primaryScoreboard) ?: return
+        if (!scoreboard.shouldDisplay(player)) return
 
         board.updateTitle(scoreboard.getTitle(player))
         board.updateLines(scoreboard.getScores(player))

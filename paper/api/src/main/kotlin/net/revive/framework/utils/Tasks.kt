@@ -6,89 +6,89 @@ import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
 
 object Tasks {
-    
+
     lateinit var plugin: ExtendedKotlinPlugin
     val scheduler: BukkitScheduler get() = plugin.server.scheduler
 
     @JvmStatic
     fun sync(lambda: () -> Unit) {
-        scheduler.runTask(plugin) { test ->
+        scheduler.runTask(plugin) { _ ->
             lambda.invoke()
         }
     }
 
     @JvmStatic
     fun delayed(delay: Long, lambda: () -> Unit) {
-        return scheduler.runTaskLater(plugin, { test ->
+        return scheduler.runTaskLater(plugin, { _ ->
             lambda.invoke()
         }, delay)
     }
 
     @JvmStatic
-    fun delayed(delay: Long, runnable: Runnable) : BukkitTask {
+    fun delayed(delay: Long, runnable: Runnable): BukkitTask {
         return scheduler.runTaskLater(plugin, runnable, delay)
     }
 
     @JvmStatic
-    fun delayed(delay: Long, runnable: BukkitRunnable) : BukkitTask {
+    fun delayed(delay: Long, runnable: BukkitRunnable): BukkitTask {
         return runnable.runTaskLater(plugin, delay)
     }
 
     @JvmStatic
     fun timer(delay: Long, interval: Long, lambda: () -> Unit) {
-        return scheduler.runTaskTimer(plugin, { test ->
+        return scheduler.runTaskTimer(plugin, { _ ->
             lambda.invoke()
         }, delay, interval)
     }
 
     @JvmStatic
-    fun timer(delay: Long, interval: Long, runnable: Runnable) : BukkitTask {
+    fun timer(delay: Long, interval: Long, runnable: Runnable): BukkitTask {
         return scheduler.runTaskTimer(plugin, runnable, delay, interval)
     }
 
     @JvmStatic
-    fun timer(delay: Long, interval: Long, runnable: BukkitRunnable) : BukkitTask {
+    fun timer(delay: Long, interval: Long, runnable: BukkitRunnable): BukkitTask {
         return runnable.runTaskTimer(plugin, delay, interval)
     }
 
     @JvmStatic
     fun async(lambda: () -> Unit) {
-        return scheduler.runTaskAsynchronously(plugin) { test ->
+        return scheduler.runTaskAsynchronously(plugin) { _ ->
             lambda.invoke()
         }
     }
 
     @JvmStatic
     fun asyncDelayed(delay: Long, lambda: () -> Unit) {
-        return scheduler.runTaskLaterAsynchronously(plugin, { test ->
+        return scheduler.runTaskLaterAsynchronously(plugin, { _ ->
             lambda.invoke()
         }, delay)
     }
 
     @JvmStatic
-    fun asyncDelayed(runnable: Runnable, delay: Long) : BukkitTask {
+    fun asyncDelayed(runnable: Runnable, delay: Long): BukkitTask {
         return scheduler.runTaskLaterAsynchronously(plugin, runnable, delay)
     }
 
     @JvmStatic
-    fun asyncDelayed(runnable: BukkitRunnable, delay: Long) : BukkitTask {
+    fun asyncDelayed(runnable: BukkitRunnable, delay: Long): BukkitTask {
         return runnable.runTaskLaterAsynchronously(plugin, delay)
     }
 
     @JvmStatic
     fun asyncTimer(delay: Long, interval: Long, lambda: () -> Unit) {
-        return scheduler.runTaskTimerAsynchronously(plugin, { test ->
+        return scheduler.runTaskTimerAsynchronously(plugin, { _ ->
             lambda.invoke()
         }, delay, interval)
     }
 
     @JvmStatic
-    fun asyncTimer(runnable: Runnable, delay: Long, interval: Long) : BukkitTask {
+    fun asyncTimer(runnable: Runnable, delay: Long, interval: Long): BukkitTask {
         return scheduler.runTaskTimerAsynchronously(plugin, runnable, delay, interval)
     }
 
     @JvmStatic
-    fun asyncTimer(runnable: BukkitRunnable, delay: Long, interval: Long) : BukkitTask {
+    fun asyncTimer(runnable: BukkitRunnable, delay: Long, interval: Long): BukkitTask {
         return runnable.runTaskTimerAsynchronously(plugin, delay, interval)
     }
 }

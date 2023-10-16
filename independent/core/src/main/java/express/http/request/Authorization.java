@@ -51,7 +51,7 @@ public class Authorization {
      * If any of the predicates returns <code>true</code>, the request is counted as
      * validly authorized and the method returns <code>true</code>.
      *
-     * @param req Request instance
+     * @param req        Request instance
      * @param validators Validators
      * @return If authorization was successful
      */

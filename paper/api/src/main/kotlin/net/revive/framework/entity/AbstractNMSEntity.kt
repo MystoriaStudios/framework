@@ -74,8 +74,7 @@ abstract class AbstractNMSEntity(var location: Location) {
      *
      * Therefore, this method is called immediately after deserialization.
      */
-    open fun initializeData()
-    {
+    open fun initializeData() {
         this.id = IEntityHandler.instance.nextEntityId()
         this.persistent = true
         this.root = true
@@ -92,14 +91,11 @@ abstract class AbstractNMSEntity(var location: Location) {
         this.initialized = true
     }
 
-    open fun onDeletion()
-    {
+    open fun onDeletion() {
         destroyForCurrentWatchers()
 
-        if (isMultiPartEntity())
-        {
-            for (child in getChildEntities())
-            {
+        if (isMultiPartEntity()) {
+            for (child in getChildEntities()) {
                 child.destroyForCurrentWatchers()
                 child.onDeletion()
             }
@@ -109,12 +105,10 @@ abstract class AbstractNMSEntity(var location: Location) {
     /**
      * Updates the [Entity.location] of this entity to the given [location] and sends updates to the current watchers.
      */
-    open fun updateLocation(location: Location)
-    {
+    open fun updateLocation(location: Location) {
         this.location = location
 
-        for (player in getCurrentWatcherPlayers())
-        {
+        for (player in getCurrentWatcherPlayers()) {
             if (isVisibleToPlayer(player)) sendRepositionPackets(player)
         }
     }
@@ -122,68 +116,57 @@ abstract class AbstractNMSEntity(var location: Location) {
     /**
      * Gets a prepped location that's used to spawn/reposition an entity.
      */
-    open fun getAdjustedLocation(player: Player): Location
-    {
+    open fun getAdjustedLocation(player: Player): Location {
         return location
     }
 
     /**
      *
      */
-    open fun getDebugViewLocation(): Location
-    {
+    open fun getDebugViewLocation(): Location {
         return location.clone().subtract(0.0, 0.0, 0.0)
     }
-/*
+    /*
 
-    open fun getAttachedHologram(): AbstractNMSHologram?
-    {
-        return null
-    }
-*/
+        open fun getAttachedHologram(): AbstractNMSHologram?
+        {
+            return null
+        }
+    */
 
-    fun isInitialized(): Boolean
-    {
+    fun isInitialized(): Boolean {
         return initialized
     }
 
     /**
      * If this entity is visible.
      */
-    open fun isVisible(): Boolean
-    {
+    open fun isVisible(): Boolean {
         return !hidden
     }
 
     /**
      * If this entity is visible to the given [player].
      */
-    open fun isVisibleToPlayer(player: Player): Boolean
-    {
+    open fun isVisibleToPlayer(player: Player): Boolean {
         return !hidden && location.world == player.world && location.distance(player.location) <= 32.0
     }
 
     /**
      * Updates the visibility of this entity.
      */
-    open fun updateVisibility(hidden: Boolean)
-    {
+    open fun updateVisibility(hidden: Boolean) {
         val hasChanged = hidden != this.hidden
 
         this.hidden = hidden
 
-        if (hasChanged)
-        {
-            if (this.hidden)
-            {
-                for (player in getCurrentWatcherPlayers())
-                {
+        if (hasChanged) {
+            if (this.hidden) {
+                for (player in getCurrentWatcherPlayers()) {
                     destroy(player)
                 }
-            } else
-            {
-                for (player in getCurrentWatcherPlayers())
-                {
+            } else {
+                for (player in getCurrentWatcherPlayers()) {
                     spawn(player)
                 }
             }
@@ -193,30 +176,24 @@ abstract class AbstractNMSEntity(var location: Location) {
     /**
      * Called when the given [player] left-clicks this entity.
      */
-    open fun onLeftClick(player: Player)
-    {
+    open fun onLeftClick(player: Player) {
     }
 
     /**
      * Called when the given [player] right-clicks this entity.
      */
-    open fun onRightClick(player: Player)
-    {
-        if (command != null)
-        {
+    open fun onRightClick(player: Player) {
+        if (command != null) {
             player.chat("/$command")
         }
     }
 
-    open fun isDamageable(): Boolean
-    {
+    open fun isDamageable(): Boolean {
         return false
     }
 
-    open fun spawn(player: Player)
-    {
-        if (currentWatchers.contains(player.uniqueId))
-        {
+    open fun spawn(player: Player) {
+        if (currentWatchers.contains(player.uniqueId)) {
             return
         }
 
@@ -226,73 +203,60 @@ abstract class AbstractNMSEntity(var location: Location) {
         sendUpdatePackets(player)
 
         val multiPart = isMultiPartEntity()
-        if (multiPart)
-        {
-            for (childEntity in getChildEntities())
-            {
+        if (multiPart) {
+            for (childEntity in getChildEntities()) {
                 childEntity.spawn(player)
             }
         }
     }
 
-    open fun update(player: Player)
-    {
-        if (!currentWatchers.contains(player.uniqueId))
-        {
+    open fun update(player: Player) {
+        if (!currentWatchers.contains(player.uniqueId)) {
             return
         }
 
         sendUpdatePackets(player)
 
-        if (isMultiPartEntity())
-        {
-            for (childEntity in getChildEntities())
-            {
+        if (isMultiPartEntity()) {
+            for (childEntity in getChildEntities()) {
                 childEntity.update(player)
             }
         }
     }
 
-    open fun destroy(player: Player)
-    {
+    open fun destroy(player: Player) {
         currentWatchers.remove(player.uniqueId)
 
         sendDestroyPackets(player)
 
-        if (isMultiPartEntity())
-        {
-            for (childEntity in getChildEntities())
-            {
+        if (isMultiPartEntity()) {
+            for (childEntity in getChildEntities()) {
                 childEntity.destroy(player)
             }
         }
     }
 
-    fun hasAnyWatchers(): Boolean
-    {
+    fun hasAnyWatchers(): Boolean {
         return currentWatchers.isNotEmpty()
     }
 
     /**
      * Gets a list of [Player] objects mapped from the [currentWatchers] list.
      */
-    fun getCurrentWatcherPlayers(): List<Player>
-    {
-        return kotlin.runCatching { currentWatchers.mapNotNull { Bukkit.getPlayer(it) } }.onFailure { emptyList<Player>() }.getOrThrow()
+    fun getCurrentWatcherPlayers(): List<Player> {
+        return kotlin.runCatching { currentWatchers.mapNotNull { Bukkit.getPlayer(it) } }
+            .onFailure { emptyList<Player>() }.getOrThrow()
     }
 
-    fun isWatcher(playerUuid: UUID): Boolean
-    {
+    fun isWatcher(playerUuid: UUID): Boolean {
         return currentWatchers.contains(playerUuid)
     }
 
     /**
      * Sends entity updates to all current watchers.
      */
-    open fun updateForCurrentWatchers()
-    {
-        for (player in getCurrentWatcherPlayers())
-        {
+    open fun updateForCurrentWatchers() {
+        for (player in getCurrentWatcherPlayers()) {
             update(player)
         }
     }
@@ -300,54 +264,49 @@ abstract class AbstractNMSEntity(var location: Location) {
     /**
      * Destroys the entity for all current watchers.
      */
-    open fun destroyForCurrentWatchers()
-    {
-        for (player in getCurrentWatcherPlayers())
-        {
+    open fun destroyForCurrentWatchers() {
+        for (player in getCurrentWatcherPlayers()) {
             destroy(player)
         }
     }
 
-    open fun resendForCurrentWatchers()
-    {
-        for (player in getCurrentWatcherPlayers())
-        {
+    open fun resendForCurrentWatchers() {
+        for (player in getCurrentWatcherPlayers()) {
             destroy(player)
             spawn(player)
         }
     }
 
-    open fun isMultiPartEntity(): Boolean
-    {
+    open fun isMultiPartEntity(): Boolean {
         return false
     }
 
-    open fun isRootOfMultiPartEntity(): Boolean
-    {
+    open fun isRootOfMultiPartEntity(): Boolean {
         return root
     }
 
-    open fun sendSpawnPackets(player: Player)
-    {
+    open fun sendSpawnPackets(player: Player) {
     }
 
-    open fun sendDestroyPackets(player: Player)
-    {
+    open fun sendDestroyPackets(player: Player) {
         nmsEntityHandler.sendDestroyPackets(player, id)
     }
 
-    open fun sendUpdatePackets(player: Player)
-    {
+    open fun sendUpdatePackets(player: Player) {
     }
 
-    fun sendStatusPacket(status: Byte)
-    {
+    fun sendStatusPacket(status: Byte) {
         nmsEntityHandler.sendStatusPacket(getCurrentWatcherPlayers(), id, status)
     }
 
-    open fun sendRepositionPackets(player: Player)
-    {
-        nmsEntityHandler.sendEntityTeleport(player, id, location, AngleUtils.yawToBytes(location.yaw), AngleUtils.yawToBytes(location.pitch))
+    open fun sendRepositionPackets(player: Player) {
+        nmsEntityHandler.sendEntityTeleport(
+            player,
+            id,
+            location,
+            AngleUtils.yawToBytes(location.yaw),
+            AngleUtils.yawToBytes(location.pitch)
+        )
     }
 
     companion object {

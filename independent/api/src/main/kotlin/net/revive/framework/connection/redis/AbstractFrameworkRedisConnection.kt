@@ -5,7 +5,8 @@ import io.lettuce.core.api.StatefulRedisConnection
 import net.revive.framework.connection.AbstractFrameworkConnection
 import kotlin.properties.Delegates
 
-abstract class AbstractFrameworkRedisConnection : AbstractFrameworkConnection<RedisClient, StatefulRedisConnection<String, String>>() {
+abstract class AbstractFrameworkRedisConnection :
+    AbstractFrameworkConnection<RedisClient, StatefulRedisConnection<String, String>>() {
     private var handle by Delegates.notNull<RedisClient>()
     lateinit var connection: StatefulRedisConnection<String, String>
 

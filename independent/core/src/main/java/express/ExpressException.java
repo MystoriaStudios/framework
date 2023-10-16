@@ -9,7 +9,8 @@ public class ExpressException extends RuntimeException {
     /**
      * Constructs a new exception with an empty detail message.
      */
-    public ExpressException() {}
+    public ExpressException() {
+    }
 
     /**
      * Constructs a new exception with the specified detail message.

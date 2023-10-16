@@ -26,18 +26,18 @@ import java.util.logging.Logger
 abstract class Framework {
 
     companion object {
-        lateinit var instance: net.revive.framework.Framework
+        lateinit var instance: Framework
 
-        fun supply(framework: net.revive.framework.Framework, lambda: (net.revive.framework.Framework) -> Unit) {
-            net.revive.framework.Framework.Companion.instance = framework
-            lambda.invoke(net.revive.framework.Framework.Companion.instance)
+        fun supply(framework: Framework, lambda: (Framework) -> Unit) {
+            instance = framework
+            lambda.invoke(instance)
         }
 
-        fun use(lambda: (net.revive.framework.Framework) -> Unit) = lambda.invoke(net.revive.framework.Framework.Companion.instance)
-        fun <T> useWithReturn(lambda: (net.revive.framework.Framework) -> T) = lambda.invoke(net.revive.framework.Framework.Companion.instance)
+        fun use(lambda: (Framework) -> Unit) = lambda.invoke(instance)
+        fun <T> useWithReturn(lambda: (Framework) -> T) = lambda.invoke(instance)
     }
 
-    lateinit var platform: net.revive.framework.IFrameworkPlatform
+    lateinit var platform: IFrameworkPlatform
     abstract var permissionProvider: IPermissionProvider
     abstract var permissionRegistry: IPermissionRegistry
 
@@ -53,9 +53,9 @@ abstract class Framework {
         .addInterceptor(FrameworkAuthenticationInterceptor)
         .build()
 
-    fun configure(platform: net.revive.framework.IFrameworkPlatform) {
+    fun configure(platform: IFrameworkPlatform) {
         this.platform = platform
-        net.revive.framework.Framework.Companion.instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
+        instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
 
         sentryService.configure()
         messageHandler.configure()
@@ -63,7 +63,7 @@ abstract class Framework {
 
         retrofit = Retrofit.Builder()
             .baseUrl("${Deployment.Security.API_BASE_URL}/")
-            .client(net.revive.framework.Framework.Companion.useWithReturn {
+            .client(useWithReturn {
                 it.okHttpClient
             })
             .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
@@ -71,8 +71,8 @@ abstract class Framework {
         logger.log(Level.INFO, "Registering Retrofit instance as required.")
     }
 
-    abstract fun constructNewRedisConnection() : AbstractFrameworkRedisConnection
-    abstract fun constructNewMongoConnection() : AbstractFrameworkMongoConnection
+    abstract fun constructNewRedisConnection(): AbstractFrameworkRedisConnection
+    abstract fun constructNewMongoConnection(): AbstractFrameworkMongoConnection
 
     fun log(from: String, message: String) {
         logger.log(Level.INFO, "[$from] $message")
@@ -83,6 +83,6 @@ abstract class Framework {
     }
 }
 
-fun String.debug(from: String) = net.revive.framework.Framework.Companion.use {
+fun String.debug(from: String) = Framework.use {
     it.log(from, this)
 }

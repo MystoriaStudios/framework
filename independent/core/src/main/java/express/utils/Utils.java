@@ -12,7 +12,8 @@ import java.security.SecureRandom;
 
 public final class Utils {
 
-    private Utils() {}
+    private Utils() {
+    }
 
     /**
      * Write all data from an InputStream in an String

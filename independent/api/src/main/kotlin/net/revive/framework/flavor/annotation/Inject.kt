@@ -10,6 +10,7 @@ package net.revive.framework.flavor.annotation
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.CONSTRUCTOR,
     AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS
 )
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Inject

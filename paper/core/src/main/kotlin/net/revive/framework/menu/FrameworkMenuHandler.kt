@@ -1,20 +1,21 @@
 package net.revive.framework.menu
 
-import net.revive.framework.Framework
-import net.revive.framework.PaperFrameworkPlugin
+import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
+import net.revive.framework.flavor.service.Service
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.nms.menu.INMSMenuHandler
 import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.Tasks
+import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class FrameworkMenuHandler : IMenuHandler {
+@Service
+object FrameworkMenuHandler : IMenuHandler {
 
     @Inject
     lateinit var menuService: MenuService
@@ -59,11 +60,19 @@ class FrameworkMenuHandler : IMenuHandler {
         }.onFailure { throwable ->
             net.revive.framework.Framework.use {
                 it.sentryService.log(throwable) { id ->
-                    var message = "${ChatColor.RED}Whoops! we ran into an error whilst trying to do that. "
+                    var message = "Whoops! we ran into an error whilst trying to do that. "
                     message += if (id != null) {
-                        "Please report the following error code to a platform administrator ${ChatColor.YELLOW}$id"
+                        "Please report the following error code to a platform administrator $id"
                     } else "Please try again later."
-                    player.sendMessage(message)
+                    player.sendMessage(buildComponent(message, Tailwind.RED_600))
+                    if (id == null) {
+                        throwable.printStackTrace()
+                        if (player.isOp) {
+                            throwable.stackTrace.forEach {
+                                player.sendMessage(buildComponent(it.toString(), Tailwind.RED_400))
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -80,8 +89,7 @@ class FrameworkMenuHandler : IMenuHandler {
         val openInventory = player.openInventory
 
         // check if top inv size is the same as new menu size and if the titles match
-        if (nmsMenuHandler.isSameInventory(inventory, openInventory, menu.getTitle(player)))
-        {
+        if (nmsMenuHandler.isSameInventory(inventory, openInventory, menu.getTitle(player))) {
             openInventory.topInventory.contents = inventory.contents
             return
         }
@@ -89,7 +97,7 @@ class FrameworkMenuHandler : IMenuHandler {
         menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
-            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
+            player.openInventory(inventory)
             updateMenu(player, menu)
 
             player.updateInventory()
@@ -99,8 +107,7 @@ class FrameworkMenuHandler : IMenuHandler {
 
         Tasks.delayed(1L)
         {
-
-            nmsMenuHandler.openCustomInventory(player, inventory, inventory.size)
+            player.openInventory(inventory)
             updateMenu(player, menu)
 
             player.updateInventory()

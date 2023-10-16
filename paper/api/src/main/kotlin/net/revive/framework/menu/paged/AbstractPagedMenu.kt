@@ -7,6 +7,7 @@ import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.distribution.MenuDistributionRow
 import org.bukkit.entity.Player
 import kotlin.math.ceil
+
 /**
  * An abstract class representing a paged menu that extends the IMenu interface.
  */
@@ -17,6 +18,8 @@ abstract class AbstractPagedMenu : IMenu {
 
     // The distribution type for menu buttons.
     private var distribution = MenuDistributionRow.NONE
+
+    override fun size(buttons: Map<Int, IButton>) = 4 * 9
 
     /**
      * Retrieves the title of the menu with pagination for the given player.
@@ -47,9 +50,11 @@ abstract class AbstractPagedMenu : IMenu {
             if (this != null) {
                 val pages = getPages(player)
 
-                return this.append(Component.text(
-                    if (pages > 1) " ($page/$pages)" else ""
-                ))
+                return this.append(
+                    Component.text(
+                        if (pages > 1) " ($page/$pages)" else ""
+                    )
+                )
             } else {
                 return getUnPaginatedTitle(player)
             }
@@ -174,5 +179,5 @@ abstract class AbstractPagedMenu : IMenu {
      *
      * @return A list of custom button slots, or an empty list for automatic distribution.
      */
-    open fun getAllPagesButtonSlots(): List<Int> = emptyList()
+    open fun getAllPagesButtonSlots(): List<Int> = (9..35).toList()
 }

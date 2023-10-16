@@ -85,14 +85,14 @@ interface IMenu {
      *
      * @param player The player who opened the menu.
      */
-    fun onOpen(player: Player) { }
+    fun onOpen(player: Player) {}
 
     /**
      * Called when the menu is closed by a player.
      *
      * @param player The player who closed the menu.
      */
-    fun onClose(player: Player) { }
+    fun onClose(player: Player) {}
 
     /**
      * Calculates and returns the size of the menu based on the buttons provided.
@@ -100,13 +100,10 @@ interface IMenu {
      * @param buttons A map of button positions (slot numbers) to button identifiers (IButton).
      * @return The calculated size of the menu as an integer.
      */
-    fun size(buttons: Map<Int, IButton>): Int
-    {
+    fun size(buttons: Map<Int, IButton>): Int {
         var highest = 0
-        for (buttonValue in buttons.keys)
-        {
-            if (buttonValue > highest)
-            {
+        for (buttonValue in buttons.keys) {
+            if (buttonValue > highest) {
                 highest = buttonValue
             }
         }

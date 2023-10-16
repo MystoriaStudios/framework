@@ -1,5 +1,7 @@
 package net.revive.framework.menu
+
 import net.revive.framework.menu.button.IButton
+import net.revive.framework.menu.template.MenuTemplate
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -64,4 +66,8 @@ interface IMenuHandler {
 
 fun Player.openMenu(menu: IMenu) {
     MenuService.menuHandler.openMenu(this, menu)
+}
+
+fun Player.openMenuTemplate(menu: MenuTemplate) {
+    MenuService.menuHandler.openMenu(this, menu.build())
 }

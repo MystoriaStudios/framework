@@ -10,5 +10,6 @@
 | 1.20.1      | 1.20.1-R0.1-SNAPSHOT | True             |
 
 # **Features:**
+
 - **Menus** Handles all version specific items for menus such as menu titles and opening them.
 - **Entities** As entities are packet based, we implement the packets here aswell as some logic

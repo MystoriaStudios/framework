@@ -18,6 +18,10 @@ class VelocityLocalUUIDCacheTranslator(val server: ProxyServer) : ILocalUUIDCach
 
     }
 
+    override fun update(username: String, uuid: UUID) {
+
+    }
+
     override fun update(response: UUIDCacheHelper.MojangResponse, commit: Boolean) {
 
     }

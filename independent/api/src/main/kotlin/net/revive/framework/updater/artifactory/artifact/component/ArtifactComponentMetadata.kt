@@ -6,7 +6,6 @@ data class ArtifactComponentMetadata(
     val mimeType: String,
     val downloadUri: String,
     val checksums: ArtifactComponentChecksums,
-)
-{
+) {
     var version = "???"
 }

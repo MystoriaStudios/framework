@@ -6,7 +6,8 @@ import org.bukkit.event.HandlerList
 open class SimpleEvent : Event() {
 
     companion object {
-        @JvmStatic val handlerList = HandlerList()
+        @JvmStatic
+        val handlerList = HandlerList()
     }
 
     override fun getHandlers() = handlerList

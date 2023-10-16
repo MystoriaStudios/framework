@@ -6,7 +6,6 @@ import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.paged.AbstractPagedMenu
 import net.revive.framework.utils.ItemStackBuilder
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class TestMenu : AbstractPagedMenu() {

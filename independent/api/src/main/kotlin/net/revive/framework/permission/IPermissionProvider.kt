@@ -2,7 +2,6 @@ package net.revive.framework.permission
 
 import co.aikar.commands.ConditionFailedException
 import java.util.*
-import kotlin.jvm.Throws
 
 interface IPermissionProvider {
     fun hasPermission(uuid: UUID, permission: String): Boolean

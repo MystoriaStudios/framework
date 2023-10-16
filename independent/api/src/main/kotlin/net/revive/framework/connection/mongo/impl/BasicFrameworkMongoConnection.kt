@@ -10,8 +10,13 @@ class BasicFrameworkMongoConnection(
     private val details: Details
 ) : AbstractFrameworkMongoConnection() {
     data class Details(
-        val uri: String = "mongodb://admin:${URLEncoder.encode("a=@NbvLLa9?!D2tVL#nwt-eEe5CWB\$ky+C&3YxwWxNN")}@100.67.254.17:27017/admin",
-        val database: String = "framework"
+        val uri: String = "mongodb://root:${
+            URLEncoder.encode(
+                System.getProperty("MONGODB_PASSWORD"),
+                "UTF-8"
+            )
+        }@localhost:27017/admin",
+        val database: String = "randomcraft"
     ) {
         constructor(
             hostname: String,
@@ -21,13 +26,23 @@ class BasicFrameworkMongoConnection(
         constructor(
             hostname: String,
             port: Int,
-            username: String,
-            password: String
-        ) : this("mongodb://$username:$password@$hostname:$port/admin")
+            username: String?,
+            password: String?,
+            database: String = "randomcraft",
+            authDatabase: String = "admin",
+            srv: Boolean = hostname.endsWith("mongodb.net")
+        ) : this(
+            "mongodb${
+                if (srv) "+srv" else ""
+            }://${
+                if (username != null) "$username:" else ""
+            }${
+                if (password != null) "$password@" else ""
+            }$hostname${if (!srv) ":$port" else ""}/$authDatabase", database
+        )
     }
 
-    override fun getAppliedResource() : MongoDatabase
-    {
+    override fun getAppliedResource(): MongoDatabase {
         return try {
             getConnection().getDatabase(details.database)
         } catch (ignoRED: Exception) {
@@ -37,6 +52,11 @@ class BasicFrameworkMongoConnection(
         }
     }
 
-    override fun getConnection() = try { handle } catch (e: Exception) { createNewConnection() }
+    override fun getConnection() = try {
+        handle
+    } catch (e: Exception) {
+        createNewConnection()
+    }
+
     override fun createNewConnection() = MongoClient(MongoClientURI(details.uri))
 }

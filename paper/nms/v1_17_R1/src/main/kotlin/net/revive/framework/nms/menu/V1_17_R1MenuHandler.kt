@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.inventory.MenuType
 import net.revive.framework.nms.NMSVersion
 import net.revive.framework.nms.annotation.NMSHandler
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftHumanEntity
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer
 import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftContainer

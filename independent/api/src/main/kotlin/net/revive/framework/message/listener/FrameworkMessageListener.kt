@@ -1,7 +1,6 @@
 package net.revive.framework.message.listener
 
 import io.lettuce.core.pubsub.RedisPubSubListener
-import net.revive.framework.Framework
 import net.revive.framework.message.IMessage
 import net.revive.framework.serializer.impl.GsonSerializer
 

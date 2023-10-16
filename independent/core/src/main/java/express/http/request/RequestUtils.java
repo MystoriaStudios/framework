@@ -10,7 +10,8 @@ import java.util.List;
 
 final class RequestUtils {
 
-    private RequestUtils() {}
+    private RequestUtils() {
+    }
 
     /**
      * Extract the cookies from the 'Cookie' header.

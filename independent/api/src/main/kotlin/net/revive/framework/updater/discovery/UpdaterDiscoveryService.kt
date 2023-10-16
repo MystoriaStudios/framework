@@ -6,13 +6,11 @@ import net.revive.framework.serializer.IAbstractTypeSerializable
 import net.revive.framework.updater.UpdaterService
 
 @Service(priority = 45)
-object UpdaterDiscoveryService
-{
+object UpdaterDiscoveryService {
     var discoverable = UpdaterService.discoverable
 
     @Configure
-    fun configure()
-    {
+    fun configure() {
         discoverable = UpdaterService.discoverable
     }
 
@@ -24,8 +22,7 @@ object UpdaterDiscoveryService
         val assets: MutableList<String> = mutableListOf(
 
         )
-    ) : IAbstractTypeSerializable
-    {
+    ) : IAbstractTypeSerializable {
         override fun getAbstractType() = DiscoverableAssets::class.java
     }
 }

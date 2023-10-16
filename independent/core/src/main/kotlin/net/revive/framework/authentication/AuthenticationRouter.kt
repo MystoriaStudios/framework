@@ -2,8 +2,6 @@ package net.revive.framework.authentication
 
 import express.ExpressRouter
 import express.http.Cookie
-import express.http.CookieFactory
-import net.revive.framework.Framework
 import net.revive.framework.authentication.exception.AuthenticationFailedException
 
 object AuthenticationRouter : ExpressRouter() {
@@ -29,10 +27,12 @@ object AuthenticationRouter : ExpressRouter() {
                 return@post
             }
 
-            res.setCookie(Cookie(
-                "",
-                ""
-            ))
+            res.setCookie(
+                Cookie(
+                    "",
+                    ""
+                )
+            )
 
         }
     }

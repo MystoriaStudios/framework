@@ -1,22 +1,21 @@
 package net.revive.framework.utils
 
 import com.google.common.base.Preconditions
-import com.google.common.collect.Lists
 import net.kyori.adventure.text.Component
+import net.revive.framework.component.IFrameworkComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.Damageable
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
-import java.util.*
-import java.util.stream.Collectors
 
-inline fun ItemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder(itemStack = itemStack).apply(builder).build()
+inline fun itemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack =
+    ItemStackBuilder(itemStack = itemStack).apply(builder).build()
 
-inline fun ItemBuilder(builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder().apply(builder).build()
+inline fun itemBuilder(builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder().apply(builder).build()
 
 class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
 
@@ -30,6 +29,16 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
         meta.displayName(name)
         itemStack.itemMeta = meta
+    }
+
+    @JvmName("fLore")
+    fun lore(lore: List<IFrameworkComponent>) = apply {
+        lore(lore.map(IFrameworkComponent::build))
+    }
+
+    @JvmName("fLore")
+    fun lore(vararg lore: IFrameworkComponent) = apply {
+        lore(lore.map(IFrameworkComponent::build))
     }
 
     fun lore(lore: List<Component>) = apply {
@@ -72,8 +81,12 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         itemStack.itemMeta = meta
     }
 
-    fun data(data: Short) = apply {
-        this.itemStack.durability = data
+    fun durability(data: Int) = apply {
+        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
+        if (meta is Damageable) {
+            meta.damage = data
+            itemStack.itemMeta = meta
+        } else throw RuntimeException()
     }
 
     fun model(data: Int) = apply {
@@ -100,30 +113,18 @@ class ItemBuilder {
         return this
     }
 
-    fun data(data: Short): ItemBuilder {
-        item.durability = data
-        return this
-    }
-
-    fun owner(owner: String?): ItemBuilder {
-        val playerheadmeta = item.itemMeta as SkullMeta
-        playerheadmeta.owner = owner
-        playerheadmeta.setDisplayName(owner)
-        item.itemMeta = playerheadmeta
-        return this
-    }
-
-    fun owner(owner: String?, displayName: String?): ItemBuilder {
-        val playerheadmeta = item.itemMeta as SkullMeta
-        playerheadmeta.owner = owner
-        playerheadmeta.setDisplayName(displayName)
-        item.itemMeta = playerheadmeta
-        return this
-    }
-
-    fun flag(flag: ItemFlag?): ItemBuilder {
+    fun data(data: Int): ItemBuilder {
         val meta = item.itemMeta
-        meta.addItemFlags(flag!!)
+        if (meta is Damageable) {
+            meta.damage = data
+            item.itemMeta = meta
+            return this
+        } else throw RuntimeException()
+    }
+
+    fun flag(flag: ItemFlag): ItemBuilder {
+        val meta = item.itemMeta
+        meta.addItemFlags(flag)
         item.itemMeta = meta
         return this
     }
@@ -138,46 +139,23 @@ class ItemBuilder {
         return this
     }
 
-    fun name(displayName: String?): ItemBuilder {
+    fun name(displayName: Component?): ItemBuilder {
         val meta = item.itemMeta
-        meta.setDisplayName(if (displayName == null) null else ChatColor.translateAlternateColorCodes('&', displayName))
+        meta.displayName(displayName)
         item.itemMeta = meta
         return this
     }
 
-    fun owningPlayer(name: String?): ItemBuilder {
+    fun owner(name: String?): ItemBuilder {
         val meta = item.itemMeta as SkullMeta
         meta.owningPlayer = Bukkit.getOfflinePlayer(name!!)
         item.itemMeta = meta
         return this
     }
 
-    fun addToLore(vararg parts: String): ItemBuilder {
-        var meta = item.itemMeta
-        if (meta == null) meta = Bukkit.getItemFactory().getItemMeta(item.type)
-        var lore: MutableList<String?>
-        if (meta!!.lore.also { lore = it!! } == null) lore = Lists.newArrayList()
-        lore.addAll(Arrays.stream(parts).map { part: String? ->
-            ChatColor.translateAlternateColorCodes(
-                '&',
-                part!!
-            )
-        }.collect(Collectors.toList()))
-        meta.lore = lore
-        item.setItemMeta(meta)
-        return this
-    }
-
-    fun setLore(l: Collection<String?>): ItemBuilder {
-        val lore: ArrayList<String> = arrayListOf()
+    fun lore(l: Collection<Component>): ItemBuilder {
         val meta = item.itemMeta
-        lore.addAll(l.stream().map { part: String? ->
-            ChatColor.translateAlternateColorCodes(
-                '&',
-                part!!
-            )
-        }.collect(Collectors.toList()))
-        meta.setLore(lore)
+        meta.lore(l.toMutableList())
         item.setItemMeta(meta)
         return this
     }

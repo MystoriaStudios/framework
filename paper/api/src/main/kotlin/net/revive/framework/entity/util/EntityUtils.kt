@@ -1,17 +1,19 @@
 package net.revive.framework.entity.util
 
 import org.bukkit.entity.EntityType
+import java.util.*
 
 object EntityUtils {
     private var displayNames: MutableMap<EntityType, String> = mutableMapOf()
     private var currentFakeEntityId = 0
 
     fun getName(type: EntityType): String {
-        return displayNames[type] ?: type.name.lowercase().replace("_", " ").capitalize()
+        return displayNames[type] ?: type.name.lowercase().replace("_", " ")
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 
     fun parse(input: String): EntityType? {
-        for ((key, value) in displayNames!!) {
+        for ((key, value) in displayNames) {
             if (value.replace(" ", "").equals(input, ignoreCase = true)) {
                 return key
             }

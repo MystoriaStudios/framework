@@ -1,7 +1,6 @@
 package net.revive.framework.nms.entity
 
-interface IDataWatcherHandler
-{
+interface IDataWatcherHandler {
     fun initiateObject(): Any
     fun <T> register(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any)
     fun <T> set(wrapper: EntityDataAccessorWrapper<T>, dataWatcher: Any, value: T & Any)

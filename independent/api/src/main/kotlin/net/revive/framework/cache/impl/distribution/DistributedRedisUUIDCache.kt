@@ -1,19 +1,12 @@
 package net.revive.framework.cache.impl.distribution
 
-import io.lettuce.core.ExpireArgs
-import net.revive.framework.Framework
 import net.revive.framework.cache.IUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCacheHelper
-import net.revive.framework.connection.redis.impl.BasicFrameworkRedisConnection
-import net.revive.framework.flavor.annotation.Inject
-import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
-import kotlin.math.exp
 
-object DistributedRedisUUIDCache : IUUIDCacheTranslator
-{
+object DistributedRedisUUIDCache : IUUIDCacheTranslator {
 
     const val UUID_CACHE_KEY_UUID = "Framework:UUID"
     const val UUID_CACHE_KEY_USERNAME = "Framework:Username"
@@ -23,12 +16,23 @@ object DistributedRedisUUIDCache : IUUIDCacheTranslator
             it.constructNewRedisConnection()
         }
     }
+
     override fun configure(): CompletionStage<Void> {
         return CompletableFuture.completedFuture(null)
     }
 
     override fun preLoadCache(async: Boolean) {
 
+    }
+
+    override fun update(username: String, uuid: UUID) {
+        redisConnection.useResource {
+            val async = this.async()
+            async.hset(UUID_CACHE_KEY_UUID, uuid.toString(), username)
+            async.hset(UUID_CACHE_KEY_USERNAME, username.lowercase(), uuid.toString())
+
+            // TODO: Expire this on the independent server
+        }
     }
 
     override fun update(response: UUIDCacheHelper.MojangResponse, commit: Boolean) {

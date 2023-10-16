@@ -4,14 +4,12 @@ import net.revive.framework.menu.button.IButton
 
 enum class MenuDistributionRow(
     private val rowDistribution: (Int) -> List<Int>
-)
-{
+) {
     NONE({
         listOf()
     }),
     EVENLY({
-        when (it)
-        {
+        when (it) {
             0 -> listOf()
             1 -> listOf(4)
             2 -> listOf(3, 5)
@@ -24,8 +22,7 @@ enum class MenuDistributionRow(
         }
     }),
     SQUASHED({
-        when (it)
-        {
+        when (it) {
             0 -> listOf()
             1 -> listOf(4)
             2 -> listOf(3, 5)
@@ -38,8 +35,7 @@ enum class MenuDistributionRow(
         }
     }),
     BORDERED({
-        when (it)
-        {
+        when (it) {
             0 -> listOf()
             1 -> listOf(0)
             2 -> listOf(0, 8)
@@ -54,12 +50,10 @@ enum class MenuDistributionRow(
 
     fun allDistributed(
         rows: Int, buttons: Map<Int, IButton>
-    ): List<Int>
-    {
+    ): List<Int> {
         return mutableListOf<Int>()
             .apply {
-                for (row in 0 until rows)
-                {
+                for (row in 0 until rows) {
                     this.addAll(
                         distributed(row, buttons)
                     )
@@ -69,8 +63,7 @@ enum class MenuDistributionRow(
 
     private fun distributed(
         row: Int, buttons: Map<Int, IButton>
-    ): List<Int>
-    {
+    ): List<Int> {
         val buttonsInRow = buttons.keys
             .filter {
                 // math to calculate whether this button

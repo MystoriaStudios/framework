@@ -5,9 +5,10 @@ import net.revive.framework.storage.FrameworkStorageLayer
 import net.revive.framework.storage.storable.IStorable
 import java.util.*
 
-class CachedFrameworkStorageLayer<D : IStorable> : FrameworkStorageLayer<FrameworkCacheConnection<UUID, D>, D, (D) -> Boolean>(
-    FrameworkCacheConnection()
-) {
+class CachedFrameworkStorageLayer<D : IStorable> :
+    FrameworkStorageLayer<FrameworkCacheConnection<UUID, D>, D, (D) -> Boolean>(
+        FrameworkCacheConnection()
+    ) {
     override fun saveSync(data: D) {
         connection.getConnection()[data.identifier] = data
     }
@@ -20,15 +21,17 @@ class CachedFrameworkStorageLayer<D : IStorable> : FrameworkStorageLayer<Framewo
     ): Map<UUID, D> {
         return connection.getConnection()
             .apply {
-                val filteRED = this.values
+                val filtered = this.values
                     .filter(filter)
 
                 mutableMapOf<UUID, D>()
                     .also { map ->
-                        filteRED.forEach { map[it.identifier] = it }
+                        filtered.forEach { map[it.identifier] = it }
                     }
             }
     }
 
-    override fun deleteSync(identifier: UUID) { connection.getConnection().remove(identifier) }
+    override fun deleteSync(identifier: UUID) {
+        connection.getConnection().remove(identifier)
+    }
 }

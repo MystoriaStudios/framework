@@ -1,11 +1,9 @@
- import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
- import org.jetbrains.dokka.DokkaConfiguration
- import org.jetbrains.dokka.gradle.DokkaTaskPartial
- import org.jetbrains.gradle.ext.settings
- import java.net.URI
- import org.jetbrains.gradle.ext.runConfigurations
- import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
- import org.jetbrains.gradle.ext.Gradle
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.gradle.ext.Gradle
+import org.jetbrains.gradle.ext.runConfigurations
+import org.jetbrains.gradle.ext.settings
 
 plugins {
     id("maven-publish")
@@ -16,12 +14,6 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.0"
     kotlin("kapt") version "1.9.10"
 }
-
-val artifactory_contextUrl: String by project
-val artifactory_release: String by project
-val artifactory_user: String by project
-val artifactory_password: String by project
-
 val sentry_auth: String by project
 
 sentry {
@@ -44,20 +36,11 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.revive.framework"
-    version = "1.0.11-SNAPSHOT"
+    version = "1.0.14-SNAPSHOT"
 
     repositories {
         mavenCentral()
         maven("https://repo.aikar.co/content/groups/aikar/")
-
-        maven {
-            name = "Revive"
-            url = URI("${artifactory_contextUrl}/${artifactory_release}")
-            credentials {
-                username = artifactory_user
-                password = artifactory_password
-            }
-        }
     }
 
     dependencies {
@@ -72,6 +55,8 @@ allprojects {
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
+
+        testImplementation(kotlin("test"))
 
         // Generate documentation
         dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
@@ -91,10 +76,12 @@ allprojects {
 
     tasks.withType<DokkaTaskPartial>().configureEach {
         dokkaSourceSets.configureEach {
-            documentedVisibilities.set(setOf(
-                DokkaConfiguration.Visibility.PUBLIC,
-                DokkaConfiguration.Visibility.PROTECTED
-            ))
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED
+                )
+            )
         }
     }
 
@@ -108,22 +95,14 @@ allprojects {
         }
 
         repositories {
-            maven {
-                name = "Revive"
-                url = uri("$artifactory_contextUrl/$artifactory_release")
-
-                credentials {
-                    username = artifactory_user
-                    password = artifactory_password
-                }
-            }
+            mavenLocal()
         }
     }
 
     tasks["build"]
         .dependsOn(
             "shadowJar",
-            "publishMavenJavaPublicationToReviveRepository"
+            "publishMavenJavaPublicationToMavenLocalRepository"
         )
 }
 

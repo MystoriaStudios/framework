@@ -4,7 +4,6 @@ import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import kong.unirest.GetRequest
 import kong.unirest.Unirest
-import net.revive.framework.Framework
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
@@ -36,15 +35,13 @@ object UpdaterConnector {
         applyPendingUpdates()
     }
 
-    fun applyPendingUpdates()
-    {
+    fun applyPendingUpdates() {
         net.revive.framework.Framework.use {
             usePendingUpdatesSync { asset, file, name ->
                 val start = System.currentTimeMillis()
                 it.log("Updater", "Downloading the latest $name (v${asset.version}) archive...")
 
-                try
-                {
+                try {
                     file.delete()
                     request(asset.downloadUri)
                         .asObject {
@@ -56,7 +53,10 @@ object UpdaterConnector {
                     it.log("Updater", "Successfully updated $name (took ${System.currentTimeMillis() - start}ms)!")
                 } catch (exception: Exception) {
                     it.sentryService.log(exception) { id ->
-                        it.severe("Updater", "Oops, seems like there was an exception thrown during the update process. Check it out on sentry @ $id")
+                        it.severe(
+                            "Updater",
+                            "Oops, seems like there was an exception thrown during the update process. Check it out on sentry @ $id"
+                        )
                     }
                 }
             }
@@ -65,13 +65,11 @@ object UpdaterConnector {
 
     private fun useTrackedAssets(
         lambda: (String, ArtifactMetadata, ArtifactComponentMetadata) -> Unit
-    )
-    {
+    ) {
         val assets = UpdaterDiscoveryService
             .discoverable.assets.toMutableSet()
 
-        for (component in assets)
-        {
+        for (component in assets) {
             val composite = component
                 .split(":")
 
@@ -112,8 +110,7 @@ object UpdaterConnector {
 
     private fun usePendingUpdatesSync(
         lambda: (ArtifactComponentMetadata, File, String) -> Unit
-    )
-    {
+    ) {
         useTrackedAssets { discoverable, _, component ->
             val fileToOverride = discoverable
                 .split(":")[2]
@@ -134,8 +131,7 @@ object UpdaterConnector {
                 .hash(Hashing.sha256())
                 .toString()
 
-            if (md5Hash != component.checksums.sha256)
-            {
+            if (md5Hash != component.checksums.sha256) {
                 lambda.invoke(
                     component, file, fileToOverride
                 )
@@ -145,8 +141,7 @@ object UpdaterConnector {
 
     fun usePendingUpdates(
         lambda: (ArtifactComponentMetadata, File, String) -> Unit
-    ): CompletableFuture<Void>
-    {
+    ): CompletableFuture<Void> {
         return CompletableFuture
             .runAsync {
                 usePendingUpdatesSync(lambda)
@@ -161,8 +156,7 @@ object UpdaterConnector {
             }
     }
 
-    fun request(request: String): GetRequest
-    {
+    fun request(request: String): GetRequest {
         val wrapper = UpdaterAuthenticationService.getWrapper()
 
         return Unirest.get(request)

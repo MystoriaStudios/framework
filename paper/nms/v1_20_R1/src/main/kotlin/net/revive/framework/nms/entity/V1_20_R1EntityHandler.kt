@@ -1,6 +1,5 @@
 package net.revive.framework.nms.entity
 
-import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.protocol.Packet
@@ -44,10 +43,10 @@ object V1_20_R1EntityHandler : INMSEntityHandler {
 
     override fun sendStatusPacket(vararg player: Any, entityId: Int, status: Byte) {
         val packet = ClientboundEntityEventPacket(
-             FriendlyByteBuf(Unpooled.buffer()).apply {
-                 this.writeInt(entityId)
-                 this.writeByte(status.toInt())
-             }
+            FriendlyByteBuf(Unpooled.buffer()).apply {
+                this.writeInt(entityId)
+                this.writeByte(status.toInt())
+            }
         )
 
         player.forEach {

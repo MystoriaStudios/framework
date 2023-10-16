@@ -13,21 +13,18 @@ import kotlin.reflect.KClass
 @Suppress("UNCHECKED_CAST")
 class FlavorBinder<T : Any>(
     val kClass: KClass<out T>
-)
-{
+) {
     val annotationChecks = mutableMapOf<KClass<out Annotation>, (Annotation) -> Boolean>()
     var instance by Delegates.notNull<Any>()
 
-    infix fun to(any: Any): FlavorBinder<T>
-    {
+    infix fun to(any: Any): FlavorBinder<T> {
         instance = any
         return this
     }
 
     inline fun <reified A : Annotation> annotated(
         noinline lambda: (A) -> Boolean
-    ): FlavorBinder<T>
-    {
+    ): FlavorBinder<T> {
         annotationChecks[A::class] = lambda as (Annotation) -> Boolean
         return this
     }

@@ -18,7 +18,7 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         return pg > 0 && menu.getPages(player) >= pg
     }
 
-    override fun getMaterial(player: Player) = XMaterial.ARROW
+    override fun getMaterial(player: Player) = XMaterial.BAMBOO_HANGING_SIGN
     override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit {
         return {
             name(
@@ -54,6 +54,7 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
 
                 XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player)
             }
+
             else -> {
                 XSound.BLOCK_GRAVEL_BREAK.play(player)
             }

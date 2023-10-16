@@ -1,7 +1,6 @@
 package net.revive.framework.message
 
 import io.lettuce.core.RedisClient
-import net.revive.framework.Framework
 import net.revive.framework.message.listener.FrameworkMessageListener
 import net.revive.framework.serializer.impl.GsonSerializer
 

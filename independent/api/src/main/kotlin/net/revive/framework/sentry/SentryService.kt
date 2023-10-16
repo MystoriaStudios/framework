@@ -2,7 +2,6 @@ package net.revive.framework.sentry
 
 import io.sentry.Sentry
 import io.sentry.protocol.SentryId
-import net.revive.framework.Framework
 import java.util.concurrent.Executors
 
 class SentryService {

@@ -4,27 +4,34 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.revive.framework.Framework
 import net.revive.framework.annotation.Listeners
+import net.revive.framework.annotation.Scoreboard
 import net.revive.framework.annotation.command.AutoRegister
 import net.revive.framework.annotation.command.ManualRegister
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.annotation.container.flavor.LazyStartup
+import net.revive.framework.annotation.inject.AutoBind
 import net.revive.framework.annotation.retrofit.RetrofitService
 import net.revive.framework.annotation.retrofit.UsesRetrofit
 import net.revive.framework.command.FrameworkCommandManager
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.config.save
 import net.revive.framework.constants.Deployment
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
+import net.revive.framework.flavor.annotation.Inject
+import net.revive.framework.flavor.reflections.PackageIndexer
+import net.revive.framework.menu.IMenu
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
+import net.revive.framework.scoreboard.IScoreboard
+import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
 import net.revive.framework.serializer.impl.GsonSerializer
@@ -39,6 +46,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.FileNotFoundException
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.reflect.full.hasAnnotation
@@ -48,6 +56,7 @@ import kotlin.reflect.full.hasAnnotation
  * support for our custom annotation-based
  * plugin framework.
  */
+@Suppress("DEPRECATION")
 open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
 
     override fun getBaseFolder() = dataFolder
@@ -55,11 +64,9 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
     /**
      * START FLAVOR INJECTION AND HANDLING
      */
-    val packageIndexer by lazy {
-        this.flavor.reflections
-    }
-
+    lateinit var packageIndexer: PackageIndexer
     private lateinit var flavor: Flavor
+    var trackedConfigs = mutableMapOf<JsonConfig, Any>()
 
     private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
 
@@ -70,6 +77,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
 
         flavor.lambda()
     }
+
     /**
      * END FLAVOUR INJECTION AND HANDLING
      */
@@ -85,7 +93,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             return
         }
 
-        this.flavor = Flavor.create(this::class, FlavorOptions(logger))
+        this.flavor =
+            Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
+        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this.classLoader))
+        this.packageIndexer = this.flavor.reflections
 
         if (this::class.hasAnnotation<UsesRetrofit>()) {
             retrofit = Retrofit.Builder()
@@ -132,9 +143,18 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .getTypesAnnotatedWith<JsonConfig>()
             .forEach {
                 kotlin.runCatching {
+                    logger.log(Level.INFO, "Loading config ${it.name}")
+
+                    val config = try {
+                        load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                    } catch (exception: FileNotFoundException) {
+                        save(it.getAnnotation(JsonConfig::class.java), it.getConstructor().newInstance())
+                    }
+
                     flavor().binders.add(
-                        FlavorBinder(it::class) to load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                        FlavorBinder(it::class) to config
                     )
+                    trackedConfigs[it.getAnnotation(JsonConfig::class.java)] = config
                 }.onFailure { throwable ->
                     logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)
                 }
@@ -172,7 +192,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .getTypesAnnotatedWith<AutoRegister>()
             .forEach {
                 kotlin.runCatching {
-                    val instance = it.objectInstance() ?: it.newInstance()
+                    val instance = it.objectInstance() ?: it.getDeclaredConstructor().newInstance()
 
                     this.flavor.inject(instance)
 
@@ -196,6 +216,34 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 }
             }
 
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<AutoBind>()
+            .mapNotNull {
+                it.kotlin.objectInstance ?: it.newInstance()
+            }
+            .forEach {
+                this.flavor.binders.add(FlavorBinder(it::class) to it)
+            }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<Inject>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .forEach {
+                this.flavor.inject(it)
+            }
+
+        this.packageIndexer
+            .getSubTypes<IMenu>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }
+            .forEach {
+                this.flavor.inject(it)
+            }
+
         this.packageIndexer
             .getTypesAnnotatedWith<Listeners>()
             .mapNotNull {
@@ -205,6 +253,17 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 this.flavor.inject(it)
 
                 this.server.pluginManager.registerEvents(it as Listener, this)
+            }
+
+        this.packageIndexer
+            .getTypesAnnotatedWith<Scoreboard>()
+            .mapNotNull {
+                it.kotlin.objectInstance
+            }.filterIsInstance<IScoreboard>()
+            .forEach {
+                this.flavor.inject(it)
+
+                ScoreboardService.updatePrimaryProvider(it)
             }
 
         if (this::class.java.getAnnotation(LazyStartup::class.java) == null) Tasks.async {
@@ -230,6 +289,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                     logger.log(Level.WARNING, "Failed to disable container part!", it)
                 }
             }
+
+        trackedConfigs.filter {
+            it.key.autoSave
+        }.forEach(this::save)
 
         this.commandManager.unregisterCommands()
         this.flavor.close()

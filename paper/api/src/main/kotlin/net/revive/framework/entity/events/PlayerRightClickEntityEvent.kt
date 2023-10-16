@@ -8,8 +8,7 @@ import org.bukkit.event.Cancellable
 class PlayerRightClickEntityEvent(
     val player: Player,
     val entity: AbstractNMSEntity
-) : SimpleEvent(), Cancellable
-{
+) : SimpleEvent(), Cancellable {
 
     private var cancelled: Boolean = false
     var spamProtection: Boolean = true

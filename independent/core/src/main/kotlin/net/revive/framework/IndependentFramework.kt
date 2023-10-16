@@ -9,15 +9,19 @@ import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.IPermissionRegistry
 import java.util.logging.Logger
 
-object IndependentFramework : net.revive.framework.Framework() {
+object IndependentFramework : Framework() {
     override var logger: Logger = FrameworkLogger()
 
     override var permissionProvider: IPermissionProvider
         get() = TODO("Not yet implemented")
-        set(value) {}
+        set(value) {
+            println(value)
+        }
     override var permissionRegistry: IPermissionRegistry
         get() = TODO("Not yet implemented")
-        set(value) {}
+        set(value) {
+            println(value)
+        }
 
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
         return BasicFrameworkRedisConnection(BasicFrameworkRedisConnection.Details())

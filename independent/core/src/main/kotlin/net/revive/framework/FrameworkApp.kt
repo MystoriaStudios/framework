@@ -22,15 +22,16 @@ object FrameworkApp {
     val modules: MutableMap<String, FrameworkModule> = mutableMapOf()
 
     fun setup(args: Array<String>) {
-        net.revive.framework.Framework.supply(IndependentFramework) {
+        println(args)
+        Framework.supply(IndependentFramework) {
             val port = Integer.parseInt(System.getProperty("port") ?: "8080")
             express = Express("0.0.0.0")
             express.listen(port)
 
             express.use(MojangUUIDCacheRouter)
 
-            express.get("/") { req, res ->
-                res.send("its online si si si")
+            express.get("/") { _, res ->
+                res.send("{api: true}")
             }
 
             it.log("Framework", "Starting express server on port ${port}.")
@@ -41,9 +42,9 @@ object FrameworkApp {
             loader.startup()
         }
 
-        net.revive.framework.Framework.instance.log("Framework", "Trying to enable ${modules.size} modules.")
+        Framework.instance.log("Framework", "Trying to enable ${modules.size} modules.")
         modules.forEach { (key, module) ->
-            net.revive.framework.Framework.instance.log("Framework", "Trying to enable $key")
+            Framework.instance.log("Framework", "Trying to enable $key")
             module.enable()
 
             module.javaClass.declaredMethods.forEach { method ->
@@ -53,11 +54,11 @@ object FrameworkApp {
             }
 
             module.routers.forEach { router ->
-                net.revive.framework.Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
+                Framework.instance.log("Framework", "Loaded router from class ${router::class.simpleName}")
                 express.use("/${module.details.name.lowercase()}", router)
             }
         }
-        net.revive.framework.Framework.instance.log("Framework", "Finished loading modules")
+        Framework.instance.log("Framework", "Finished loading modules")
 
     }
 }

@@ -35,16 +35,16 @@ public class CorsOptions {
         return origin;
     }
 
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
     public boolean isAllowCredentials() {
         return allowCredentials;
     }
 
     public void setAllowCredentials(boolean allowCredentials) {
         this.allowCredentials = allowCredentials;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
     }
 
     public RequestMethod[] getMethods() {

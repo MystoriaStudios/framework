@@ -3,7 +3,6 @@ package net.revive.framework.nms.menu
 import com.google.common.base.Preconditions
 import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ChestMenu
