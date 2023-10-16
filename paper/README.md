@@ -11,3 +11,4 @@
 - Write `AbstractFlag` system for regions
 - Write a metric system using influx or promotheus db.
 - Write a per player regon system for blocks and entities that works with stuff like schematics.
+- Make `DisguiseInfo` provider and make it abstract.
