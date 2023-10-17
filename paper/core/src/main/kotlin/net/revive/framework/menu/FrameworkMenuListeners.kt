@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 
 @Listeners
@@ -26,6 +27,16 @@ object FrameworkMenuListeners : Listener {
 
     @Inject
     lateinit var menuService: MenuService
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    fun onClose(event: InventoryCloseEvent) {
+        if (event.player !is Player) return
+        val player = event.player as Player
+
+        if (menuService.getOpenedMenu(player) != null) {
+            menuService.removeOpenedMenu(player)
+        }
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
