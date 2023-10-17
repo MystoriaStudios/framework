@@ -18,7 +18,7 @@ inline fun <reified T : Any> IConfigProvider.load(config: JsonConfig): T {
         save<T>(config, inst)
     } else {
         Framework.useWithReturn {
-            it.serializer.deserialize(T::class, FileUtils.readFileToString(file, "UTF-8"))
+            it.serializer.deserialize(T::class, file.readText())
         }
     }
 }
@@ -30,7 +30,7 @@ fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>): Any {
         throw FileNotFoundException()
     } else {
         Framework.useWithReturn {
-            it.serializer.deserialize(clazz::class, FileUtils.readFileToString(file, "UTF-8"))
+            it.serializer.deserialize(clazz::class, file.readText())
         }
     }
 }
@@ -41,9 +41,9 @@ inline fun <reified T : Any> IConfigProvider.save(config: JsonConfig, inst: T): 
 
     if (!file.exists()) file.createNewFile()
 
-    FileUtils.writeStringToFile(file, Framework.useWithReturn {
+    file.writeText(Framework.useWithReturn {
         it.serializer.serialize(inst)
-    }, "UTF-8")
+    })
 
     return inst
 }
