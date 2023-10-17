@@ -2,6 +2,7 @@ package net.revive.framework.menu.impl
 
 import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
@@ -13,6 +14,7 @@ import net.revive.framework.utils.Strings
 import net.revive.framework.utils.Tasks
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
@@ -39,9 +41,29 @@ class EditItemStackMenu(private var itemstack: ItemStack? = null) : IMenu {
     )
 
     override fun getButtons(player: Player): Map<Int, IButton> {
-        return mapOf(
+        return mutableMapOf<Int, IButton>().apply {
+            this[3] = object : IButton {
+                override fun getMaterial(player: Player) = XMaterial.matchXMaterial(itemstack ?: ItemStack.empty())
 
-        )
+                override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+                    itemStack = itemstack ?: ItemStack.empty()
+                    if (itemStack.isEmpty) {
+                        type(Material.BARRIER)
+                        name(buildComponent {
+                            text("Change Item") {
+                                it.color(Tailwind.RED_600)
+                                it.decorate(TextDecoration.BOLD)
+                            }
+                        })
+                        enchantment(Enchantment.VANISHING_CURSE, 1)
+                    }
+                }
+
+                override fun onClick(player: Player, type: ClickType) {
+                    player.openMenu(EditMaterialMenu(this@EditItemStackMenu))
+                }
+            }
+        }
     }
 
     inner class EditMaterialMenu(val parentMenu: EditItemStackMenu) : AbstractPagedMenu() {

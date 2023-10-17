@@ -66,8 +66,7 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
                         }
                         addAll(listOf(
                             Component.empty(),
-                            ControlComponent(ClickType.LEFT, "edit the value").build(),
-                            ControlComponent(ClickType.RIGHT, "delete the key").build()
+                            ControlComponent(ClickType.LEFT, "set the enum to this").build()
                         ))
                     })
                 }
