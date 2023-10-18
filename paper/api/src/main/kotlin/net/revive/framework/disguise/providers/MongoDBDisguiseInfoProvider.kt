@@ -1,6 +1,6 @@
 package net.revive.framework.disguise.providers
 
-import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.eq
 import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.IDisguiseInfoProvider
 import net.revive.framework.disguise.StoredDisguiseInfo
@@ -9,8 +9,6 @@ import net.revive.framework.storage.impl.MongoFrameworkStorageLayer
 import net.revive.framework.storage.type.FrameworkStorageType
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import com.mongodb.client.model.Filters.eq
-import net.revive.framework.controller.FrameworkObjectController
 
 
 object MongoDBDisguiseInfoProvider : IDisguiseInfoProvider {

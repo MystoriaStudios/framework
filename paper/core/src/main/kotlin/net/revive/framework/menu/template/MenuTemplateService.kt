@@ -1,7 +1,6 @@
 package net.revive.framework.menu.template
 
 import net.revive.framework.Framework
-import net.revive.framework.PaperFramework
 import net.revive.framework.PaperFrameworkPlugin
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.service.Configure
@@ -9,7 +8,6 @@ import net.revive.framework.flavor.service.Service
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.itemBuilder
 import org.bukkit.Material
-import java.awt.print.Paper
 import java.io.File
 
 @Service
@@ -32,18 +30,20 @@ object MenuTemplateService {
             if (example.createNewFile()) example.writeText(Framework.useWithReturn {
                 it.serializer.serialize(MenuTemplate(
                     "example",
-                        buttons = mutableListOf(
-                            MenuTemplate.Button(
-                                1,
-                                itemBuilder {
-                                    this.type(Material.OAK_SIGN)
-                                    this.lore(listOf(
+                    buttons = mutableListOf(
+                        MenuTemplate.Button(
+                            1,
+                            itemBuilder {
+                                this.type(Material.OAK_SIGN)
+                                this.lore(
+                                    listOf(
                                         buildComponent("test", Tailwind.AMBER_400)
-                                    ))
-                                }
-                            )
+                                    )
+                                )
+                            }
                         )
-                    ))
+                    )
+                ))
             })
         }
 

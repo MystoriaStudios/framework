@@ -1,8 +1,8 @@
 package net.revive.framework.disguise;
 
-import net.revive.framework.nms.disguise.DisguiseInfo;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import net.revive.framework.nms.disguise.DisguiseInfo
+import java.util.*
+import java.util.concurrent.CompletableFuture
 
 /**
  * Represents a provider for fetching disguise-related information.

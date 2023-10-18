@@ -14,7 +14,6 @@ import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.menu.openMenuTemplate
-import net.revive.framework.menu.template.MenuTemplate
 import net.revive.framework.menu.template.MenuTemplateService
 import net.revive.framework.menu.test.TestMenu
 import net.revive.framework.scoreboard.IScoreboard
@@ -111,8 +110,8 @@ object FrameworkTestCommand : FrameworkCommand() {
     @Subcommand("test-menu-template")
     fun testMenu(player: Player, @Name("id") id: String) {
         player.openMenuTemplate(
-            MenuTemplateService.templates[id.lowercase()] ?:
-            throw ConditionFailedException("Unable to find a menu with that template id.")
+            MenuTemplateService.templates[id.lowercase()]
+                ?: throw ConditionFailedException("Unable to find a menu with that template id.")
         )
     }
 }

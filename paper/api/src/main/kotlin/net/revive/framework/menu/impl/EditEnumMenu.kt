@@ -9,15 +9,9 @@ import net.revive.framework.component.impl.ControlComponent
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
-import net.revive.framework.menu.button.impl.AbstractInputButton
-import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.paged.AbstractPagedMenu
-import net.revive.framework.metadata.IMetaDataHolder
-import net.revive.framework.storage.storable.IStorable
 import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.buildComponent
-import net.wesjd.anvilgui.AnvilGUI
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 
@@ -47,28 +41,30 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
 
                     lore(
                         mutableListOf(
-                        CategoryComponent("Enum State").build(),
-                        Component.empty(),
-                    ).apply {
-                        it::class.java.declaredFields.filter {
-                            it.isAnnotationPresent(Export::class.java)
-                        }.forEach {
-                            val annotation = it.getAnnotation(Export::class.java)
-                            val name = annotation.name.ifEmpty {
-                                it.name
-                            }
-
-                            add(buildComponent {
-                                text(" • ", Tailwind.GRAY_700)
-                                text("$name: ", Tailwind.AMBER_400)
-                                text(it.get(it).toString(), Tailwind.TEAL_700)
-                            })
-                        }
-                        addAll(listOf(
+                            CategoryComponent("Enum State").build(),
                             Component.empty(),
-                            ControlComponent(ClickType.LEFT, "set the enum to this").build()
-                        ))
-                    })
+                        ).apply {
+                            it::class.java.declaredFields.filter {
+                                it.isAnnotationPresent(Export::class.java)
+                            }.forEach {
+                                val annotation = it.getAnnotation(Export::class.java)
+                                val name = annotation.name.ifEmpty {
+                                    it.name
+                                }
+
+                                add(buildComponent {
+                                    text(" • ", Tailwind.GRAY_700)
+                                    text("$name: ", Tailwind.AMBER_400)
+                                    text(it.get(it).toString(), Tailwind.TEAL_700)
+                                })
+                            }
+                            addAll(
+                                listOf(
+                                    Component.empty(),
+                                    ControlComponent(ClickType.LEFT, "set the enum to this").build()
+                                )
+                            )
+                        })
                 }
 
                 override fun onClick(player: Player, type: ClickType) {

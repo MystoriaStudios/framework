@@ -6,8 +6,6 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.GameType
 import net.minecraft.world.level.biome.BiomeManager
 import net.revive.framework.nms.NMSVersion
 import net.revive.framework.nms.annotation.NMSHandler
@@ -68,7 +66,10 @@ object V1_20_R1DisguiseHandler : INMSDisguiseHandler {
         )
 
         val worldServer = player.world as CraftWorld
-        val level = MinecraftServer.getServer().getLevel(worldServer.handle.dimension()) ?: throw UnsupportedOperationException("WTF")
+        val level =
+            MinecraftServer.getServer().getLevel(worldServer.handle.dimension()) ?: throw UnsupportedOperationException(
+                "WTF"
+            )
 
         player.handle.connection.send(
             ClientboundRespawnPacket(
@@ -100,8 +101,7 @@ object V1_20_R1DisguiseHandler : INMSDisguiseHandler {
 
     // You need to get the gameprofile and save it before disguising a player TODO: make a method for it
 
-    override fun handleUnDisguiseInternal(player: Any, originalGameProfile: Any, disconnecting: Boolean)
-    {
+    override fun handleUnDisguiseInternal(player: Any, originalGameProfile: Any, disconnecting: Boolean) {
         player as CraftPlayer
         player.handle.gameProfile = originalGameProfile as GameProfile
 

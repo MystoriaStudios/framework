@@ -94,6 +94,14 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         meta.setCustomModelData(data)
         itemStack.itemMeta = meta
     }
+
+    fun color(color: org.bukkit.Color?) = apply {
+        val meta = itemStack.itemMeta as? LeatherArmorMeta
+            ?: throw UnsupportedOperationException("Cannot set color of a non-leather armor item.")
+        meta.setColor(color)
+        itemStack.itemMeta = meta
+        return this
+    }
 }
 
 class ItemBuilder {

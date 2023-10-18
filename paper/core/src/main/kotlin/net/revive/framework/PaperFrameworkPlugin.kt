@@ -15,13 +15,11 @@ import net.revive.framework.adapters.WorldAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.config.load
-import net.revive.framework.disguise.FrameworkDisguiseHandler
-import net.revive.framework.disguise.IDisguiseHandler
-import net.revive.framework.flavor.Flavor
 import net.revive.framework.cache.PaperLocalUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCache
 import net.revive.framework.controller.FrameworkObjectControllerCache
+import net.revive.framework.disguise.FrameworkDisguiseHandler
+import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
@@ -89,7 +87,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
         Framework.use { framework ->
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
-          
+
             framework.flavor.bind<IDisguiseHandler>() to FrameworkDisguiseHandler()
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
         }

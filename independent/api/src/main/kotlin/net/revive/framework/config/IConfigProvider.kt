@@ -1,7 +1,6 @@
 package net.revive.framework.config
 
 import net.revive.framework.Framework
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.reflect.KClass

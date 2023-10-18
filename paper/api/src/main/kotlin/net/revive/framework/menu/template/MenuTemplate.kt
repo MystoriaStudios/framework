@@ -25,7 +25,7 @@ class MenuTemplate(
         }
     }
 
-    fun build() : IMenu {
+    fun build(): IMenu {
         return object : IMenu {
             override val metaData: IMenu.MetaData = IMenu.MetaData()
             override fun getTitle(player: Player) = title
