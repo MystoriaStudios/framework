@@ -41,6 +41,7 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://repo.aikar.co/content/groups/aikar/")
+        maven("https://jitpack.io")
     }
 
     dependencies {

@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly("dev.hollowcube:minestom-ce:517b195b5e") {
+    compileOnly("dev.hollowcube:minestom-ce:438338381e") {
         exclude("org.slf4j", "slf4j-api")
         exclude("ch.qos.logback", "logback-classic")
     }
