@@ -14,6 +14,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class MaterialCallbackMenu(
     override var onCallback: (Material) -> Unit
@@ -27,7 +28,7 @@ class MaterialCallbackMenu(
         var i = 0;
         return Material
             .entries
-            .filter { !it.isAir }
+            .filter { !it.isAir && it.isItem }
             .map {
                 return@map MaterialButton(it)
             }.associateBy {
@@ -46,14 +47,15 @@ class MaterialCallbackMenu(
         override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
             name(
                 buildComponent(
-                    type.name.lowercase().capitalize(), Tailwind.GREEN_500
+                    type.name.lowercase().split("_").joinToString(" ") {
+                        it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    }, Tailwind.GREEN_500
                 )
             )
 
             lore(
                 Component.empty(),
-                buildComponent("Click to change the item's type", Tailwind.GRAY_500),
-                buildComponent("to this.", Tailwind.GRAY_500)
+                buildComponent("Click to change select this material type", Tailwind.GRAY_500)
             )
         }
 

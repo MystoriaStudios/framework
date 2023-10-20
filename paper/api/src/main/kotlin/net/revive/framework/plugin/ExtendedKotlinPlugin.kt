@@ -154,7 +154,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                     flavor().binders.add(
                         FlavorBinder(it::class) to config
                     )
-                    trackedConfigs[it.getAnnotation(JsonConfig::class.java)] = config
+
+                    if (it.getAnnotation(JsonConfig::class.java).autoSave) {
+                        trackedConfigs[it.getAnnotation(JsonConfig::class.java)] = config
+                    }
                 }.onFailure { throwable ->
                     logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)
                 }
