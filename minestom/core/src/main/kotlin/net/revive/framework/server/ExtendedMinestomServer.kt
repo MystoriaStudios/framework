@@ -1,13 +1,6 @@
-package net.revive.framework.plugin
+package net.revive.framework.server
 
-import co.aikar.commands.BaseCommand
-import co.aikar.commands.BukkitCommandManager
-import co.aikar.commands.PaperCommandManager
-import me.lucko.helper.plugin.ExtendedJavaPlugin
-import net.revive.framework.annotation.Listeners
-import net.revive.framework.annotation.Scoreboard
-import net.revive.framework.annotation.command.AutoRegister
-import net.revive.framework.annotation.command.ManualRegister
+import net.minestom.server.MinecraftServer
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
@@ -26,39 +19,27 @@ import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.reflections.PackageIndexer
-import net.revive.framework.menu.IMenu
 import net.revive.framework.message.FrameworkMessageHandler
-import net.revive.framework.plugin.event.KotlinPluginEnableEvent
-import net.revive.framework.scoreboard.IScoreboard
-import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
 import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.utils.Strings
-import net.revive.framework.utils.Tasks
 import net.revive.framework.utils.objectInstance
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
-import org.bukkit.Bukkit
-import org.bukkit.Server
-import org.bukkit.event.Listener
-import org.bukkit.plugin.java.JavaPlugin
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.io.FileNotFoundException
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger
 import kotlin.reflect.full.hasAnnotation
 
-/**
- * An extension of [ExtendedJavaPlugin] with
- * support for our custom annotation-based
- * plugin framework.
- */
 @Suppress("DEPRECATION")
-open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
+open class ExtendedMinestomServer : IConfigProvider {
 
-    override fun getBaseFolder() = dataFolder
+    override fun getBaseFolder(): File {
+        return File("TODO")
+    }
 
     /**
      * START FLAVOR INJECTION AND HANDLING
@@ -66,6 +47,8 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
     lateinit var packageIndexer: PackageIndexer
     private lateinit var flavor: Flavor
     var trackedConfigs = mutableMapOf<JsonConfig, Any>()
+
+    var logger: Logger = Logger.getLogger("Framework")
 
     private val usingFlavor = this::class.java.getAnnotation(IgnoreDependencyInjection::class.java) != null
 
@@ -81,39 +64,18 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
      * END FLAVOUR INJECTION AND HANDLING
      */
 
-    lateinit var commandManager: FrameworkCommandManager
-    lateinit var retrofit: Retrofit
-
-    override fun load() {
+    fun load() {
         if (!SystemUtils.isJavaVersionAtLeast(JavaVersion.JAVA_11)) {
-            logger.info("[Compatability] This version of ${description.name} does not support java ${SystemUtils.JAVA_VERSION}!")
+            logger.info("[Compatability] This version of Framework does not support java ${SystemUtils.JAVA_VERSION}!")
             logger.info("[Compatability] Please use a version higher than 11.")
-            Bukkit.shutdown()
+            MinecraftServer.stopCleanly()
             return
         }
 
         this.flavor =
-            Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
-        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this.classLoader))
+            Flavor.create((this)::class, FlavorOptions(logger))
+        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this::class.java.classLoader))
         this.packageIndexer = this.flavor.reflections
-
-        if (this::class.hasAnnotation<UsesRetrofit>()) {
-            retrofit = Retrofit.Builder()
-                .baseUrl("${Deployment.Security.API_BASE_URL}/${this.description.name}/")
-                .client(net.revive.framework.Framework.useWithReturn {
-                    it.okHttpClient
-                })
-                .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
-                .build()
-            logger.log(Level.INFO, "Registering Retrofit instance as required.")
-
-            this.packageIndexer
-                .getTypesAnnotatedWith<RetrofitService>()
-                .forEach {
-                    flavor().binders.add(FlavorBinder(it::class) to retrofit.create(it))
-                    logger.log(Level.INFO, "Registered Retrofit service from class ${it.name}")
-                }
-        }
 
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerPreEnable>()
@@ -126,15 +88,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             }
 
         flavor().binders.add(
-            FlavorBinder(this@ExtendedKotlinPlugin::class) to this@ExtendedKotlinPlugin
+            FlavorBinder(this@ExtendedMinestomServer::class) to this@ExtendedMinestomServer
         )
 
         flavor {
-            bind<ExtendedKotlinPlugin>() to this@ExtendedKotlinPlugin
-            bind<ExtendedJavaPlugin>() to this@ExtendedKotlinPlugin
-            bind<JavaPlugin>() to this@ExtendedKotlinPlugin
-
-            bind<Server>() to server
             bind<Logger>() to logger
         }
 
@@ -168,7 +125,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             }
     }
 
-    override fun enable() {
+    fun enable() {
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerEnable>()
             .forEach {
@@ -185,44 +142,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 bind<IFrameworkSerializer>() to it.serializer
             }
         }
-
-        this.commandManager = FrameworkCommandManager(this)
-
-        flavor {
-            bind<FrameworkCommandManager>() to commandManager
-            bind<BukkitCommandManager>() to commandManager
-            bind<PaperCommandManager>() to commandManager
-        }
-
-        var commands = 0
-        this.packageIndexer
-            .getTypesAnnotatedWith<AutoRegister>()
-            .forEach {
-                kotlin.runCatching {
-                    val instance = it.objectInstance() ?: it.getDeclaredConstructor().newInstance()
-
-                    this.flavor.inject(instance)
-
-                    this.commandManager.registerCommand(instance as BaseCommand)
-                    commands++
-                }.onFailure {
-                    logger.log(Level.WARNING, "Failed to register command", it)
-                }
-            }
-        net.revive.framework.Framework.use {
-            it.log("Commands", "Registered $commands ${Strings.pluralize(commands, "command")}")
-        }
-
-        this.packageIndexer
-            .getMethodsAnnotatedWith<ManualRegister>()
-            .forEach {
-                kotlin.runCatching {
-                    it.invoke(this, this.commandManager)
-                }.onFailure {
-                    logger.log(Level.WARNING, "Failed to manually register command", it)
-                }
-            }
-
 
         this.packageIndexer
             .getTypesAnnotatedWith<AutoBind>()
@@ -242,48 +161,12 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                 this.flavor.inject(it)
             }
 
-        this.packageIndexer
-            .getSubTypes<IMenu>()
-            .mapNotNull {
-                it.kotlin.objectInstance
-            }
-            .forEach {
-                this.flavor.inject(it)
-            }
-
-        this.packageIndexer
-            .getTypesAnnotatedWith<Listeners>()
-            .mapNotNull {
-                it.kotlin.objectInstance
-            }
-            .forEach {
-                this.flavor.inject(it)
-
-                this.server.pluginManager.registerEvents(it as Listener, this)
-            }
-
-        this.packageIndexer
-            .getTypesAnnotatedWith<Scoreboard>()
-            .mapNotNull {
-                it.kotlin.objectInstance
-            }.filterIsInstance<IScoreboard>()
-            .forEach {
-                this.flavor.inject(it)
-
-                ScoreboardService.updatePrimaryProvider(it)
-            }
-
-        if (this::class.java.getAnnotation(LazyStartup::class.java) == null) Tasks.async {
+        if (this::class.java.getAnnotation(LazyStartup::class.java) == null) CompletableFuture.runAsync {
             this.flavor.startup()
-        }
-
-        if (!KotlinPluginEnableEvent(this).callEvent()) {
-            this.logger.severe("Disabling plugin due to event being cancelled by another plugin.")
-            Bukkit.getPluginManager().disablePlugin(this)
         }
     }
 
-    override fun disable() {
+    fun disable() {
         this.packageIndexer
             .getMethodsAnnotatedWith<ContainerDisable>()
             .filter {
@@ -301,7 +184,6 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             it.key.autoSave
         }.forEach(this::save)
 
-        this.commandManager.unregisterCommands()
         this.flavor.close()
     }
 }

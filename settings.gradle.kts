@@ -1,6 +1,6 @@
 rootProject.name = "framework"
 
-listOf("paper", "velocity", "independent").forEach {
+listOf("paper", "velocity", "independent", "minestom").forEach {
     include(":$it")
     mutableListOf("$it:api", "$it:core")
         .forEach { module ->
