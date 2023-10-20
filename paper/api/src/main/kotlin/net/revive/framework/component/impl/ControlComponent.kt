@@ -10,11 +10,6 @@ import org.bukkit.event.inventory.ClickType
 class ControlComponent(val clickType: ClickType, val action: String, val color: String = Tailwind.AMBER_400) :
     IFrameworkComponent {
     override fun build() = buildComponent {
-        text(clickType.name) {
-            it.color(color)
-            it.decorate(TextDecoration.BOLD)
-        }
-
-        text(" to $action".applySmallCaps(), color)
+        text("${clickType.name.replace("_", " ")} click to $action".applySmallCaps(), color)
     }
 }

@@ -47,16 +47,20 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
                             it::class.java.declaredFields.filter {
                                 it.isAnnotationPresent(Export::class.java)
                             }.forEach {
-                                val annotation = it.getAnnotation(Export::class.java)
-                                val name = annotation.name.ifEmpty {
-                                    it.name
-                                }
+                                runCatching {
+                                    val annotation = it.getAnnotation(Export::class.java)
+                                    val name = annotation.name.ifEmpty {
+                                        it.name
+                                    }
 
-                                add(buildComponent {
-                                    text(" • ", Tailwind.GRAY_700)
-                                    text("$name: ", Tailwind.AMBER_400)
-                                    text(it.get(it).toString(), Tailwind.TEAL_700)
-                                })
+                                    it.isAccessible = true
+
+                                    add(buildComponent {
+                                        text(" • ", Tailwind.GRAY_700)
+                                        text("$name: ", Tailwind.AMBER_400)
+                                        text(it.get(it).toString(), Tailwind.TEAL_700)
+                                    })
+                                }
                             }
                             addAll(
                                 listOf(

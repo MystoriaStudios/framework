@@ -10,6 +10,7 @@ import net.revive.framework.menu.button.IButton
 import net.revive.framework.utils.ItemStackBuilder
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
+import org.bukkit.inventory.ItemFlag
 
 class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IButton {
 
@@ -18,32 +19,22 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         return pg > 0 && menu.getPages(player) >= pg
     }
 
-    override fun getMaterial(player: Player) = XMaterial.BAMBOO_HANGING_SIGN
+    override fun getMaterial(player: Player) = if (hasNext(player)) XMaterial.HONEYCOMB else XMaterial.AIR
     override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit {
+        if (!hasNext(player)) return {}
         return {
             name(
-                if (!hasNext(player)) {
-                    Component.empty()
-                } else {
-                    Component.text(
-                        if (mod > 0) {
-                            "Next Page"
-                        } else {
-                            "Previous Page"
-                        },
-                        TextColor.fromHexString("#ffae42")
-                    ).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false)
-                }
-            )
-
-            lore(
-                Component.text("View the ${if (mod > 0) "next" else "previous"} menu page.", NamedTextColor.GRAY),
-                Component.empty(),
                 Component.text(
-                    "Click the view the ${if (mod > 0) "next" else "previous"} page!",
+                    if (mod > 0) {
+                        "Next Page"
+                    } else {
+                        "Previous Page"
+                    },
                     TextColor.fromHexString("#ffae42")
-                ).decoration(TextDecoration.ITALIC, false)
+                ).decorate(TextDecoration.BOLD)
+
             )
+            flags(ItemFlag.HIDE_ITEM_SPECIFICS, ItemFlag.HIDE_ATTRIBUTES)
         }
     }
 
@@ -52,7 +43,7 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
             hasNext(player) -> {
                 menu.modPage(player, mod)
 
-                XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player)
+                XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player, 4f, 1f)
             }
 
             else -> {

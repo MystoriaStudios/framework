@@ -75,9 +75,9 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         itemStack.itemMeta = meta
     }
 
-    fun flags(itemFlag: ItemFlag) = apply {
+    fun flags(vararg itemFlag: ItemFlag) = apply {
         val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.addItemFlags(itemFlag)
+        meta.addItemFlags(*itemFlag)
         itemStack.itemMeta = meta
     }
 

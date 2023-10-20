@@ -25,6 +25,7 @@ class ColorCallbackMenu(
     override fun getAllPagesButtons(player: Player): Map<Int, IButton> {
         var i = 0;
         return Tailwind::class.java.declaredFields
+            .filter { it.name != "INSTANCE" }
             .map {
                 return@map ColorButton(it)
             }.associateBy {

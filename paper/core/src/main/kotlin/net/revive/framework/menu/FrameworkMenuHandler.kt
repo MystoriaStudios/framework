@@ -148,8 +148,7 @@ object FrameworkMenuHandler : IMenuHandler {
     override fun constructItemStack(player: Player, button: IButton): ItemStack {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
-        return ItemStackBuilder().apply {
-            type(type.parseMaterial() ?: Material.DIAMOND_SWORD)
+        return ItemStackBuilder(ItemStack(type.parseMaterial() ?: Material.BARRIER)).apply {
             button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack

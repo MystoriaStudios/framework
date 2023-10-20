@@ -13,6 +13,8 @@ import net.revive.framework.constants.Deployment
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.menu.IMenuHandler
+import net.revive.framework.menu.callback.impl.ColorCallbackMenu
+import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.openMenuTemplate
 import net.revive.framework.menu.template.MenuTemplateService
 import net.revive.framework.menu.test.TestMenu
@@ -30,9 +32,6 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Inject
     lateinit var scoreboardService: ScoreboardService
-
-    @Inject
-    lateinit var menuHandler: IMenuHandler
 
     @Inject
     lateinit var config: SecurityConfig
@@ -103,8 +102,14 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Subcommand("test-menu")
     fun testMenu(player: Player) {
-        val menu = TestMenu()
-        menuHandler.openMenu(player, menu)
+        player.openMenu(TestMenu())
+    }
+
+    @Subcommand("test-menu-color")
+    fun testMenuColor(player: Player) {
+        player.openMenu(ColorCallbackMenu {
+            player.sendMessage(buildComponent("You clicked this color $it", it))
+        })
     }
 
     @Subcommand("test-menu-template")

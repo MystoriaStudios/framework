@@ -40,7 +40,7 @@ interface IDeathMessageConfiguration {
 
                 buildComponent {
                     this.text(name) {
-                        it.color(Tailwind.GRAY_50)
+                        it.color(Tailwind.GRAY_100)
                         it.component.hoverEvent(
                             HoverEvent.showEntity(
                                 EntityType.PLAYER.key,

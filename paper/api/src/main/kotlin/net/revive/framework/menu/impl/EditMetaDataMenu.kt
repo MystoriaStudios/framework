@@ -29,7 +29,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
     override fun getButtons(player: Player) = mutableMapOf<Int, IButton>().apply {
         this.putAll(super.getButtons(player))
         this[4] = object : AbstractInputButton() {
-            override fun getMaterial(player: Player) = XMaterial.HONEYCOMB
+            override fun getMaterial(player: Player) = XMaterial.YELLOW_CANDLE
 
             override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
                 name(buildComponent {
