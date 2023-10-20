@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit
     name = "Framework",
     version = "1.0.14-SNAPSHOT",
     authors = ["Revive Studios"],
+    apiVersion = "1.20",
     website = "https://randomcraft.net/",
     depends = [
         PluginDependency(

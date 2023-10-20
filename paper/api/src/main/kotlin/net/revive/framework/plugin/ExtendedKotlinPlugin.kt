@@ -143,20 +143,25 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .getTypesAnnotatedWith<JsonConfig>()
             .forEach {
                 kotlin.runCatching {
-                    logger.log(Level.INFO, "Loading config ${it.name}")
+                    logger.log(Level.INFO, "Trying to load config ${it.name}.")
+
+                    val annotation = it.getAnnotation(JsonConfig::class.java)
 
                     val config = try {
-                        load(it.getAnnotation(JsonConfig::class.java), it.kotlin)
+                        load(annotation, it.kotlin)
+                        logger.log(Level.INFO, "Loaded configuration from ${annotation.fileName}.")
                     } catch (exception: FileNotFoundException) {
-                        save(it.getAnnotation(JsonConfig::class.java), it.getConstructor().newInstance())
+                        logger.log(Level.SEVERE, "${annotation.fileName} not found, trying to save the default provider.")
+                        save(annotation, it.getConstructor().newInstance())
                     }
 
                     flavor().binders.add(
                         FlavorBinder(it::class) to config
                     )
 
-                    if (it.getAnnotation(JsonConfig::class.java).autoSave) {
-                        trackedConfigs[it.getAnnotation(JsonConfig::class.java)] = config
+                    if (annotation.autoSave) {
+                        logger.log(Level.INFO, "Configuration for ${it.name} will now be auto saved.")
+                        trackedConfigs[annotation] = config
                     }
                 }.onFailure { throwable ->
                     logger.log(Level.SEVERE, "Failed to load json configuration correctly", throwable)
