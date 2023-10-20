@@ -11,6 +11,9 @@ listOf("paper", "velocity", "independent").forEach {
         }
 }
 
+include(":mc-commons")
+project(":mc-commons").name = "minecraft-platform"
+
 include(":paper:nms")
 include("paper:nms:core")
 project(":paper:nms:core").name = "nms-core"

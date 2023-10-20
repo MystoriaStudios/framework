@@ -16,6 +16,7 @@ dependencies {
     implementation("fr.mrmicky:fastboard:2.0.0")
     implementation("me.lucko:helper:5.6.10")
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly(project(":minecraft-platform"))
 
     compileOnly(project(":paper:nms:nms-core"))
     compileOnly("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
