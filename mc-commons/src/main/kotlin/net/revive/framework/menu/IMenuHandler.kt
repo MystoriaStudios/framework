@@ -3,6 +3,7 @@ package net.revive.framework.menu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.template.MenuTemplate
 import net.revive.framework.sender.AbstractFrameworkPlayer
+import net.revive.framework.sender.FrameworkPlayer
 
 /**
  * An interface representing a menu handler for managing in-game menus and inventories.
