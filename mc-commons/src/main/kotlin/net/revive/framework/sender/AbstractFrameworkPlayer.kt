@@ -1,4 +1,8 @@
 package net.revive.framework.sender
 
-abstract class AbstractFrameworkPlayer<P> : FrameworkSender<P> {
+
+typealias FrameworkPlayer = AbstractFrameworkPlayer<*>
+
+abstract class AbstractFrameworkPlayer<P>(p: P) : FrameworkSender<P> {
+
 }

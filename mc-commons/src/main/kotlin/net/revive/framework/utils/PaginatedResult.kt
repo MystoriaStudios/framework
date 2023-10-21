@@ -55,7 +55,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
         }
 
         if (command != null) {
-            if (sender is AbstractFrameworkPlayer<*>) {
+            if (sender is FrameworkPlayer) {
                 val component = Component.text()
 
                 component.append(
