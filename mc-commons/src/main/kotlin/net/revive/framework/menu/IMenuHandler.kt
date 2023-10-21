@@ -1,6 +1,8 @@
 package net.revive.framework.menu
 
 import net.revive.framework.menu.button.IButton
+import net.revive.framework.menu.inventory.AbstractFrameworkInventory
+import net.revive.framework.menu.inventory.FrameworkInventory
 import net.revive.framework.menu.template.MenuTemplate
 import net.revive.framework.sender.AbstractFrameworkPlayer
 import net.revive.framework.sender.FrameworkPlayer
@@ -17,7 +19,7 @@ interface IMenuHandler {
      * @param menu The menu for which the inventory is created.
      * @return The created inventory.
      */
-    fun createInventory(player: FrameworkPlayer, menu: IMenu): Inventory
+    fun createInventory(player: FrameworkPlayer, menu: IMenu): FrameworkInventory
 
     /**
      * Opens the specified menu for the given player.
@@ -34,7 +36,7 @@ interface IMenuHandler {
      * @param inventory The custom inventory to be opened.
      * @param menu The menu that the inventory is being opened.
      */
-    fun openCustomInventory(player: FrameworkPlayer, inventory: Inventory, menu: IMenu)
+    fun openCustomInventory(player: FrameworkPlayer, inventory: FrameworkInventory, menu: IMenu)
 
     /**
      * Updates the specified menu for the given player.

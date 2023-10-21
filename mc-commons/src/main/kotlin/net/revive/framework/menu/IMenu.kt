@@ -3,6 +3,7 @@ package net.revive.framework.menu
 import net.kyori.adventure.text.Component
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.sender.AbstractFrameworkPlayer
+import net.revive.framework.sender.FrameworkPlayer
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.ceil
 
