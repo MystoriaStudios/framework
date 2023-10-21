@@ -1,5 +1,7 @@
 package net.revive.framework.menu
 
+import net.revive.framework.item.AbstractFrameworkItemStack
+import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.inventory.AbstractFrameworkInventory
 import net.revive.framework.menu.inventory.FrameworkInventory
@@ -62,7 +64,7 @@ interface IMenuHandler {
      * @param button The button for which the ItemStack is constructed.
      * @return The constructed ItemStack.
      */
-    fun constructItemStack(player: FrameworkPlayer, button: IButton): ItemStack
+    fun constructItemStack(player: FrameworkPlayer, button: IButton): FrameworkItemStack
 }
 
 fun FrameworkPlayer.openMenu(menu: IMenu) {

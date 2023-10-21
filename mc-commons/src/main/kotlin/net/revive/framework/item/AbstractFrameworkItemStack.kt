@@ -1,3 +1,7 @@
 package net.revive.framework.item
 
-abstract class AbstractFrameworkItemStack<I>(val item: I)
+typealias FrameworkItemStack = AbstractFrameworkItemStack<*>
+
+abstract class AbstractFrameworkItemStack<I>(val item: I) {
+    abstract fun
+}
