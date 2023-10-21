@@ -15,6 +15,7 @@ import net.revive.framework.annotation.container.flavor.LazyStartup
 import net.revive.framework.annotation.inject.AutoBind
 import net.revive.framework.annotation.retrofit.RetrofitService
 import net.revive.framework.annotation.retrofit.UsesRetrofit
+import net.revive.framework.command.FrameworkCommandManager
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load

@@ -15,6 +15,7 @@ import net.revive.framework.metadata.IMetaDataHolder
 import net.revive.framework.storage.storable.IStorable
 import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toFramework
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -44,7 +45,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                     buildComponent("Create a new key for metadata", Tailwind.GRAY_200),
                     buildComponent("attached to the holder.", Tailwind.GRAY_200),
                     Component.empty(),
-                    ControlComponent(ClickType.LEFT, "create a new entry").build()
+                    ControlComponent(ClickType.LEFT.toFramework(), "create a new entry").build()
                 )
             }
 
@@ -96,8 +97,8 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                             text(it.value, Tailwind.TEAL_700)
                         },
                         Component.empty(),
-                        ControlComponent(ClickType.LEFT, "edit the value").build(),
-                        ControlComponent(ClickType.RIGHT, "delete the key").build()
+                        ControlComponent(ClickType.LEFT.toFramework(), "edit the value").build(),
+                        ControlComponent(ClickType.RIGHT.toFramework(), "delete the key").build()
                     )
                 }
 

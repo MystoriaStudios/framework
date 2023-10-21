@@ -12,6 +12,7 @@ import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.paged.AbstractPagedMenu
 import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toFramework
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 
@@ -65,7 +66,7 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
                             addAll(
                                 listOf(
                                     Component.empty(),
-                                    ControlComponent(ClickType.LEFT, "set the enum to this").build()
+                                    ControlComponent(ClickType.LEFT.toFramework(), "set the enum to this").build()
                                 )
                             )
                         })
