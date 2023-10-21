@@ -8,9 +8,7 @@ import java.io.File
 
 object UpdaterMinestomPlatform : IUpdaterPlatform {
     override fun configure() {
-        UpdaterService.pluginContainer = File(
-            ExtensionBootstrap.getExtensionManager().extensionFolder, ""
-        )
+        UpdaterService.pluginContainer = ExtensionBootstrap.getExtensionManager().extensionFolder
 
         // configuration
         UpdaterService.authentication = UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper()
