@@ -1,6 +1,6 @@
 package net.revive.framework.server
 
-import net.revive.framework.sender.AbstractFrameworkPlayer
+import net.revive.framework.sender.FrameworkPlayer
 import java.util.UUID
 
 interface IMinecraftPlatform {
