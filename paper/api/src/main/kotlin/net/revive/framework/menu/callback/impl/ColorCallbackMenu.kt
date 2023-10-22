@@ -2,27 +2,28 @@ package net.revive.framework.menu.callback.impl
 
 import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.format.TextColor
+import net.revive.framework.component.ClickType
 import net.revive.framework.constants.Tailwind
+import net.revive.framework.item.ItemStackBuilder
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.callback.AbstractCallbackPagedMenu
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toMinecraftKey
 import org.bukkit.Color
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.ClickType
 import java.lang.reflect.Field
 
 class ColorCallbackMenu(
     override var onCallback: (String) -> Unit
 ) : AbstractCallbackPagedMenu<String>() {
-    override fun getTitle(player: Player) = buildComponent(
+    override fun getTitle(player: FrameworkPlayer) = buildComponent(
         "Selecting color",
         Tailwind.GRAY_700
     )
 
-    override fun getAllPagesButtons(player: Player): Map<Int, IButton> {
+    override fun getAllPagesButtons(player: FrameworkPlayer): Map<Int, IButton> {
         var i = 0;
         return Tailwind::class.java.declaredFields
             .filter { it.name != "INSTANCE" }
@@ -39,18 +40,18 @@ class ColorCallbackMenu(
     override val metaData: IMenu.MetaData = IMenu.MetaData()
 
     inner class ColorButton(val field: Field) : IButton {
-        override fun getMaterial(player: Player) = XMaterial.LEATHER_CHESTPLATE
+        override fun getMaterial(player: FrameworkPlayer) = XMaterial.LEATHER_CHESTPLATE.toMinecraftKey()
 
-        override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+        override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
             name(buildComponent(
                     field.name,
                     field.get(Tailwind).toString()
             ))
 
-            color(Color.fromRGB(TextColor.fromHexString(field.get(Tailwind).toString())?.value() ?: 0))
+            TextColor.fromHexString(field.get(Tailwind).toString())?.let { color(it) }
         }
 
-        override fun onClick(player: Player, type: ClickType) {
+        override fun onClick(player: FrameworkPlayer, type: ClickType) {
             onCallback.invoke(field.get(Tailwind).toString())
         }
     }

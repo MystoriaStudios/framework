@@ -5,8 +5,9 @@ import net.revive.framework.PaperFrameworkPlugin
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
+import net.revive.framework.item.buildItem
 import net.revive.framework.utils.buildComponent
-import net.revive.framework.utils.itemBuilder
+import net.revive.framework.utils.toMinecraftKey
 import org.bukkit.Material
 import java.io.File
 
@@ -33,8 +34,8 @@ object MenuTemplateService {
                     buttons = mutableListOf(
                         MenuTemplate.Button(
                             1,
-                            itemBuilder {
-                                this.type(Material.OAK_SIGN)
+                            buildItem {
+                                this.type(Material.OAK_SIGN.toMinecraftKey())
                                 this.lore(
                                     listOf(
                                         buildComponent("test", Tailwind.AMBER_400)

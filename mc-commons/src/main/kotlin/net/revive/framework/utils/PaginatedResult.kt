@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.constants.Icons
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.sender.AbstractFrameworkPlayer
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.FrameworkSender
 
 /**
@@ -55,7 +56,7 @@ abstract class PaginatedResult<T>(private val resultsPerPage: Int = 20) {
         }
 
         if (command != null) {
-            if (sender is AbstractFrameworkPlayer<*>) {
+            if (sender is FrameworkPlayer) {
                 val component = Component.text()
 
                 component.append(

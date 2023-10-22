@@ -7,8 +7,8 @@ import net.revive.framework.annotation.Listeners
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.event.event
 import net.revive.framework.flavor.annotation.Inject
-import net.revive.framework.utils.ItemBuilder
 import net.revive.framework.utils.Tasks
+import net.revive.framework.utils.pvc
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -32,16 +32,17 @@ object FrameworkMenuListeners : Listener {
     fun onClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val player = event.player as Player
+        val frameworkPlayer = player.pvc
 
-        if (menuService.getOpenedMenu(player) != null) {
-            menuService.removeOpenedMenu(player)
+        if (menuService.getOpenedMenu(frameworkPlayer) != null) {
+            menuService.removeOpenedMenu(frameworkPlayer)
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
         if (event.whoClicked !is Player) return
-        menuService.getOpenedMenu(event.whoClicked as Player) ?: return
+        menuService.getOpenedMenu((event.whoClicked as Player).pvc) ?: return
 
         if (event.inventory != event.view.topInventory) {
             event.isCancelled = true
@@ -59,8 +60,9 @@ object FrameworkMenuListeners : Listener {
     @EventHandler
     fun onButtonPress(event: InventoryClickEvent) = event(event.whoClicked) {
         val player = event.whoClicked as Player
+        val frameworkPlayer = player.pvc
 
-        val openMenu = menuService.getOpenedMenu(player)
+        val openMenu = menuService.getOpenedMenu(frameworkPlayer)
         if (openMenu != null) {
             if (event.click == ClickType.DOUBLE_CLICK) {
                 event.isCancelled = true
@@ -87,6 +89,7 @@ object FrameworkMenuListeners : Listener {
                 if (event.clickedInventory == event.view.topInventory) {
                     event.isCancelled = true
 
+                    /* TODO
                     when (event.click) {
                         ClickType.LEFT -> {
                             event.cursor
@@ -105,6 +108,8 @@ object FrameworkMenuListeners : Listener {
                             event.cursor
                         }
                     }
+
+                     */
                     return
                 }
             }
@@ -125,8 +130,7 @@ object FrameworkMenuListeners : Listener {
 
 
                 try {
-                    button.onClick(player, event.click)
-                    button.onClick(player, event.click, event)
+                    button.onClick(frameworkPlayer, event.click.pvc)
                 } catch (exception: ConditionFailedException) {
                     player.sendMessage(
                         Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700))
@@ -134,10 +138,10 @@ object FrameworkMenuListeners : Listener {
                 }
 
                 // check if player is still in the same menu and needs to update
-                if (menuService.hasOpenedMenu(player)) {
-                    val newMenu = menuService.getOpenedMenu(player)
+                if (menuService.hasOpenedMenu(frameworkPlayer)) {
+                    val newMenu = menuService.getOpenedMenu(frameworkPlayer)
                     if (newMenu === openMenu && newMenu.updateOnClick) {
-                        menuHandler.openMenu(player, newMenu)
+                        menuHandler.openMenu(frameworkPlayer, newMenu)
                     }
                 }
 

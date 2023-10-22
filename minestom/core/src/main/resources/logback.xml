@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Define color highlighting for different log levels -->
+    <conversionRule conversionWord="highlight"
+                    converterClass="ch.qos.logback.classic.pattern.color.HighlightingCompositeConverter"/>
+    <conversionRule conversionWord="magenta"
+                    converterClass="ch.qos.logback.classic.pattern.color.MagentaCompositeConverter"/>
+    <conversionRule conversionWord="red"
+                    converterClass="ch.qos.logback.classic.pattern.color.RedCompositeConverter"/>
+    <conversionRule conversionWord="green"
+                    converterClass="ch.qos.logback.classic.pattern.color.GreenCompositeConverter"/>
+    <conversionRule conversionWord="yellow"
+                    converterClass="ch.qos.logback.classic.pattern.color.YellowCompositeConverter"/>
+    <conversionRule conversionWord="cyan"
+                    converterClass="ch.qos.logback.classic.pattern.color.CyanCompositeConverter"/>
+
+    <!-- Define the console appender with pattern layout -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%highlight(%d{HH:mm:ss} [%thread/%level]) %logger{15} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- MongoDB logger - Disable all logs from MongoDB -->
+    <logger name="org.mongodb.driver" level="OFF" />
+
+    <!-- JDA logger - Disable all logs from JDA -->
+    <logger name="net.dv8tion.jda" level="OFF" />
+
+    <logger name="net.minestom.server.instance.AnvilLoader" level="OFF"/>
+
+    <!-- Root logger -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

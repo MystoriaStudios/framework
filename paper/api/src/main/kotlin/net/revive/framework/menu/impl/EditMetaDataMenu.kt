@@ -3,22 +3,23 @@ package net.revive.framework.menu.impl
 import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
+import net.revive.framework.component.ClickType
 import net.revive.framework.component.impl.CategoryComponent
 import net.revive.framework.component.impl.ControlComponent
 import net.revive.framework.constants.Tailwind
+import net.revive.framework.item.ItemStackBuilder
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.button.impl.AbstractInputButton
 import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.paged.AbstractPagedMenu
 import net.revive.framework.metadata.IMetaDataHolder
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.storage.storable.IStorable
-import net.revive.framework.utils.ItemStackBuilder
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toMinecraftKey
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.ClickType
 
 class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit) : AbstractPagedMenu() {
 
@@ -26,12 +27,12 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
     override val buttonStartOffset = 9
     override val maxItemsPerPage = 21
 
-    override fun getButtons(player: Player) = mutableMapOf<Int, IButton>().apply {
+    override fun getButtons(player: FrameworkPlayer) = mutableMapOf<Int, IButton>().apply {
         this.putAll(super.getButtons(player))
         this[4] = object : AbstractInputButton() {
-            override fun getMaterial(player: Player) = XMaterial.YELLOW_CANDLE
+            override fun getMaterial(player: FrameworkPlayer) = XMaterial.YELLOW_CANDLE.toMinecraftKey()
 
-            override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+            override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
                 name(buildComponent {
                     text("Create new MetaData") {
                         it.color(Tailwind.AMBER_400)
@@ -48,7 +49,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                 )
             }
 
-            override fun builder(player: Player) = AnvilGUI.Builder()
+            override fun builder(player: FrameworkPlayer) = AnvilGUI.Builder()
                 .plugin(Bukkit.getPluginManager().getPlugin("Framework"))
                 .text("Enter a key.")
                 .onClick { _, event ->
@@ -70,11 +71,11 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
      * @param player The player for whom the buttons are generated.
      * @return A map of button positions (slot numbers) to button identifiers (IButton) for all pages.
      */
-    override fun getAllPagesButtons(player: Player) = mutableMapOf<Int, IButton>().apply {
+    override fun getAllPagesButtons(player: FrameworkPlayer) = mutableMapOf<Int, IButton>().apply {
         holder.metaData.forEach {
             this[this.size] = object : AbstractInputButton() {
-                override fun getMaterial(player: Player) = XMaterial.WRITABLE_BOOK
-                override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+                override fun getMaterial(player: FrameworkPlayer) = XMaterial.WRITABLE_BOOK.toMinecraftKey()
+                override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
                     name(buildComponent {
                         text(it.key) {
                             it.color(Tailwind.AMBER_400)
@@ -101,7 +102,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                     )
                 }
 
-                override fun builder(player: Player) = AnvilGUI.Builder()
+                override fun builder(player: FrameworkPlayer) = AnvilGUI.Builder()
                     .plugin(Bukkit.getPluginManager().getPlugin("Framework"))
                     .text(it.value)
                     .onClick { _, event ->
@@ -112,7 +113,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
                         return@onClick listOf(AnvilGUI.ResponseAction.close())
                     }
 
-                override fun onClick(player: Player, type: ClickType) {
+                override fun onClick(player: FrameworkPlayer, type: ClickType) {
                     when (type) {
                         ClickType.LEFT -> super.onClick(player, type)
                         ClickType.RIGHT -> {
@@ -127,7 +128,7 @@ class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit
         }
     }
 
-    override fun getTitle(player: Player) = buildComponent(
+    override fun getTitle(player: FrameworkPlayer) = buildComponent(
         "Editing metadata ${
             if (holder is IStorable) {
                 "for ${holder.identifier}"

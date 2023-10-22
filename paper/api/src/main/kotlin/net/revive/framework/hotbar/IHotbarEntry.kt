@@ -1,6 +1,6 @@
 package net.revive.framework.hotbar
 
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.item.ItemStackBuilder
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import java.util.*

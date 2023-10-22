@@ -1,7 +1,7 @@
 package net.revive.framework.hotbar.impl
 
 import net.revive.framework.hotbar.IHotbarEntry
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.item.ItemStackBuilder
 import org.bukkit.entity.Player
 import java.util.*
 

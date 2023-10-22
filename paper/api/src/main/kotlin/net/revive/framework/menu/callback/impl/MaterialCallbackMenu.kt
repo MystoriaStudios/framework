@@ -2,29 +2,29 @@ package net.revive.framework.menu.callback.impl
 
 import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.Component
+import net.revive.framework.component.ClickType
 import net.revive.framework.constants.Tailwind
+import net.revive.framework.item.ItemStackBuilder
+import net.revive.framework.key.MinecraftKey
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.callback.AbstractCallbackPagedMenu
-import net.revive.framework.menu.callback.ICallbackMenu
-import net.revive.framework.menu.openMenu
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toMinecraftKey
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.ClickType
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class MaterialCallbackMenu(
     override var onCallback: (Material) -> Unit
 ) : AbstractCallbackPagedMenu<Material>() {
-    override fun getTitle(player: Player) = buildComponent(
+    override fun getTitle(player: FrameworkPlayer) = buildComponent(
         "Selecting item type",
         Tailwind.GRAY_700
     )
 
-    override fun getAllPagesButtons(player: Player): Map<Int, IButton> {
+    override fun getAllPagesButtons(player: FrameworkPlayer): Map<Int, IButton> {
         var i = 0;
         return Material
             .entries
@@ -42,9 +42,9 @@ class MaterialCallbackMenu(
     override val metaData: IMenu.MetaData = IMenu.MetaData()
 
     inner class MaterialButton(val type: Material) : IButton {
-        override fun getMaterial(player: Player) = XMaterial.matchXMaterial(type)
+        override fun getMaterial(player: FrameworkPlayer) = XMaterial.matchXMaterial(type).toMinecraftKey()
 
-        override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+        override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
             name(
                 buildComponent(
                     type.name.lowercase().split("_").joinToString(" ") {
@@ -59,7 +59,7 @@ class MaterialCallbackMenu(
             )
         }
 
-        override fun onClick(player: Player, type: ClickType) {
+        override fun onClick(player: FrameworkPlayer, type: ClickType) {
             onCallback.invoke(this.type)
         }
     }
