@@ -6,7 +6,7 @@ import java.util.concurrent.Executors
 
 class SentryService {
 
-    val DATA_SOURCE = "https://cbb72c2cefe13634c895ef52079a0ac8@o4505916375957504.ingest.sentry.io/4505916384935936"
+    val DATA_SOURCE = "https://bb1c52703dd8db80ecb927fb03209bbf@o1263915.ingest.sentry.io/4506094565785600"
     private val executor = Executors.newSingleThreadExecutor()
     var enabled = false
 

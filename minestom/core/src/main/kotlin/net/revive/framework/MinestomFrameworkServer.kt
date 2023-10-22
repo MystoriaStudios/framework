@@ -1,26 +1,29 @@
 package net.revive.framework
 
-import com.google.common.base.Stopwatch
 import fr.bretzel.minestom.placement.BlockPlacementManager
 import net.hollowcube.minestom.extensions.ExtensionBootstrap
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.minestom.server.MinecraftServer
+import net.minestom.server.item.ItemStack
 import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.cache.UUIDCache
 import net.revive.framework.console.Console
 import net.revive.framework.controller.FrameworkObjectControllerCache
-import net.revive.framework.flavor.FlavorBinder
+import net.revive.framework.item.FrameworkItemStack
+import net.revive.framework.item.IItemStackProvider
+import net.revive.framework.item.MinestomFrameworkItemStack
+import net.revive.framework.item.MinestomItemStackProvider
+import net.revive.framework.menu.FrameworkMenuHandler
+import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.server.ExtendedMinestomServer
 import net.revive.framework.updater.UpdaterMinestomPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
 import org.fusesource.jansi.AnsiConsole
-import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 fun main() {
@@ -29,12 +32,12 @@ fun main() {
     System.setProperty("org.jline.terminal", "org.jline.terminal.impl.JansiSupport")
     AnsiConsole.systemInstall()
 
+    val server = ExtensionBootstrap.init()
+
     MinestomFrameworkServer.also {
         it.load()
         it.enable()
     }
-
-    val server = ExtensionBootstrap.init()
 
     MinecraftServer.setTerminalEnabled(true)
     BlockPlacementManager.register();
@@ -76,7 +79,11 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
     @ContainerEnable
     fun containerEnable() {
         Framework.use { framework ->
+            framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
 
+            framework.flavor.bind<IItemStackProvider<*>>() to MinestomItemStackProvider()
+            framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to MinestomItemStackProvider()
+            framework.flavor.bind<IItemStackProvider<MinestomFrameworkItemStack>>() to MinestomItemStackProvider()
         }
 
         UpdaterService.configure(UpdaterMinestomPlatform)
