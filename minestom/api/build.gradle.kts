@@ -6,7 +6,7 @@ dependencies {
     compileOnly("dev.hollowcube:minestom-ce-extensions:1.2.0")
 
     implementation(project(":independent:independent-api"))
-    compileOnly(project(":minecraft-platform"))
+    implementation(project(":minecraft-platform"))
 
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
