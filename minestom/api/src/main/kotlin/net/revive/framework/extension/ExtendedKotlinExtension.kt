@@ -91,10 +91,6 @@ open class ExtendedKotlinExtension : Extension(), IConfigProvider {
             FlavorBinder(this@ExtendedKotlinExtension::class) to this@ExtendedKotlinExtension
         )
 
-        flavor {
-            bind<Logger>() to logger
-        }
-
         this.packageIndexer
             .getTypesAnnotatedWith<JsonConfig>()
             .forEach {
