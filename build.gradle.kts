@@ -26,7 +26,7 @@ sentry {
     authToken.set(sentry_auth)
 }
 
-var projectVer = "1.0.14-SNAPSHOT"
+var projectVer = "1.1.0-SNAPSHOT"
 
 allprojects {
     apply(plugin = "maven-publish")

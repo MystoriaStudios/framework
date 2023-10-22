@@ -17,11 +17,9 @@ import net.revive.framework.metadata.IMetaDataHolder
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.storage.storable.IStorable
 import net.revive.framework.utils.buildComponent
-import net.revive.framework.utils.toFramework
 import net.revive.framework.utils.toMinecraftKey
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 
 class EditMetaDataMenu<T : IMetaDataHolder>(val holder: T, val save: (T) -> Unit) : AbstractPagedMenu() {
 

@@ -12,7 +12,6 @@ import net.revive.framework.config.SecurityConfig
 import net.revive.framework.constants.Deployment
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
-import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.menu.callback.impl.ColorCallbackMenu
 import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.openMenuTemplate
@@ -21,7 +20,7 @@ import net.revive.framework.menu.test.TestMenu
 import net.revive.framework.scoreboard.IScoreboard
 import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.utils.buildComponent
-import net.revive.framework.utils.toFramework
+import net.revive.framework.utils.pvc
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -103,19 +102,19 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Subcommand("test-menu")
     fun testMenu(player: Player) {
-        player.toFramework().openMenu(TestMenu())
+        player.pvc.openMenu(TestMenu())
     }
 
     @Subcommand("test-menu-color")
     fun testMenuColor(player: Player) {
-        player.toFramework().openMenu(ColorCallbackMenu {
+        player.pvc.openMenu(ColorCallbackMenu {
             player.sendMessage(buildComponent("You clicked this color $it", it))
         })
     }
 
     @Subcommand("test-menu-template")
     fun testMenu(player: Player, @Name("id") id: String) {
-        player.toFramework().openMenuTemplate(
+        player.pvc.openMenuTemplate(
             MenuTemplateService.templates[id.lowercase()]
                 ?: throw ConditionFailedException("Unable to find a menu with that template id.")
         )

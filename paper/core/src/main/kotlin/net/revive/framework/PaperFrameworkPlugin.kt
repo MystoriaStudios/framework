@@ -29,6 +29,7 @@ import net.revive.framework.permission.impl.LuckPermsPermissionProvider
 import net.revive.framework.plugin.ExtendedKotlinPlugin
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
 import net.revive.framework.serializer.impl.GsonSerializer
+import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterPaperPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
@@ -87,6 +88,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         nmsVersion = NMSVersion.V1_20_R1
 
         Framework.use { framework ->
+            framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
 
             framework.flavor.bind<IDisguiseHandler>() to FrameworkDisguiseHandler()

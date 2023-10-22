@@ -7,8 +7,7 @@ import net.revive.framework.server.IMinecraftPlatform
 import org.bukkit.Bukkit
 import java.util.*
 
-@AutoBind
-class PaperMinecraftPlatform : IMinecraftPlatform {
+object PaperMinecraftPlatform : IMinecraftPlatform {
     override fun getOnlinePlayers(): MutableList<FrameworkPlayer> {
         return Bukkit.getOnlinePlayers()
             .map {

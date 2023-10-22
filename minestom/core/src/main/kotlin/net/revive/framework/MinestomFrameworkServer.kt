@@ -20,6 +20,7 @@ import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.server.ExtendedMinestomServer
+import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterMinestomPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
@@ -80,6 +81,7 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
     fun containerEnable() {
         Framework.use { framework ->
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
+            framework.flavor.bind<IMinecraftPlatform>() to MinestomMinecraftPlatform
 
             framework.flavor.bind<IItemStackProvider<*>>() to MinestomItemStackProvider()
             framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to MinestomItemStackProvider()

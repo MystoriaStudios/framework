@@ -16,17 +16,16 @@ object MinestomFramework : Framework() {
     override var permissionRegistry: IPermissionRegistry
         get() = TODO("Not yet implemented")
         set(value) {}
-    override var logger: Logger
-        get() = TODO("Not yet implemented")
-        set(value) {}
+
+    override var logger: Logger = Logger.getLogger("Framework")
 
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
         val config = MinestomFrameworkServer.config
 
         return BasicFrameworkRedisConnection(
             BasicFrameworkRedisConnection.Details(
-                "",
-                0
+                "127.0.0.1",
+                6379
             )
         )
     }
@@ -36,7 +35,7 @@ object MinestomFramework : Framework() {
 
         return BasicFrameworkMongoConnection(
             BasicFrameworkMongoConnection.Details(
-                "localhost",
+                "mongodb://localhost:27017",
                 "framework"
             )
         )

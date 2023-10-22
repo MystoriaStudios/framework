@@ -7,9 +7,8 @@ import net.revive.framework.annotation.Listeners
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.event.event
 import net.revive.framework.flavor.annotation.Inject
-import net.revive.framework.item.ItemBuilder
 import net.revive.framework.utils.Tasks
-import net.revive.framework.utils.toFramework
+import net.revive.framework.utils.pvc
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -33,7 +32,7 @@ object FrameworkMenuListeners : Listener {
     fun onClose(event: InventoryCloseEvent) {
         if (event.player !is Player) return
         val player = event.player as Player
-        val frameworkPlayer = player.toFramework()
+        val frameworkPlayer = player.pvc
 
         if (menuService.getOpenedMenu(frameworkPlayer) != null) {
             menuService.removeOpenedMenu(frameworkPlayer)
@@ -43,7 +42,7 @@ object FrameworkMenuListeners : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onInventoryDrag(event: InventoryDragEvent) = event(event.whoClicked) {
         if (event.whoClicked !is Player) return
-        menuService.getOpenedMenu((event.whoClicked as Player).toFramework()) ?: return
+        menuService.getOpenedMenu((event.whoClicked as Player).pvc) ?: return
 
         if (event.inventory != event.view.topInventory) {
             event.isCancelled = true
@@ -61,7 +60,7 @@ object FrameworkMenuListeners : Listener {
     @EventHandler
     fun onButtonPress(event: InventoryClickEvent) = event(event.whoClicked) {
         val player = event.whoClicked as Player
-        val frameworkPlayer = player.toFramework()
+        val frameworkPlayer = player.pvc
 
         val openMenu = menuService.getOpenedMenu(frameworkPlayer)
         if (openMenu != null) {
@@ -131,7 +130,7 @@ object FrameworkMenuListeners : Listener {
 
 
                 try {
-                    button.onClick(frameworkPlayer, event.click.toFramework())
+                    button.onClick(frameworkPlayer, event.click.pvc)
                 } catch (exception: ConditionFailedException) {
                     player.sendMessage(
                         Component.text(exception.localizedMessage).color(TextColor.fromHexString(Tailwind.RED_700))

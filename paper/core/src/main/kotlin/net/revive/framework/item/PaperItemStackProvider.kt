@@ -4,7 +4,7 @@ import net.revive.framework.annotation.inject.AutoBind
 import org.bukkit.inventory.ItemStack
 
 @AutoBind
-class PaperItemStackProvider : AbstractItemStackProvider<PaperFrameworkItemStack> {
+class PaperItemStackProvider : IItemStackProvider<PaperFrameworkItemStack> {
     override fun getEmpty(): PaperFrameworkItemStack {
         return EMPTY
     }

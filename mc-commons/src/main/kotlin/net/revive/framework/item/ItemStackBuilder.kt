@@ -1,8 +1,6 @@
 package net.revive.framework.item
 
-import com.google.common.base.Preconditions
 import net.kyori.adventure.key.Key
-import net.kyori.adventure.key.Keyed
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.component.IFrameworkComponent
@@ -41,7 +39,7 @@ class ItemStackBuilder(var itemStack: FrameworkItemStack) {
     companion object {
 
         @Inject
-        lateinit var itemStackProvider: AbstractItemStackProvider<*>
+        lateinit var itemStackProvider: IItemStackProvider<*>
     }
 }
 
