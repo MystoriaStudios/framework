@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.constants.Icons
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.sender.AbstractFrameworkPlayer
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.FrameworkSender
 
 /**

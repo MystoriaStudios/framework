@@ -21,6 +21,7 @@ import net.revive.framework.menu.test.TestMenu
 import net.revive.framework.scoreboard.IScoreboard
 import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.utils.buildComponent
+import net.revive.framework.utils.toFramework
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -102,19 +103,19 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @Subcommand("test-menu")
     fun testMenu(player: Player) {
-        player.openMenu(TestMenu())
+        player.toFramework().openMenu(TestMenu())
     }
 
     @Subcommand("test-menu-color")
     fun testMenuColor(player: Player) {
-        player.openMenu(ColorCallbackMenu {
+        player.toFramework().openMenu(ColorCallbackMenu {
             player.sendMessage(buildComponent("You clicked this color $it", it))
         })
     }
 
     @Subcommand("test-menu-template")
     fun testMenu(player: Player, @Name("id") id: String) {
-        player.openMenuTemplate(
+        player.toFramework().openMenuTemplate(
             MenuTemplateService.templates[id.lowercase()]
                 ?: throw ConditionFailedException("Unable to find a menu with that template id.")
         )

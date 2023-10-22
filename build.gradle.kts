@@ -26,6 +26,8 @@ sentry {
     authToken.set(sentry_auth)
 }
 
+var projectVer = "1.0.14-SNAPSHOT"
+
 allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
@@ -36,7 +38,7 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
 
     group = "net.revive.framework"
-    version = "1.0.14-SNAPSHOT"
+    version = projectVer
 
     repositories {
         mavenCentral()
@@ -97,18 +99,28 @@ allprojects {
 
         repositories {
             mavenLocal()
+
+            maven {
+                name = "Astrae"
+                url = uri("https://repo.nopox.xyz/mystoria")
+                credentials(PasswordCredentials::class)
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
         }
     }
 
     tasks["build"]
         .dependsOn(
             "shadowJar",
-            "publishMavenJavaPublicationToMavenLocalRepository"
+            "publishMavenJavaPublicationToMavenLocalRepository",
+            "publishMavenJavaPublicationToAstraeRepository"
         )
 }
 
 kotlin {
-    jvmToolchain(18)
+    jvmToolchain(17)
 }
 
 

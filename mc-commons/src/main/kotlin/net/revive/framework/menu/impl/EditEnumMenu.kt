@@ -7,6 +7,8 @@ import net.revive.framework.component.ClickType
 import net.revive.framework.component.impl.CategoryComponent
 import net.revive.framework.component.impl.ControlComponent
 import net.revive.framework.constants.Tailwind
+import net.revive.framework.item.ItemStackBuilder
+import net.revive.framework.key.MinecraftKey
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.paged.AbstractPagedMenu
@@ -26,9 +28,9 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
      * @return A map of button positions (slot numbers) to button identifiers (IButton) for all pages.
      */
     override fun getAllPagesButtons(player: FrameworkPlayer) = mutableMapOf<Int, IButton>().apply {
-        enums.forEach {
+        enums.forEach { it ->
             this[this.size] = object : IButton {
-                override fun getMaterial(player: FrameworkPlayer) = XMaterial.WRITABLE_BOOK
+                override fun getMaterial(player: FrameworkPlayer) = MinecraftKey("writable_book")
                 override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
                     name(buildComponent {
                         text(it.name) {
@@ -63,7 +65,7 @@ class EditEnumMenu<T : Enum<*>>(val enums: Array<T>, val save: (T) -> Unit) : Ab
                             addAll(
                                 listOf(
                                     Component.empty(),
-                                    ControlComponent(ClickType.LEFT.toFramework(), "set the enum to this").build()
+                                    ControlComponent(ClickType.LEFT, "set the enum to this").build()
                                 )
                             )
                         })

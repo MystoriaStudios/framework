@@ -4,6 +4,7 @@ import net.revive.framework.annotation.Listeners
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.utils.Tasks
+import net.revive.framework.utils.toFramework
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -46,7 +47,7 @@ class FrameworkMenuUpdater : Runnable, Listener {
 
                     if (System.currentTimeMillis() - updateTimestamps[player.uniqueId]!! >= openMenu.autoUpdateInterval) {
                         updateTimestamps[player.uniqueId] = System.currentTimeMillis()
-                        menuHandler.openMenu(player, openMenu)
+                        menuHandler.openMenu(player.toFramework(), openMenu)
                     }
                 }
             } catch (e: Exception) {

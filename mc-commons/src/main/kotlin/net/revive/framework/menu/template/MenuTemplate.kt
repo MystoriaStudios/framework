@@ -1,16 +1,14 @@
 package net.revive.framework.menu.template
 
-import com.cryptomorin.xseries.XMaterial
 import net.kyori.adventure.text.Component
 import net.revive.framework.constants.Tailwind
+import net.revive.framework.item.FrameworkItemStack
+import net.revive.framework.item.ItemStackBuilder
+import net.revive.framework.key.MinecraftKey
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
-import net.revive.framework.sender.AbstractFrameworkPlayer
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
-import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-
 class MenuTemplate(
     val id: String,
     val title: Component = buildComponent(id, Tailwind.GRAY_700),
@@ -18,10 +16,10 @@ class MenuTemplate(
 ) {
     class Button(
         val slot: Int,
-        val item: ItemStack
+        val item: FrameworkItemStack
     ) : IButton {
-        override fun getMaterial(player: Player) = XMaterial.STONE
-        override fun getButtonItem(player: Player): ItemStackBuilder.() -> Unit = {
+        override fun getMaterial(player: FrameworkPlayer) = MinecraftKey("stone")
+        override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
             itemStack = item
         }
     }

@@ -3,9 +3,16 @@ package net.revive.framework.menu
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Service
+import net.revive.framework.item.FrameworkItemStack
+import net.revive.framework.item.ItemStackBuilder
+import net.revive.framework.item.PaperFrameworkItemStack
 import net.revive.framework.menu.button.IButton
+import net.revive.framework.menu.inventory.FrameworkInventory
+import net.revive.framework.menu.inventory.PaperFrameworkInventory
 import net.revive.framework.nms.menu.INMSMenuHandler
-import net.revive.framework.utils.ItemStackBuilder
+import net.revive.framework.sender.FrameworkPlayer
+import net.revive.framework.sender.PaperFrameworkPlayer
+
 import net.revive.framework.utils.Tasks
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
@@ -30,22 +37,22 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param menu The menu for which the inventory is created.
      * @return The created inventory.
      */
-    override fun createInventory(player: Player, menu: IMenu): Inventory {
+    override fun createInventory(player: FrameworkPlayer, menu: IMenu): FrameworkInventory {
         val title = menu.getTitle(player)
         val invButtons = menu.getButtons(player)
 
         val size = menu.size(invButtons)
 
-        return Bukkit.createInventory(null, size, title).apply {
+        return PaperFrameworkInventory(Bukkit.createInventory(null, size, title).apply {
             invButtons.forEach { invButton ->
                 if (invButton.key >= size) {
                     return@forEach
                 }
 
                 menu.metaData.buttons[invButton.key] = invButton.value
-                setItem(invButton.key, constructItemStack(player, invButton.value))
+                setItem(invButton.key, constructItemStack(player, invButton.value).item as ItemStack)
             }
-        }
+        })
     }
 
     /**
@@ -54,7 +61,7 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param player The player who is opening the menu.
      * @param menu The menu to be opened.
      */
-    override fun openMenu(player: Player, menu: IMenu) = Tasks.async {
+    override fun openMenu(player: FrameworkPlayer, menu: IMenu) = Tasks.async {
         runCatching {
             openCustomInventory(player, createInventory(player, menu), menu)
         }.onFailure { throwable ->
@@ -67,7 +74,7 @@ object FrameworkMenuHandler : IMenuHandler {
                     player.sendMessage(buildComponent(message, Tailwind.RED_600))
                     if (id == null) {
                         throwable.printStackTrace()
-                        if (player.isOp) {
+                        if ((player as PaperFrameworkPlayer).player.isOp) {
                             throwable.stackTrace.forEach {
                                 player.sendMessage(buildComponent(it.toString(), Tailwind.RED_400))
                             }
@@ -85,32 +92,33 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param inventory The custom inventory to be opened.
      * @param menu The menu that the inventory is being opened.
      */
-    override fun openCustomInventory(player: Player, inventory: Inventory, menu: IMenu) {
-        val openInventory = player.openInventory
+    override fun openCustomInventory(player: FrameworkPlayer, inventory: FrameworkInventory, menu: IMenu) {
+        val bukkitPlayer = (player as PaperFrameworkPlayer).player
+        val openInventory = bukkitPlayer.openInventory
 
         // check if top inv size is the same as new menu size and if the titles match
         if (nmsMenuHandler.isSameInventory(inventory, openInventory, menu.getTitle(player))) {
-            openInventory.topInventory.contents = inventory.contents
+            openInventory.topInventory.contents = (inventory.inventory as Inventory).contents
             return
         }
 
         menu.metaData.manualClose = false
 
         if (Bukkit.isPrimaryThread()) {
-            player.openInventory(inventory)
+            bukkitPlayer.openInventory(inventory.inventory as Inventory)
             updateMenu(player, menu)
 
-            player.updateInventory()
+            bukkitPlayer.updateInventory()
             return
         }
 
 
         Tasks.delayed(1L)
         {
-            player.openInventory(inventory)
+            bukkitPlayer.openInventory(inventory.inventory as Inventory)
             updateMenu(player, menu)
 
-            player.updateInventory()
+            bukkitPlayer.updateInventory()
         }
     }
 
@@ -120,7 +128,7 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param player The player for whom the menu is updated.
      * @param menu The menu to be updated.
      */
-    override fun updateMenu(player: Player, menu: IMenu) {
+    override fun updateMenu(player: FrameworkPlayer, menu: IMenu) {
         menuService.addOpenedMenu(player, menu)
 
         menu.metaData.closed = false
@@ -145,15 +153,15 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param button The button for which the ItemStack is constructed.
      * @return The constructed ItemStack.
      */
-    override fun constructItemStack(player: Player, button: IButton): ItemStack {
+    override fun constructItemStack(player: FrameworkPlayer, button: IButton): FrameworkItemStack {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
-        return ItemStackBuilder(ItemStack(type.parseMaterial() ?: Material.BARRIER)).apply {
+
+        return ItemStackBuilder(PaperFrameworkItemStack(ItemStack(Material.matchMaterial(type.toString()) ?: Material.BARRIER))).apply {
             button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack
             button.applyTexture(player).invoke(this)
         }.build()
-
     }
 }

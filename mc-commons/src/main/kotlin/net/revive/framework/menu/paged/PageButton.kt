@@ -1,9 +1,15 @@
 package net.revive.framework.menu.paged
 
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.revive.framework.component.ClickType
+import net.revive.framework.item.FrameworkItemFlag
+import net.revive.framework.item.ItemStackBuilder
+import net.revive.framework.key.MinecraftKey
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.sender.FrameworkPlayer
 
@@ -14,7 +20,7 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         return pg > 0 && menu.getPages(player) >= pg
     }
 
-    override fun getMaterial(player: FrameworkPlayer) = if (hasNext(player)) XMaterial.HONEYCOMB else XMaterial.AIR
+    override fun getMaterial(player: FrameworkPlayer) = if (hasNext(player)) MinecraftKey("honeycomb") else MinecraftKey("air")
     override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit {
         if (!hasNext(player)) return {}
         return {
@@ -29,20 +35,36 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
                 ).decorate(TextDecoration.BOLD)
 
             )
-            flags(ItemFlag.HIDE_ITEM_SPECIFICS, ItemFlag.HIDE_ATTRIBUTES)
+            flag(FrameworkItemFlag.HIDE_ITEM_SPECIFICS, FrameworkItemFlag.HIDE_ATTRIBUTES)
         }
     }
 
-    override fun onClick(player: Player, type: ClickType) {
+    override fun onClick(player: FrameworkPlayer, type: ClickType) {
         when {
             hasNext(player) -> {
                 menu.modPage(player, mod)
-
-                XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player, 4f, 1f)
+                player.playSound(
+                    Sound.sound(
+                        MinecraftKey("block.large_amethyst_bud.place"),
+                        Sound.Source.BLOCK,
+                        4f,
+                        1f
+                    )
+                )
+                //XSound.BLOCK_AMETHYST_BLOCK_CHIME.play(player, 4f, 1f)
             }
 
             else -> {
-                XSound.BLOCK_GRAVEL_BREAK.play(player)
+                player.playSound(
+                    Sound.sound(
+                        MinecraftKey("block.suspicious_gravel.break"),
+                        Sound.Source.BLOCK,
+                        4f,
+                        1f
+                    )
+                )
+
+                //XSound.BLOCK_GRAVEL_BREAK.play(player)
             }
         }
     }

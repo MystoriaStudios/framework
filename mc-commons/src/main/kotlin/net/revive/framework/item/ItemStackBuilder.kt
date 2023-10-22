@@ -1,40 +1,24 @@
 package net.revive.framework.item
 
-import net.kyori.adventure.key.Namespaced
-
-@@ -1,211 +0,0 @@
-package net.revive.framework.utils
-
 import com.google.common.base.Preconditions
+import net.kyori.adventure.key.Key
+import net.kyori.adventure.key.Keyed
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.revive.framework.component.IFrameworkComponent
-import org.bukkit.Bukkit
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.inventory.ItemFlag
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.Damageable
-import org.bukkit.inventory.meta.LeatherArmorMeta
-import org.bukkit.inventory.meta.SkullMeta
+import net.revive.framework.flavor.annotation.Inject
 
-inline fun itemBuilder(itemStack: ItemStack, builder: ItemStackBuilder.() -> Unit): ItemStack =
+inline fun buildItem(itemStack: FrameworkItemStack, builder: ItemStackBuilder.() -> Unit): FrameworkItemStack =
     ItemStackBuilder(itemStack = itemStack).apply(builder).build()
 
-inline fun itemBuilder(builder: ItemStackBuilder.() -> Unit): ItemStack = ItemStackBuilder().apply(builder).build()
+inline fun buildItem(builder: ItemStackBuilder.() -> Unit): FrameworkItemStack = ItemStackBuilder(ItemStackBuilder.itemStackProvider.getEmpty()).apply(builder).build()
 
-class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
+class ItemStackBuilder(var itemStack: FrameworkItemStack) {
 
-    fun build(): ItemStack = itemStack
-
-    fun type(material: Material) = apply { itemStack.type = material }
-
-    fun amount(amount: Int) = apply { itemStack.amount = amount }
-
-    fun name(name: Component) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.displayName(name)
-        itemStack.itemMeta = meta
-    }
+    fun build(): FrameworkItemStack = itemStack
+    fun type(material: Key) = apply { itemStack.setType(material) }
+    fun amount(amount: Int) = apply { itemStack.setAmount(amount) }
+    fun name(name: Component) = apply { itemStack.setName(name) }
 
     @JvmName("fLore")
     fun lore(lore: List<IFrameworkComponent>) = apply {
@@ -46,167 +30,28 @@ class ItemStackBuilder(var itemStack: ItemStack = ItemStack(Material.AIR)) {
         lore(lore.map(IFrameworkComponent::build))
     }
 
-    fun lore(lore: List<Component>) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        if (!meta.hasLore()) {
-            meta.lore(lore)
-        } else {
-            meta.lore()!!.addAll(lore)
-        }
-        itemStack.itemMeta = meta
-    }
+    fun lore(lore: List<Component>) = apply { itemStack.addLore(lore) }
+    fun lore(vararg lore: Component) = apply { itemStack.addLore(lore.toList()) }
+    fun durability(data: Int) = apply { itemStack.setDurability(data) }
+    fun model(data: Int) = apply { itemStack.setCustomModelData(data) }
+    fun flag(flag: FrameworkItemFlag) = apply { itemStack.addFlag(flag) }
+    fun flag(vararg flags: FrameworkItemFlag) = apply { flags.forEach { flag(it) }}
+    fun color(color: TextColor) = apply { itemStack.setColor(color) }
 
-    fun lore(vararg lore: Component) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        if (!meta.hasLore()) {
-            meta.lore(lore.toList())
-        } else {
-            meta.lore()!!.addAll(lore.toList())
-        }
-        itemStack.itemMeta = meta
-    }
+    companion object {
 
-    fun enchantment(enchantment: Enchantment, level: Int) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.addEnchant(enchantment, level, true)
-        itemStack.itemMeta = meta
-    }
-
-    fun enchantments(enchantments: Map<Enchantment, Int>) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        enchantments.forEach { (enchantment, level) ->
-            meta.addEnchant(enchantment, level, true)
-        }
-        itemStack.itemMeta = meta
-    }
-
-    fun flags(vararg itemFlag: ItemFlag) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.addItemFlags(*itemFlag)
-        itemStack.itemMeta = meta
-    }
-
-    fun durability(data: Int) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        if (meta is Damageable) {
-            meta.damage = data
-            itemStack.itemMeta = meta
-        } else throw RuntimeException()
-    }
-
-    fun model(data: Int) = apply {
-        val meta = itemStack.itemMeta ?: Bukkit.getItemFactory().getItemMeta(itemStack.type);
-        meta.setCustomModelData(data)
-        itemStack.itemMeta = meta
-    }
-
-    fun color(color: org.bukkit.Color?) = apply {
-        val meta = itemStack.itemMeta as? LeatherArmorMeta
-            ?: throw UnsupportedOperationException("Cannot set color of a non-leather armor item.")
-        meta.setColor(color)
-        itemStack.itemMeta = meta
-        return this
+        @Inject
+        lateinit var itemStackProvider: AbstractItemStackProvider<*>
     }
 }
 
-class ItemBuilder {
-    private val item: ItemStack
+class ItemBuilder(val item: FrameworkItemStack) {
+    fun amount(amount: Int) = apply { item.setAmount(amount) }
+    fun data(data: Int) = apply { item.setDurability(data) }
+    fun flag(flag: FrameworkItemFlag) = apply { item.addFlag(flag) }
+    fun name(displayName: Component) = apply { item.setName(displayName) }
 
-    private constructor(material: Material, amount: Int) {
-        Preconditions.checkArgument(amount > 0, "Amount cannot be lower than 0.")
-        item = ItemStack(material, amount)
-    }
-
-    private constructor(item: ItemStack) {
-        this.item = item
-    }
-
-    fun amount(amount: Int): ItemBuilder {
-        item.amount = amount
-        return this
-    }
-
-    fun data(data: Int): ItemBuilder {
-        val meta = item.itemMeta
-        if (meta is Damageable) {
-            meta.damage = data
-            item.itemMeta = meta
-            return this
-        } else throw RuntimeException()
-    }
-
-    fun flag(flag: ItemFlag): ItemBuilder {
-        val meta = item.itemMeta
-        meta.addItemFlags(flag)
-        item.itemMeta = meta
-        return this
-    }
-
-    fun enchant(enchantment: Enchantment?, level: Int): ItemBuilder {
-        item.addUnsafeEnchantment(enchantment!!, level)
-        return this
-    }
-
-    fun unenchant(enchantment: Enchantment?): ItemBuilder {
-        item.removeEnchantment(enchantment!!)
-        return this
-    }
-
-    fun name(displayName: Component?): ItemBuilder {
-        val meta = item.itemMeta
-        meta.displayName(displayName)
-        item.itemMeta = meta
-        return this
-    }
-
-    fun owner(name: String?): ItemBuilder {
-        val meta = item.itemMeta as SkullMeta
-        meta.owningPlayer = Bukkit.getOfflinePlayer(name!!)
-        item.itemMeta = meta
-        return this
-    }
-
-    fun lore(l: Collection<Component>): ItemBuilder {
-        val meta = item.itemMeta
-        meta.lore(l.toMutableList())
-        item.setItemMeta(meta)
-        return this
-    }
-
-    fun color(color: org.bukkit.Color?): ItemBuilder {
-        val meta = item.itemMeta as? LeatherArmorMeta
-            ?: throw UnsupportedOperationException("Cannot set color of a non-leather armor item.")
-        meta.setColor(color)
-        item.itemMeta = meta
-        return this
-    }
-
-    fun setUnbreakable(unbreakable: Boolean): ItemBuilder {
-        val meta = item.itemMeta
-        meta.isUnbreakable = unbreakable
-        item.itemMeta = meta
-        return this
-    }
-
-    fun build(): ItemStack {
-        return item.clone()
-    }
-
-    companion object {
-        fun of(material: Material): ItemBuilder {
-            return ItemBuilder(material, 1)
-        }
-
-        fun of(material: Namespaced, amount: Int): ItemBuilder {
-            return ItemBuilder(material, amount)
-        }
-
-        fun copyOf(builder: ItemBuilder): ItemBuilder {
-            return ItemBuilder(builder.build())
-        }
-
-        fun copyOf(item: ItemStack): ItemBuilder {
-            return ItemBuilder(item)
-        }
+    fun build(): FrameworkItemStack {
+        return item
     }
 }
