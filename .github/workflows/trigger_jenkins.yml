@@ -9,6 +9,9 @@ jobs:
   trigger_jenkins:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Check Commit Message
         id: check_message
         run: |
