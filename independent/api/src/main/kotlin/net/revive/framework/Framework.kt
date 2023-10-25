@@ -4,6 +4,8 @@ import net.revive.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.revive.framework.connection.redis.AbstractFrameworkRedisConnection
 import net.revive.framework.constants.Deployment
 import net.revive.framework.flavor.Flavor
+import net.revive.framework.instance.Instance
+import net.revive.framework.instance.InstanceService
 import net.revive.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.permission.IPermissionProvider
@@ -13,6 +15,7 @@ import net.revive.framework.security.impl.Argon2HashingAlgorithm
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
 import net.revive.framework.serializer.impl.GsonSerializer
+import net.revive.framework.storage.type.FrameworkStorageType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -80,6 +83,12 @@ abstract class Framework {
 
     fun severe(from: String, message: String) {
         logger.log(Level.SEVERE, "[$from] $message")
+    }
+
+    fun updateInstance() {
+        InstanceService.local = InstanceService.byId(platform.id) ?: Instance.create(platform)
+        InstanceService.local.provideData(platform)
+        InstanceService.controller.save(InstanceService.local, FrameworkStorageType.REDIS)
     }
 }
 

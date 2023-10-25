@@ -37,6 +37,10 @@ class FrameworkObjectController<D : IStorable>(
             localLayerCache[FrameworkStorageType.MONGO] = MongoFrameworkStorageLayer(
                 it.constructNewMongoConnection(), this, dataType
             )
+
+            localLayerCache[FrameworkStorageType.REDIS] = RedisFrameworkStoreStorageLayer(
+                it.constructNewRedisConnection(), this, dataType
+            )
         }
 
         this.timestampField = dataType
@@ -45,6 +49,12 @@ class FrameworkObjectController<D : IStorable>(
             }
 
         localLayerCache[FrameworkStorageType.CACHE] = CachedFrameworkStorageLayer()
+    }
+
+    fun setupCache(type: FrameworkStorageType) {
+        localLayerCache[type]?.loadAll()?.thenAccept { it ->
+            it.values.forEach(localLayerCache[FrameworkStorageType.CACHE]!!::save)
+        }
     }
 
     fun localCache(): ConcurrentHashMap<UUID, D> {
