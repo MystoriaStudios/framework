@@ -1,10 +1,10 @@
 package fr.bretzel.minestom.utils.block.outline;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
-import fr.bretzel.minestom.utils.block.shapes.Shape;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.state.BooleanState;
 import fr.bretzel.minestom.states.state.Directional;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
+import fr.bretzel.minestom.utils.block.shapes.Shape;
 import net.minestom.server.instance.block.Block;
 
 public class OutlineVine extends BlockStateShapes<BlockState> {

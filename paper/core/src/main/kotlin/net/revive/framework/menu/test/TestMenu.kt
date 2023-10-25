@@ -8,7 +8,6 @@ import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.paged.AbstractPagedMenu
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.toMinecraftKey
-import org.bukkit.entity.Player
 
 class TestMenu : AbstractPagedMenu() {
 

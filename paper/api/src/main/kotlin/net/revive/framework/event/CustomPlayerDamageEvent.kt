@@ -1,7 +1,6 @@
-package net.revive.framework.deathmessage.damage.event
+package net.revive.framework.event
 
 import net.revive.framework.deathmessage.damage.AbstractDamage
-import net.revive.framework.event.SimpleEvent
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 

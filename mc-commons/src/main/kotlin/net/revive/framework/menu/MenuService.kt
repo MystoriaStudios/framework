@@ -4,7 +4,6 @@ import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
-import net.revive.framework.sender.AbstractFrameworkPlayer
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.server.IMinecraftPlatform
 import java.util.*

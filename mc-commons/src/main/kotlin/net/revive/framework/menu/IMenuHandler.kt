@@ -1,12 +1,9 @@
 package net.revive.framework.menu
 
-import net.revive.framework.item.AbstractFrameworkItemStack
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.menu.button.IButton
-import net.revive.framework.menu.inventory.AbstractFrameworkInventory
 import net.revive.framework.menu.inventory.FrameworkInventory
 import net.revive.framework.menu.template.MenuTemplate
-import net.revive.framework.sender.AbstractFrameworkPlayer
 import net.revive.framework.sender.FrameworkPlayer
 
 /**

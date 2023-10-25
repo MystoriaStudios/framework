@@ -8,13 +8,10 @@ import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.annotation.container.flavor.LazyStartup
 import net.revive.framework.annotation.inject.AutoBind
-import net.revive.framework.annotation.retrofit.RetrofitService
-import net.revive.framework.annotation.retrofit.UsesRetrofit
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
 import net.revive.framework.config.save
-import net.revive.framework.constants.Deployment
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions
@@ -24,17 +21,12 @@ import net.revive.framework.flavor.reflections.PackageIndexer
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
-import net.revive.framework.serializer.impl.GsonSerializer
-import net.revive.framework.utils.Strings
-import net.revive.framework.utils.objectInstance
 import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
-import java.io.File
 import java.io.FileNotFoundException
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlin.reflect.full.hasAnnotation
 
 @Suppress("DEPRECATION")
 open class ExtendedKotlinExtension : Extension(), IConfigProvider {
@@ -74,7 +66,8 @@ open class ExtendedKotlinExtension : Extension(), IConfigProvider {
 
         this.flavor =
             Flavor.create((this)::class, FlavorOptions(logger))
-        this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this::class.java.classLoader))
+        this.flavor.reflections =
+            PackageIndexer(this::class, FlavorOptions(logger), listOf(this::class.java.classLoader))
         this.packageIndexer = this.flavor.reflections
 
         this.packageIndexer
@@ -103,7 +96,10 @@ open class ExtendedKotlinExtension : Extension(), IConfigProvider {
                         load(annotation, it.kotlin)
                         logger.log(Level.INFO, "Loaded configuration from ${annotation.fileName}.")
                     } catch (exception: FileNotFoundException) {
-                        logger.log(Level.SEVERE, "${annotation.fileName} not found, trying to save the default provider.")
+                        logger.log(
+                            Level.SEVERE,
+                            "${annotation.fileName} not found, trying to save the default provider."
+                        )
                         save(annotation, it.getConstructor().newInstance())
                     }
 

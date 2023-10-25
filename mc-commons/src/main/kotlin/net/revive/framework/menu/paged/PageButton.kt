@@ -1,9 +1,7 @@
 package net.revive.framework.menu.paged
 
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.revive.framework.component.ClickType
@@ -20,7 +18,9 @@ class PageButton(private val mod: Int, private val menu: AbstractPagedMenu) : IB
         return pg > 0 && menu.getPages(player) >= pg
     }
 
-    override fun getMaterial(player: FrameworkPlayer) = if (hasNext(player)) MinecraftKey("honeycomb") else MinecraftKey("air")
+    override fun getMaterial(player: FrameworkPlayer) =
+        if (hasNext(player)) MinecraftKey("honeycomb") else MinecraftKey("air")
+
     override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit {
         if (!hasNext(player)) return {}
         return {

@@ -151,7 +151,10 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                         load(annotation, it.kotlin)
                         logger.log(Level.INFO, "Loaded configuration from ${annotation.fileName}.")
                     } catch (exception: FileNotFoundException) {
-                        logger.log(Level.SEVERE, "${annotation.fileName} not found, trying to save the default provider.")
+                        logger.log(
+                            Level.SEVERE,
+                            "${annotation.fileName} not found, trying to save the default provider."
+                        )
                         save(annotation, it.getConstructor().newInstance())
                     }
 

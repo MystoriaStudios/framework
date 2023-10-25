@@ -9,6 +9,7 @@ import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
+
 class MenuTemplate(
     val id: String,
     val title: Component = buildComponent(id, Tailwind.GRAY_700),

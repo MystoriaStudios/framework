@@ -22,6 +22,10 @@ public class BlockUtils {
         this.blockState = BlockStateManager.get(instance.getBlock(this.position));
     }
 
+    @NotNull
+    public static Block getOrDefault(@Nullable Block block, @NotNull Block defaults) {
+        return block == null ? defaults : block;
+    }
 
     public BlockUtils up() {
         return relative(Facing.UP);
@@ -86,10 +90,5 @@ public class BlockUtils {
                 ", position=" + position +
                 ", blockState=" + blockState +
                 '}';
-    }
-
-    @NotNull
-    public static Block getOrDefault(@Nullable Block block, @NotNull Block defaults) {
-        return block == null ? defaults : block;
     }
 }

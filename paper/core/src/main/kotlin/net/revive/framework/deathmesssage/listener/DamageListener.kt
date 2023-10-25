@@ -3,8 +3,9 @@ package net.revive.framework.deathmesssage.listener
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.UnknownDamage
-import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
+import net.revive.framework.sender.PaperFrameworkPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -20,7 +21,7 @@ object DamageListener : Listener {
             val customEvent = CustomPlayerDamageEvent(player, event)
             customEvent.trackerDamage = UnknownDamage(player.uniqueId, customEvent.damage)
             customEvent.callEvent()
-            DeathMessageService.addDamage(player, customEvent.trackerDamage!!)
+            DeathMessageService.addDamage(PaperFrameworkPlayer(player), customEvent.trackerDamage!!)
         }
     }
 }

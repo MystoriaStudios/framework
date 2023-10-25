@@ -6,6 +6,7 @@ import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
 import net.revive.framework.deathmessage.damage.UnknownDamage
 import net.revive.framework.event.event
+import net.revive.framework.sender.PaperFrameworkPlayer
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -19,7 +20,7 @@ object DeathListener : Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onPlayerDeathEarly(event: PlayerDeathEvent) = event(event.entity) {
-        val record: List<AbstractDamage> = DeathMessageService.getDamage(event.entity)
+        val record: List<AbstractDamage> = DeathMessageService.getDamage(PaperFrameworkPlayer(event.entity))
         if (record.isNotEmpty()) {
             val deathCause: AbstractDamage = record[record.size - 1]
             if (deathCause is PlayerAbstractDamage && deathCause.timeAgoMillis < TimeUnit.MINUTES.toMillis(1L)) {
@@ -34,14 +35,14 @@ object DeathListener : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onPlayerDeathLate(event: PlayerDeathEvent) = event(event.entity) {
-        val record: List<AbstractDamage> = DeathMessageService.getDamage(event.entity)
+        val record: List<AbstractDamage> = DeathMessageService.getDamage(PaperFrameworkPlayer(event.entity))
         val deathCause: AbstractDamage = if (record.isNotEmpty()) {
             record[record.size - 1]
         } else {
             UnknownDamage(event.entity.uniqueId, 1.0)
         }
 
-        DeathMessageService.clearDamage(event.entity)
+        DeathMessageService.clearDamage(PaperFrameworkPlayer(event.entity))
         //event.deathMessage(null)
         val configuration = DeathMessageService.configuration
         val diedUuid = event.entity.uniqueId

@@ -70,7 +70,7 @@ class PaperFrameworkItemStack(itemStack: ItemStack) : AbstractFrameworkItemStack
     }
 
     private fun toItemFlag(flag: FrameworkItemFlag): ItemFlag {
-        return when(flag) {
+        return when (flag) {
             FrameworkItemFlag.HIDE_ARMOR_TRIM -> ItemFlag.HIDE_ARMOR_TRIM
             FrameworkItemFlag.HIDE_ATTRIBUTES -> ItemFlag.HIDE_ATTRIBUTES
             FrameworkItemFlag.HIDE_DESTROYS -> ItemFlag.HIDE_DESTROYS

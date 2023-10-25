@@ -22,20 +22,27 @@ class FrameworkObjectController<D : IStorable>(
     private var timestampField: Field? = null
     private var timestampThreshold = 2000L
 
-    fun cache() : CachedFrameworkStorageLayer<D> = localLayerCache[FrameworkStorageType.CACHE] as CachedFrameworkStorageLayer<D>?
-        ?: throw NullPointerException()
+    fun cache(): CachedFrameworkStorageLayer<D> =
+        localLayerCache[FrameworkStorageType.CACHE] as CachedFrameworkStorageLayer<D>?
+            ?: throw NullPointerException()
 
-    fun redis() : RedisFrameworkStoreStorageLayer<D> = localLayerCache[FrameworkStorageType.REDIS] as RedisFrameworkStoreStorageLayer<D>?
-        ?: throw NullPointerException()
+    fun redis(): RedisFrameworkStoreStorageLayer<D> =
+        localLayerCache[FrameworkStorageType.REDIS] as RedisFrameworkStoreStorageLayer<D>?
+            ?: throw NullPointerException()
 
-    fun mongo() : MongoFrameworkStorageLayer<D> = localLayerCache[FrameworkStorageType.MONGO] as MongoFrameworkStorageLayer<D>?
-        ?: throw NullPointerException()
+    fun mongo(): MongoFrameworkStorageLayer<D> =
+        localLayerCache[FrameworkStorageType.MONGO] as MongoFrameworkStorageLayer<D>?
+            ?: throw NullPointerException()
 
 
     fun preLoadResources() {
         net.revive.framework.Framework.use {
             localLayerCache[FrameworkStorageType.MONGO] = MongoFrameworkStorageLayer(
                 it.constructNewMongoConnection(), this, dataType
+            )
+
+            localLayerCache[FrameworkStorageType.REDIS] = RedisFrameworkStoreStorageLayer(
+                it.constructNewRedisConnection(), this, dataType
             )
         }
 
@@ -45,6 +52,12 @@ class FrameworkObjectController<D : IStorable>(
             }
 
         localLayerCache[FrameworkStorageType.CACHE] = CachedFrameworkStorageLayer()
+    }
+
+    fun setupCache(type: FrameworkStorageType) {
+        localLayerCache[type]?.loadAll()?.thenAccept { it ->
+            it.values.forEach(localLayerCache[FrameworkStorageType.CACHE]!!::save)
+        }
     }
 
     fun localCache(): ConcurrentHashMap<UUID, D> {

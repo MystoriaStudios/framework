@@ -1,6 +1,5 @@
 package net.revive.framework
 
-import net.revive.framework.annotation.inject.AutoBind
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.PaperFrameworkPlayer
 import net.revive.framework.server.IMinecraftPlatform

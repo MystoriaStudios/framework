@@ -17,16 +17,16 @@ public class BellState extends BlockState {
         return getOr(Attachment.class, Attachment.CEILING);
     }
 
+    public void setAttachment(Attachment attachment) {
+        set(attachment);
+    }
+
     public Facing getFacing() {
         return getOr(Facing.class, Facing.NORTH);
     }
 
     public void setFacing(Facing facing) {
         set(facing);
-    }
-
-    public void setAttachment(Attachment attachment) {
-        set(attachment);
     }
 
     @NotNull

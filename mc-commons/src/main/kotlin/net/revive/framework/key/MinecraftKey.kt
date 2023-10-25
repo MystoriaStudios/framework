@@ -1,6 +1,5 @@
 package net.revive.framework.key
 
-import net.kyori.adventure.key.InvalidKeyException
 import net.kyori.adventure.key.Key
 import net.kyori.examination.ExaminableProperty
 import org.intellij.lang.annotations.RegExp
@@ -68,7 +67,7 @@ class MinecraftKey(value: String) : Key {
         val VALUE_PATTERN = "[a-z0-9_\\-./]+"
         private fun checkError(name: String, namespace: String, value: String, index: OptionalInt) {
             if (index.isPresent) {
-                val indexValue = index.getAsInt()
+                val indexValue = index.asInt
                 val character = value[indexValue]
                 throw UnsupportedOperationException(
                     String.format(

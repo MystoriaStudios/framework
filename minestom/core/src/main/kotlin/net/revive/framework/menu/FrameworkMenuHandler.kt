@@ -15,11 +15,8 @@ import net.revive.framework.menu.inventory.FrameworkInventory
 import net.revive.framework.menu.inventory.MinestomFrameworkInventory
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.MinestomFrameworkPlayer
-import net.revive.framework.utils.Tasks
-
 import net.revive.framework.utils.buildComponent
 import java.util.concurrent.CompletableFuture
-import kotlin.math.min
 
 @Service
 object FrameworkMenuHandler : IMenuHandler {
@@ -96,6 +93,7 @@ object FrameworkMenuHandler : IMenuHandler {
      * @param inventory The custom inventory to be opened.
      * @param menu The menu that the inventory is being opened.
      */
+    @OptIn(ExperimentalStdlibApi::class)
     override fun openCustomInventory(player: FrameworkPlayer, inventory: FrameworkInventory, menu: IMenu) {
         val bukkitPlayer = (player as MinestomFrameworkPlayer).player
         val openInventory = bukkitPlayer.openInventory ?: return
@@ -154,7 +152,13 @@ object FrameworkMenuHandler : IMenuHandler {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
 
-        return ItemStackBuilder(MinestomFrameworkItemStack(ItemStack.of(Material.fromNamespaceId(type.toString()) ?: Material.BARRIER))).apply {
+        return ItemStackBuilder(
+            MinestomFrameworkItemStack(
+                ItemStack.of(
+                    Material.fromNamespaceId(type.toString()) ?: Material.BARRIER
+                )
+            )
+        ).apply {
             button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack

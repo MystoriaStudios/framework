@@ -24,7 +24,7 @@ class FrameworkWriter(_properties: Map<String?, String>) : Writer {
         val name = log.name.lowercase()
         val paddedName = name.padEnd(Level.values().maxOf { it.name.length } + 1, ' ')
 
-        return when(log) {
+        return when (log) {
             Level.INFO -> ansi.fgBlue().a(paddedName).reset()
             Level.WARN -> ansi.fgYellow().a(paddedName).reset()
             Level.ERROR -> ansi.fgRed().a(paddedName).reset()
@@ -50,10 +50,13 @@ class FrameworkWriter(_properties: Map<String?, String>) : Writer {
                             logEntry.level.ordinal >= Level.INFO.ordinal
                         } catch (e: Exception) {
                             false
-                        }) {
-                        it.a(" ${
-                            packageRegex.find(logEntry.className)?.value ?: logEntry.className
-                        }.${logEntry.methodName}")
+                        }
+                    ) {
+                        it.a(
+                            " ${
+                                packageRegex.find(logEntry.className)?.value ?: logEntry.className
+                            }.${logEntry.methodName}"
+                        )
                     } else {
                         it
                     }

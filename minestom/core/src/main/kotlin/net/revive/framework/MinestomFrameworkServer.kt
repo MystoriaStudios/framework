@@ -5,7 +5,6 @@ import net.hollowcube.minestom.extensions.ExtensionBootstrap
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.minestom.server.MinecraftServer
-import net.minestom.server.item.ItemStack
 import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
@@ -24,7 +23,9 @@ import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterMinestomPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.utils.Tasks
 import org.fusesource.jansi.AnsiConsole
+import java.time.Duration
 import kotlin.concurrent.thread
 
 fun main() {
@@ -83,10 +84,24 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
             framework.flavor.bind<IMinecraftPlatform>() to MinestomMinecraftPlatform
 
-            framework.flavor.bind<IItemStackProvider<*>>() to MinestomItemStackProvider()
-            framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to MinestomItemStackProvider()
-            framework.flavor.bind<IItemStackProvider<MinestomFrameworkItemStack>>() to MinestomItemStackProvider()
+            // pleasse do not inject 3 different instances of the fucking item stack provideer again nopox..
+            val itemStackProvider = MinestomItemStackProvider()
+            framework.flavor.bind<IItemStackProvider<*>>() to itemStackProvider
+            framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to itemStackProvider
+            framework.flavor.bind<IItemStackProvider<MinestomFrameworkItemStack>>() to itemStackProvider
         }
+
+        // state tasks for minestom
+        Tasks.asyncTimer(Duration.ofSeconds(1L)) {
+            MinestomMinecraftPlatform.getOnlinePlayers().forEach {
+                it.states.forEach { state ->
+                    state.tick(it)
+                }
+            }
+        }
+
+
+        Tasks.asyncTimer(Duration.ofSeconds(10L), MinestomFramework::updateInstance)
 
         UpdaterService.configure(UpdaterMinestomPlatform)
     }
