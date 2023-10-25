@@ -5,6 +5,9 @@ pipeline {
         stage('Build & Publish') {
             steps {
                 script {
+
+                    sh 'chmod +x gradlew'
+
                     if (env.BRANCH_NAME == 'master') {
                         echo "Building master branch"
                         sh './gradlew build publishMavenJavaPublicationToMystoriaProdRepository'
