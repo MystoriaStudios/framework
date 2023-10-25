@@ -21,6 +21,10 @@ import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.FlavorBinder
+import net.revive.framework.item.FrameworkItemStack
+import net.revive.framework.item.IItemStackProvider
+import net.revive.framework.item.PaperFrameworkItemStack
+import net.revive.framework.item.PaperItemStackProvider
 import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.nms.NMSVersion
@@ -91,8 +95,24 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
 
+
+
+            val itemStackProvider = PaperItemStackProvider()
+            framework.flavor.bind<IItemStackProvider<*>>() to itemStackProvider
+            framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to itemStackProvider
+            framework.flavor.bind<IItemStackProvider<PaperFrameworkItemStack>>() to itemStackProvider
+
             framework.flavor.bind<IDisguiseHandler>() to FrameworkDisguiseHandler()
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
+        }
+
+
+        Tasks.asyncTimer(2L, 2L) {
+            PaperMinecraftPlatform.getOnlinePlayers().forEach {
+                it.states.forEach { state ->
+                    state.tick(it)
+                }
+            }
         }
 
         UpdaterService.configure(UpdaterPaperPlatform)
