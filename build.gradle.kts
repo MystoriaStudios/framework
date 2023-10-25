@@ -101,8 +101,17 @@ allprojects {
             mavenLocal()
 
             maven {
-                name = "Astrae"
-                url = uri("https://repo.nopox.xyz/mystoria")
+                name = "MystoriaDev"
+                url = uri("https://repo.nopox.xyz/mystoria-dev")
+                credentials(PasswordCredentials::class)
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
+
+            maven {
+                name = "MystoriaProd"
+                url = uri("https://repo.nopox.xyz/mystoria-prod")
                 credentials(PasswordCredentials::class)
                 authentication {
                     create<BasicAuthentication>("basic")
@@ -115,7 +124,6 @@ allprojects {
         .dependsOn(
             "shadowJar",
             "publishMavenJavaPublicationToMavenLocalRepository",
-            "publishMavenJavaPublicationToAstraeRepository"
         )
 }
 

@@ -20,8 +20,6 @@ object MinestomFramework : Framework() {
     override var logger: Logger = Logger.getLogger("Framework")
 
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
-        val config = MinestomFrameworkServer.config
-
         return BasicFrameworkRedisConnection(
             BasicFrameworkRedisConnection.Details(
                 "127.0.0.1",
@@ -31,8 +29,6 @@ object MinestomFramework : Framework() {
     }
 
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
-        val config = MinestomFrameworkServer.config
-
         return BasicFrameworkMongoConnection(
             BasicFrameworkMongoConnection.Details(
                 "mongodb://localhost:27017",
