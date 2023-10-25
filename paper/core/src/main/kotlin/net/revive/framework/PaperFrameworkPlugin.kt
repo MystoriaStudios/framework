@@ -37,6 +37,7 @@ import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterPaperPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.utils.GsonFactory
 import net.revive.framework.utils.Tasks
 import net.revive.framework.visibility.FrameworkVisiblityHandler
 import net.revive.framework.visibility.IVisibilityHandler
@@ -74,6 +75,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             it.flavor = flavor()
 
             if (it.serializer is GsonSerializer) {
+                GsonFactory.applyPlatformChanges()
                 (it.serializer as GsonSerializer).useGsonBuilderThenRebuild { gson ->
                     gson.registerTypeAdapter(Component::class.java, ComponentAdapter)
                     gson.registerTypeAdapter(TextComponent::class.java, ComponentAdapter)
