@@ -68,7 +68,7 @@ class MinecraftKey(value: String) : Key {
         val VALUE_PATTERN = "[a-z0-9_\\-./]+"
         private fun checkError(name: String, namespace: String, value: String, index: OptionalInt) {
             if (index.isPresent) {
-                val indexValue = index.getAsInt()
+                val indexValue = index.asInt
                 val character = value[indexValue]
                 throw UnsupportedOperationException(
                     String.format(
