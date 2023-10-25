@@ -9,7 +9,8 @@ import net.revive.framework.flavor.annotation.Inject
 inline fun buildItem(itemStack: FrameworkItemStack, builder: ItemStackBuilder.() -> Unit): FrameworkItemStack =
     ItemStackBuilder(itemStack = itemStack).apply(builder).build()
 
-inline fun buildItem(builder: ItemStackBuilder.() -> Unit): FrameworkItemStack = ItemStackBuilder(ItemStackBuilder.itemStackProvider.getEmpty()).apply(builder).build()
+inline fun buildItem(builder: ItemStackBuilder.() -> Unit): FrameworkItemStack =
+    ItemStackBuilder(ItemStackBuilder.itemStackProvider.getEmpty()).apply(builder).build()
 
 class ItemStackBuilder(var itemStack: FrameworkItemStack) {
 
@@ -33,7 +34,7 @@ class ItemStackBuilder(var itemStack: FrameworkItemStack) {
     fun durability(data: Int) = apply { itemStack.setDurability(data) }
     fun model(data: Int) = apply { itemStack.setCustomModelData(data) }
     fun flag(flag: FrameworkItemFlag) = apply { itemStack.addFlag(flag) }
-    fun flag(vararg flags: FrameworkItemFlag) = apply { flags.forEach { flag(it) }}
+    fun flag(vararg flags: FrameworkItemFlag) = apply { flags.forEach { flag(it) } }
     fun color(color: TextColor) = apply { itemStack.setColor(color) }
 
     companion object {

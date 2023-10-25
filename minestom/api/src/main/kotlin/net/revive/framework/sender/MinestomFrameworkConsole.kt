@@ -5,7 +5,8 @@ import net.kyori.adventure.text.Component
 import net.minestom.server.MinecraftServer
 import net.minestom.server.command.ConsoleSender
 
-object MinestomFrameworkConsole : AbstractFrameworkConsole<ConsoleSender>(MinecraftServer.getCommandManager().consoleSender) {
+object MinestomFrameworkConsole :
+    AbstractFrameworkConsole<ConsoleSender>(MinecraftServer.getCommandManager().consoleSender) {
     override fun sendMessage(message: Component) {
         console.sendMessage(message)
     }

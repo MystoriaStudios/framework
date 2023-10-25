@@ -1,8 +1,8 @@
 package fr.bretzel.minestom.utils.block.visual;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.LecternState;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 
 public class LecternVisual extends BlockStateShapes<LecternState> {
     public LecternVisual(BlockState blockState) {

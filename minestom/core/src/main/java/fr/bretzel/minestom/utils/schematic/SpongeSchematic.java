@@ -21,12 +21,12 @@ public class SpongeSchematic implements Schematic {
 
     private final Pos offset = Pos.ZERO;
     private final Map<Point, Block> blockMap = new HashMap<>();
+    private final Map<Point, NBTCompound> blockEntitiesMap = new HashMap<>();
     private short width;
     private short length;
     private Pos origin = Pos.ZERO;
     private short height;
     private Map<String, Integer> palette = new HashMap<>();
-    private final Map<Point, NBTCompound> blockEntitiesMap = new HashMap<>();
 
     public SpongeSchematic(InputStream inputStream) {
         try {

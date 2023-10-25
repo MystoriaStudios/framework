@@ -19,6 +19,10 @@ public class StairsPlacement extends PlacementRule {
         super(block);
     }
 
+    public static boolean isStairs(Block block) {
+        return block.name().toLowerCase().trim().endsWith("stairs");
+    }
+
     @Override
     public boolean canPlace(BlockState blockState, BlockPlacementRule.PlacementState placementState) {
         return true;
@@ -85,10 +89,6 @@ public class StairsPlacement extends PlacementRule {
 
             blockState.set(blockState.get(Facing.class).opposite());
         }
-    }
-
-    public static boolean isStairs(Block block) {
-        return block.name().toLowerCase().trim().endsWith("stairs");
     }
 
     private boolean isDifferentStairs(BlockState states, Instance instance, BlockUtils pos, Facing facing) {

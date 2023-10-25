@@ -11,8 +11,6 @@ import net.revive.framework.menu.callback.AbstractCallbackPagedMenu
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.toMinecraftKey
-import org.bukkit.Color
-import org.bukkit.entity.Player
 import java.lang.reflect.Field
 
 class ColorCallbackMenu(
@@ -43,10 +41,12 @@ class ColorCallbackMenu(
         override fun getMaterial(player: FrameworkPlayer) = XMaterial.LEATHER_CHESTPLATE.toMinecraftKey()
 
         override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
-            name(buildComponent(
+            name(
+                buildComponent(
                     field.name,
                     field.get(Tailwind).toString()
-            ))
+                )
+            )
 
             TextColor.fromHexString(field.get(Tailwind).toString())?.let { color(it) }
         }

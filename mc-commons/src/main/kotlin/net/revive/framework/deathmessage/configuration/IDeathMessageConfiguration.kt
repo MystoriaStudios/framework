@@ -1,12 +1,9 @@
 package net.revive.framework.deathmessage.configuration
 
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.event.HoverEvent
 import net.revive.framework.cache.UUIDCache
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.utils.buildComponent
-import org.bukkit.Bukkit
-import org.bukkit.entity.EntityType
 import java.util.*
 
 interface IDeathMessageConfiguration {
@@ -36,18 +33,11 @@ interface IDeathMessageConfiguration {
             ) = true
 
             override fun formatPlayerName(player: UUID) = run {
-                val name = UUIDCache.username(player) ?: Bukkit.getPlayer(player)?.name ?: player.toString()
+                val name = UUIDCache.username(player) ?: player.toString()
 
                 buildComponent {
                     this.text(name) {
                         it.color(Tailwind.GRAY_100)
-                        it.component.hoverEvent(
-                            HoverEvent.showEntity(
-                                EntityType.PLAYER.key,
-                                player,
-                                Component.text(name)
-                            )
-                        )
                     }
                 }
             }

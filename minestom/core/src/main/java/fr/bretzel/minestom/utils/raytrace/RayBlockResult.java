@@ -1,7 +1,7 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-import fr.bretzel.minestom.utils.block.shapes.Shape;
 import fr.bretzel.minestom.states.state.Facing;
+import fr.bretzel.minestom.utils.block.shapes.Shape;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -20,7 +20,8 @@ public class RayBlockResult {
     private final Shape hitShape;
 
     public RayBlockResult(Point blockPosition, Point hitLocation, RayTraceContext context, Facing facing, Shape hitShape) {
-        this.hit = hitLocation.add(context.direction().mul(0.0001));;
+        this.hit = hitLocation.add(context.direction().mul(0.0001));
+        ;
         this.blockPosition = blockPosition;
         this.context = context;
         this.instance = context.instance();

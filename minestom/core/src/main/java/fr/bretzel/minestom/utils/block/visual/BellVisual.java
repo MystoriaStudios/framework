@@ -1,9 +1,9 @@
 package fr.bretzel.minestom.utils.block.visual;
 
 
+import fr.bretzel.minestom.states.BellState;
 import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.utils.block.shapes.Shape;
-import fr.bretzel.minestom.states.BellState;
 
 public class BellVisual extends BlockStateShapes<BellState> {
 

@@ -1,8 +1,8 @@
 package fr.bretzel.minestom.utils.block.visual;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.states.StairsState;
 import fr.bretzel.minestom.states.state.Half;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import net.minestom.server.instance.block.Block;
 
 public class StairsVisual extends BlockStateShapes<StairsState> {

@@ -24,27 +24,6 @@ public final class BooleanState implements State<Boolean> {
         return new BooleanState(stateKey.getKey(), value);
     }
 
-    @NotNull
-    @Override
-    public Boolean parse(String rawValue) {
-        return Boolean.parseBoolean(rawValue);
-    }
-
-    @Override
-    public @NotNull String getKey() {
-        return key;
-    }
-
-    public BooleanState setValue(boolean value) {
-        this.value = value;
-        return this;
-    }
-
-    @Override
-    public @NotNull String getValue() {
-        return String.valueOf(value).toLowerCase().trim();
-    }
-
     public static BooleanState Of(boolean value) {
         return new BooleanState(value);
     }
@@ -59,5 +38,26 @@ public final class BooleanState implements State<Boolean> {
 
     public static BooleanState Waterlogged(boolean value) {
         return new BooleanState("waterlogged", value);
+    }
+
+    @NotNull
+    @Override
+    public Boolean parse(String rawValue) {
+        return Boolean.parseBoolean(rawValue);
+    }
+
+    @Override
+    public @NotNull String getKey() {
+        return key;
+    }
+
+    @Override
+    public @NotNull String getValue() {
+        return String.valueOf(value).toLowerCase().trim();
+    }
+
+    public BooleanState setValue(boolean value) {
+        this.value = value;
+        return this;
     }
 }

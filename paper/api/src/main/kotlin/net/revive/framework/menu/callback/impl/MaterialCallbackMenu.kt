@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component
 import net.revive.framework.component.ClickType
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.item.ItemStackBuilder
-import net.revive.framework.key.MinecraftKey
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.button.IButton
 import net.revive.framework.menu.callback.AbstractCallbackPagedMenu
@@ -13,7 +12,6 @@ import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.toMinecraftKey
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import java.util.*
 
 class MaterialCallbackMenu(

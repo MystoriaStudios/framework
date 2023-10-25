@@ -25,14 +25,6 @@ public enum OperatingSystem {
         this.hwInfo = hwInfo;
     }
 
-    public HWInfo getHwInfo() {
-        return hwInfo;
-    }
-
-    public String getName() {
-        return System.getProperty("os.name");
-    }
-
     public static OperatingSystem getCurrent() {
         String os_name = System.getProperty("os.name").toLowerCase(Locale.ROOT);
 
@@ -48,5 +40,13 @@ public enum OperatingSystem {
             return OperatingSystem.LINUX;
         else
             return os_name.contains("unix") ? OperatingSystem.LINUX : OperatingSystem.UNKNOWN;
+    }
+
+    public HWInfo getHwInfo() {
+        return hwInfo;
+    }
+
+    public String getName() {
+        return System.getProperty("os.name");
     }
 }

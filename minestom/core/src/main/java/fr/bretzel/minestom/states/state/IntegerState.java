@@ -16,6 +16,18 @@ public class IntegerState implements State<Integer> {
         this.value = value;
     }
 
+    public static IntegerState Of(String key) {
+        return new IntegerState(key, 0, 0, 0);
+    }
+
+    public static IntegerState Of(String key, int value) {
+        return new IntegerState(key, value, value, value);
+    }
+
+    public static IntegerState Of(String key, int value, int min, int max) {
+        return new IntegerState(key, max, min, value);
+    }
+
     @NotNull
     @Override
     public String getKey() {
@@ -49,17 +61,5 @@ public class IntegerState implements State<Integer> {
 
     public int getMax() {
         return max;
-    }
-
-    public static IntegerState Of(String key) {
-        return new IntegerState(key, 0, 0, 0);
-    }
-
-    public static IntegerState Of(String key, int value) {
-        return new IntegerState(key, value, value, value);
-    }
-
-    public static IntegerState Of(String key, int value, int min, int max) {
-        return new IntegerState(key, max, min, value);
     }
 }

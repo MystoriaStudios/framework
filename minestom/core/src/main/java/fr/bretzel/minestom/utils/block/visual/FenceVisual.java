@@ -1,9 +1,9 @@
 package fr.bretzel.minestom.utils.block.visual;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.state.BooleanState;
 import fr.bretzel.minestom.states.state.Directional;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import net.minestom.server.instance.block.Block;
 
 public class FenceVisual extends BlockStateShapes<BlockState> {

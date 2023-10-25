@@ -229,9 +229,9 @@ public class SelfExpiringHashMap<K, V> implements SelfExpiringMap<K, V> {
 
     private static class ExpiringKey<K> implements Delayed {
 
-        private long startTime = System.currentTimeMillis();
         private final long maxLifeTimeMillis;
         private final K key;
+        private long startTime = System.currentTimeMillis();
 
         public ExpiringKey(K key, long maxLifeTimeMillis) {
             this.maxLifeTimeMillis = maxLifeTimeMillis;

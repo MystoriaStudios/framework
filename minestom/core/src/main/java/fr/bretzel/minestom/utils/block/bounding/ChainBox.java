@@ -4,9 +4,9 @@
 
 package fr.bretzel.minestom.utils.block.bounding;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
 import fr.bretzel.minestom.states.AxisBlockBlockState;
 import fr.bretzel.minestom.states.state.Axis;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
 import net.minestom.server.instance.block.Block;
 
 public class ChainBox extends BlockStateShape<AxisBlockBlockState> {

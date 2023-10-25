@@ -1,7 +1,7 @@
 package fr.bretzel.minestom.utils.block.bounding;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.states.PistonHeadState;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import net.minestom.server.instance.block.Block;
 
 public class PistonHeadBox extends BlockStateShapes<PistonHeadState> {

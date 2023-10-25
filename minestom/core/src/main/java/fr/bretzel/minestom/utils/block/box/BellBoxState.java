@@ -1,10 +1,10 @@
 package fr.bretzel.minestom.utils.block.box;
 
+import fr.bretzel.minestom.states.BellState;
+import fr.bretzel.minestom.states.state.Attachment;
 import fr.bretzel.minestom.utils.block.BoxState;
 import fr.bretzel.minestom.utils.block.shapes.Shape;
 import fr.bretzel.minestom.utils.block.visual.BellVisual;
-import fr.bretzel.minestom.states.BellState;
-import fr.bretzel.minestom.states.state.Attachment;
 import net.minestom.server.instance.block.Block;
 
 public class BellBoxState extends BoxState<BellState> {

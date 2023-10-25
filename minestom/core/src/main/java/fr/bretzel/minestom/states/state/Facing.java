@@ -17,6 +17,7 @@ public enum Facing implements State<Facing> {
     UP(0, 1, 0, BlockFace.TOP, 1),
     DOWN(0, -1, 0, BlockFace.BOTTOM, 0);
 
+    public static final Facing[] axis = {Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST};
     private final int x, y, z;
     private final BlockFace blockFace;
     private final int packetIndex;
@@ -27,6 +28,18 @@ public enum Facing implements State<Facing> {
         this.z = z;
         this.blockFace = face;
         this.packetIndex = packetIndex;
+    }
+
+    public static Facing fromYaw(float yaw) {
+        return axis[Math.round(yaw / 90F) & 3].opposite();
+    }
+
+    public static Facing parse(BlockFace input) {
+        return Stream.of(values()).filter(facing -> facing.blockFace == input).findFirst().orElse(SELF);
+    }
+
+    public static Facing parse(Direction input) {
+        return Stream.of(values()).filter(facing -> facing.name().trim().toLowerCase().equalsIgnoreCase(input.name().trim())).findFirst().orElse(SELF);
     }
 
     public int getPacketIndex() {
@@ -74,10 +87,6 @@ public enum Facing implements State<Facing> {
         };
     }
 
-    public static Facing fromYaw(float yaw) {
-        return axis[Math.round(yaw / 90F) & 3].opposite();
-    }
-
     public Axis getAxis() {
         return Axis.of(this);
     }
@@ -91,8 +100,6 @@ public enum Facing implements State<Facing> {
     public @NotNull String getValue() {
         return name().trim().toLowerCase();
     }
-
-    public static final Facing[] axis = {Facing.NORTH, Facing.EAST, Facing.SOUTH, Facing.WEST};
 
     public Facing opposite() {
         return switch (this) {
@@ -110,13 +117,5 @@ public enum Facing implements State<Facing> {
         if (input == null || input.isEmpty())
             return SELF;
         return Stream.of(values()).filter(shape -> shape.name().equalsIgnoreCase(input.trim())).findFirst().orElse(SELF);
-    }
-
-    public static Facing parse(BlockFace input) {
-        return Stream.of(values()).filter(facing -> facing.blockFace == input).findFirst().orElse(SELF);
-    }
-
-    public static Facing parse(Direction input) {
-        return Stream.of(values()).filter(facing -> facing.name().trim().toLowerCase().equalsIgnoreCase(input.name().trim())).findFirst().orElse(SELF);
     }
 }

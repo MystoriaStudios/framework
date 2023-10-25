@@ -1,10 +1,10 @@
 package fr.bretzel.minestom.utils.raytrace;
 
+import fr.bretzel.minestom.states.state.Facing;
 import fr.bretzel.minestom.utils.TriFunction;
 import fr.bretzel.minestom.utils.block.BoxManager;
 import fr.bretzel.minestom.utils.block.bounding.VoidShape;
 import fr.bretzel.minestom.utils.math.MathsUtils;
-import fr.bretzel.minestom.states.state.Facing;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;

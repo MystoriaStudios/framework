@@ -6,8 +6,9 @@ import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
-import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
+import net.revive.framework.sender.PaperFrameworkPlayer
 import net.revive.framework.utils.buildComponent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -23,7 +24,7 @@ object FallDamageListener : Listener {
         if (event.cause.cause !== EntityDamageEvent.DamageCause.FALL) {
             return
         }
-        val record: List<AbstractDamage> = DeathMessageService.getDamage(event.player)
+        val record: List<AbstractDamage> = DeathMessageService.getDamage(PaperFrameworkPlayer(event.player))
         var knocker: AbstractDamage? = null
         var knockerTime = 0L
         for (damage in record) {

@@ -294,11 +294,6 @@ public class Location {
         return instance;
     }
 
-    @FunctionalInterface
-    public interface Operator {
-        @NotNull Location apply(double x, double y, double z, float yaw, float pitch);
-    }
-
     @Override
     public String toString() {
         return "Location{" +
@@ -309,5 +304,10 @@ public class Location {
                 ", yaw=" + yaw +
                 ", instance=" + instance +
                 '}';
+    }
+
+    @FunctionalInterface
+    public interface Operator {
+        @NotNull Location apply(double x, double y, double z, float yaw, float pitch);
     }
 }
