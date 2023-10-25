@@ -5,7 +5,6 @@ import net.hollowcube.minestom.extensions.ExtensionBootstrap
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.minestom.server.MinecraftServer
-import net.minestom.server.item.ItemStack
 import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
@@ -21,7 +20,6 @@ import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.server.ExtendedMinestomServer
 import net.revive.framework.server.IMinecraftPlatform
-import net.revive.framework.state.State
 import net.revive.framework.updater.UpdaterMinestomPlatform
 import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.UpdaterConnector

@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.revive.framework.component.ClickType
 import net.revive.framework.constants.Tailwind
-import net.revive.framework.item.FrameworkItemFlag
 import net.revive.framework.item.ItemStackBuilder
 import net.revive.framework.item.PaperFrameworkItemStack
 import net.revive.framework.item.buildItem
@@ -20,8 +19,6 @@ import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.toMinecraftKey
 import net.wesjd.anvilgui.AnvilGUI
 import org.bukkit.Bukkit
-import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -51,7 +48,8 @@ class EditItemStackMenu(private var reference: ItemStack = ItemStack.empty()) : 
     override fun getButtons(player: FrameworkPlayer): Map<Int, IButton> {
         return mapOf(
             0 to object : IButton {
-                override fun getMaterial(player: FrameworkPlayer) = XMaterial.matchXMaterial(reference.type).toMinecraftKey()
+                override fun getMaterial(player: FrameworkPlayer) =
+                    XMaterial.matchXMaterial(reference.type).toMinecraftKey()
 
                 override fun getButtonItem(player: FrameworkPlayer): ItemStackBuilder.() -> Unit = {
                     itemStack = PaperFrameworkItemStack(reference.clone())

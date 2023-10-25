@@ -17,5 +17,5 @@ object InstanceService {
         controller.setupCache(FrameworkStorageType.REDIS)
     }
 
-    fun byId(id: String) : Instance? = controller.cache().loadSync(UUID.nameUUIDFromBytes(id.toByteArray()))
+    fun byId(id: String): Instance? = controller.cache().loadSync(UUID.nameUUIDFromBytes(id.toByteArray()))
 }

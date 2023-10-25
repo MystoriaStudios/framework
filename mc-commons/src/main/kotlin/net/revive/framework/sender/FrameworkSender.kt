@@ -2,7 +2,7 @@ package net.revive.framework.sender
 
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import java.util.UUID
+import java.util.*
 
 interface FrameworkSender<T> {
 

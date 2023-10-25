@@ -12,12 +12,10 @@ import net.revive.framework.menu.inventory.PaperFrameworkInventory
 import net.revive.framework.nms.menu.INMSMenuHandler
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.PaperFrameworkPlayer
-
 import net.revive.framework.utils.Tasks
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -157,7 +155,13 @@ object FrameworkMenuHandler : IMenuHandler {
         // TODO: Make work with if not pack shi
         val type = button.getMaterial(player)
 
-        return ItemStackBuilder(PaperFrameworkItemStack(ItemStack(Material.matchMaterial(type.toString()) ?: Material.BARRIER))).apply {
+        return ItemStackBuilder(
+            PaperFrameworkItemStack(
+                ItemStack(
+                    Material.matchMaterial(type.toString()) ?: Material.BARRIER
+                )
+            )
+        ).apply {
             button.getButtonItem(player).invoke(this)
 
             // TODO: only apply if they are using resource pack

@@ -5,7 +5,7 @@ import net.revive.framework.annotation.Listeners
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.DeathMessageService
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
-import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
+import net.revive.framework.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Material

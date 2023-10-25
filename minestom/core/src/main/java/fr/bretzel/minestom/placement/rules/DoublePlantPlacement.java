@@ -19,6 +19,10 @@ public class DoublePlantPlacement extends PlacementRule {
         super(block);
     }
 
+    public static boolean isDoublePlant(Block block) {
+        return blockList.contains(block);
+    }
+
     @Override
     public boolean canPlace(BlockState blockState, BlockPlacementRule.PlacementState placementState) {
         var instance = placementState.instance();
@@ -49,9 +53,5 @@ public class DoublePlantPlacement extends PlacementRule {
             plantHalf = PlantHalf.UPPER;
 
         blockState.set(plantHalf);
-    }
-
-    public static boolean isDoublePlant(Block block) {
-        return blockList.contains(block);
     }
 }

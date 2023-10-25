@@ -1,6 +1,5 @@
 package net.revive.framework.key
 
-import net.kyori.adventure.key.InvalidKeyException
 import net.kyori.adventure.key.Key
 import net.kyori.examination.ExaminableProperty
 import org.intellij.lang.annotations.RegExp

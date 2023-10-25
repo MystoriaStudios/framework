@@ -67,6 +67,11 @@ public class CardinalPlacement extends PlacementRule {
         this.isMushroom = block.name().contains("mushroom");
     }
 
+    public static boolean isCardinalBlock(Block block) {
+        return cardinalPlacement.contains(block.name()) ||
+                cardinalWithUp.contains(block.name());
+    }
+
     @Override
     public boolean canPlace(BlockState blockState, BlockPlacementRule.PlacementState placementState) {
         var instance = placementState.instance();
@@ -137,11 +142,6 @@ public class CardinalPlacement extends PlacementRule {
             var blockDown = block.down();
             blockState.set(Directional.DOWN, BooleanState.Of(isMushroom != blockDown.block().isSolid()));
         }
-    }
-
-    public static boolean isCardinalBlock(Block block) {
-        return cardinalPlacement.contains(block.name()) ||
-                cardinalWithUp.contains(block.name());
     }
 
     public boolean hasUp(Block block) {

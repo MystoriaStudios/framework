@@ -96,7 +96,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
 
 
-
             val itemStackProvider = PaperItemStackProvider()
             framework.flavor.bind<IItemStackProvider<*>>() to itemStackProvider
             framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to itemStackProvider

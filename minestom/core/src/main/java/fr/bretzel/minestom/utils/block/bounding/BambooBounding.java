@@ -4,10 +4,10 @@
 
 package fr.bretzel.minestom.utils.block.bounding;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
-import fr.bretzel.minestom.utils.raytrace.OffsetType;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.state.BambooLeaves;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
+import fr.bretzel.minestom.utils.raytrace.OffsetType;
 import net.minestom.server.instance.block.Block;
 
 public class BambooBounding extends BlockStateShape<BlockState> {

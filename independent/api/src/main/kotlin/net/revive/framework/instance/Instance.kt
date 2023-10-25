@@ -16,7 +16,7 @@ class Instance(
     }
 
     companion object {
-        fun create(platform: IFrameworkPlatform) : Instance {
+        fun create(platform: IFrameworkPlatform): Instance {
             return Instance(
                 platform.id,
                 platform.groups,

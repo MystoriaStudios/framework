@@ -33,7 +33,7 @@ enum class FrameworkItemFlag {
      * Setting to show/hide potion effects, book and firework information, map
      * tooltips, patterns of banners, and enchantments of enchanted books.
      */
-    HIDE_ITEM_SPECIFICS ,
+    HIDE_ITEM_SPECIFICS,
 
     /**
      * Setting to show/hide dyes from colored leather armor.

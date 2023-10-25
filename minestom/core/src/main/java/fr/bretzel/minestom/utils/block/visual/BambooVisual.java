@@ -1,9 +1,9 @@
 package fr.bretzel.minestom.utils.block.visual;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
-import fr.bretzel.minestom.utils.raytrace.OffsetType;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.state.IntegerState;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShape;
+import fr.bretzel.minestom.utils.raytrace.OffsetType;
 import net.minestom.server.instance.block.Block;
 
 public class BambooVisual extends BlockStateShape<BlockState> {

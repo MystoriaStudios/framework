@@ -1,8 +1,8 @@
 package fr.bretzel.minestom.utils.block.visual;
 
-import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.states.BlockState;
 import fr.bretzel.minestom.states.state.Facing;
+import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import net.minestom.server.instance.block.Block;
 
 public class EndRodVisual extends BlockStateShapes<BlockState> {

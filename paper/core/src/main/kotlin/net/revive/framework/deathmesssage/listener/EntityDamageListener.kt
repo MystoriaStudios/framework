@@ -4,11 +4,12 @@ import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.damage.MobAbstractDamage
-import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
+import net.revive.framework.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
 import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -31,11 +32,11 @@ object EntityDamageListener : Listener {
     }
 
     class EntityDamage(damaged: UUID, damage: Double, entity: Entity) :
-        MobAbstractDamage(damaged, damage, entity.type) {
+        MobAbstractDamage(damaged, damage, entity.type.name) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
                 text(" was slain by a ", Tailwind.AMBER_400)
-                text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
+                text(EntityUtils.getName(EntityType.valueOf(mobType)), Tailwind.TEAL_300)
                 text(".", Tailwind.AMBER_400)
             }
         }

@@ -6,14 +6,15 @@ import net.revive.framework.constants.Tailwind
 import net.revive.framework.deathmessage.damage.AbstractDamage
 import net.revive.framework.deathmessage.damage.MobAbstractDamage
 import net.revive.framework.deathmessage.damage.PlayerAbstractDamage
-import net.revive.framework.deathmessage.damage.event.CustomPlayerDamageEvent
 import net.revive.framework.entity.util.EntityUtils
+import net.revive.framework.event.CustomPlayerDamageEvent
 import net.revive.framework.event.event
 import net.revive.framework.utils.buildComponent
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -94,11 +95,11 @@ object ArrowDamageListener : Listener {
     }
 
     class ArrowDamageByMob(damaged: UUID, damage: Double, damager: Entity?) :
-        MobAbstractDamage(damaged, damage, damager!!.type) {
+        MobAbstractDamage(damaged, damage, damager!!.type.name) {
         override fun getDeathMessage(player: UUID): Component {
             return buildComponent(wrapName(damaged, player)) {
                 text(" was shot by a ", Tailwind.AMBER_400)
-                text(EntityUtils.getName(mobType), Tailwind.TEAL_300)
+                text(EntityUtils.getName(EntityType.valueOf(mobType)), Tailwind.TEAL_300)
                 text(".", Tailwind.AMBER_400)
             }
 

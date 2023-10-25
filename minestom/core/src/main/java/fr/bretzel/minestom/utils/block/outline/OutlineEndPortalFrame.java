@@ -1,11 +1,11 @@
 package fr.bretzel.minestom.utils.block.outline;
 
+import fr.bretzel.minestom.states.BlockState;
+import fr.bretzel.minestom.states.state.BooleanState;
 import fr.bretzel.minestom.utils.block.shapes.BlockStateShapes;
 import fr.bretzel.minestom.utils.block.shapes.Shape;
 import fr.bretzel.minestom.utils.raytrace.RayBlockResult;
 import fr.bretzel.minestom.utils.raytrace.RayTraceContext;
-import fr.bretzel.minestom.states.BlockState;
-import fr.bretzel.minestom.states.state.BooleanState;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;

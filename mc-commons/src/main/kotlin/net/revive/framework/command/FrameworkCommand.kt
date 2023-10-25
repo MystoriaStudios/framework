@@ -7,5 +7,6 @@ import co.aikar.commands.annotation.HelpCommand
 open class FrameworkCommand : BaseCommand() {
 
     // default help command
-    @HelpCommand fun help(help: CommandHelp) = help.showHelp()
+    @HelpCommand
+    fun help(help: CommandHelp) = help.showHelp()
 }
