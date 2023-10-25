@@ -4,8 +4,10 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                def gradlePropertiesPath = "/path/to/your/gradle.properties"
-                sh "gradle build -Dgradle.user.home=${gradlePropertiesPath}"
+                // Fetch the gradle.properties file from Jenkins credentials
+                withCredentials([file(credentialsId: 'Gradle Properties', variable: 'GRADLE_PROPERTIES_PATH')]) {
+                    sh 'cp $GRADLE_PROPERTIES_PATH gradle.properties'
+                }
             }
         }
 
