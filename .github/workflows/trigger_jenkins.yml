@@ -27,5 +27,12 @@ jobs:
         if: steps.check_message.outputs.trigger == 'true'
         run: |
           branch_name=$(echo "${{ github.ref }}" | sed -e "s/refs\/heads\///g")
+          
+          # Fetch the CSRF token (crumb)
+          crumb=$(curl -s "https://ci.nopox.xyz/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)" \
+            --user "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_TOKEN }}")
+          
+          # Trigger the Jenkins build with the crumb included in the headers
           curl -X POST "https://ci.nopox.xyz/job/Framework/job/$branch_name/build" \
+            -H "$crumb" \
             --user "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_TOKEN }}"
