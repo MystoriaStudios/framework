@@ -5,6 +5,7 @@ import net.revive.framework.debug
 import net.revive.framework.storage.FrameworkStorageLayer
 import net.revive.framework.storage.impl.CachedFrameworkStorageLayer
 import net.revive.framework.storage.impl.MongoFrameworkStorageLayer
+import net.revive.framework.storage.impl.RedisFrameworkStoreStorageLayer
 import net.revive.framework.storage.storable.IStorable
 import net.revive.framework.storage.type.FrameworkStorageType
 import java.lang.reflect.Field
@@ -20,6 +21,16 @@ class FrameworkObjectController<D : IStorable>(
 
     private var timestampField: Field? = null
     private var timestampThreshold = 2000L
+
+    fun cache() : CachedFrameworkStorageLayer<D> = localLayerCache[FrameworkStorageType.CACHE] as CachedFrameworkStorageLayer<D>?
+        ?: throw NullPointerException()
+
+    fun redis() : RedisFrameworkStoreStorageLayer<D> = localLayerCache[FrameworkStorageType.REDIS] as RedisFrameworkStoreStorageLayer<D>?
+        ?: throw NullPointerException()
+
+    fun mongo() : MongoFrameworkStorageLayer<D> = localLayerCache[FrameworkStorageType.MONGO] as MongoFrameworkStorageLayer<D>?
+        ?: throw NullPointerException()
+
 
     fun preLoadResources() {
         net.revive.framework.Framework.use {
