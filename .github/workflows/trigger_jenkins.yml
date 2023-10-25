@@ -1,0 +1,28 @@
+name: Trigger Jenkins Build
+
+on:
+  push:
+    branches:
+      - '**'  # This will match all branches
+
+jobs:
+  trigger_jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Commit Message
+        id: check_message
+        run: |
+          commit_message=$(git log --format=%B -n 1 ${{ github.event.after }})
+          if [[ "$commit_message" == *"[build]"* ]]; then
+            echo "::set-output name=trigger::true"
+          else
+            echo "::set-output name=trigger::false"
+          fi
+        shell: bash
+
+      - name: Trigger Jenkins Job
+        if: steps.check_message.outputs.trigger == 'true'
+        run: |
+          branch_name=$(echo "${{ github.ref }}" | sed -e "s/refs\/heads\///g")
+          curl -X POST "https://ci.nopox.xyz/job/Framework/job/$branch_name/build" \
+            --user "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_TOKEN }}"
