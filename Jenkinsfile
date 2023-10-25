@@ -18,10 +18,10 @@ pipeline {
 
                     if (env.BRANCH_NAME == 'master') {
                         echo "Building master branch"
-                        sh './gradlew build publishMavenJavaPublicationToMystoriaProdRepository'
+                        sh './gradlew build publishMavenJavaPublicationToMystoriaProdRepository --stacktrace'
                     } else {
                         echo "Building feature or other branch: ${env.BRANCH_NAME}"
-                        sh './gradlew build publishMavenJavaPublicationToMystoriaDevRepository'
+                        sh './gradlew build publishMavenJavaPublicationToMystoriaDevRepository --stacktrace'
                     }
                 }
             }
