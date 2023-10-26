@@ -38,7 +38,7 @@ object FrameworkTestCommand : FrameworkCommand() {
 
     @HelpCommand
     @Default
-    fun help(help: CommandHelp) = help.showHelp()
+    override fun help(help: CommandHelp) = help.showHelp()
 
     @Subcommand("test-component")
     fun testComponent(sender: CommandSender) {
