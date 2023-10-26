@@ -24,6 +24,8 @@ pipeline {
                         sh './gradlew clean build publishMavenJavaPublicationToMystoriaDevRepository --stacktrace'
                     }
                 }
+                
+                archiveArtifacts artifacts: '**/framework-*.jar', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
             }
         }
 
