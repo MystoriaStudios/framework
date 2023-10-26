@@ -23,9 +23,9 @@ pipeline {
                         echo "Building feature or other branch: ${env.BRANCH_NAME}"
                         sh './gradlew clean build publishMavenJavaPublicationToMystoriaDevRepository --stacktrace'
                     }
-
-                    archiveArtifacts artifacts: '**/framework-*.jar', followSymlinks: false
                 }
+                
+                archiveArtifacts artifacts: '**/framework-*.jar', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
             }
         }
 
