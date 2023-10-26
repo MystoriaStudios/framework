@@ -5,7 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 
 class PlayerMoveBlockEvent(val player: Player, val from: Location, val to: Location) : SimpleEvent(), Cancellable {
-    var cancelled = false
+    var cancelledBool = false
 
     /**
      * Gets the cancellation state of this event. A cancelled event will not
@@ -13,7 +13,7 @@ class PlayerMoveBlockEvent(val player: Player, val from: Location, val to: Locat
      *
      * @return true if this event is cancelled
      */
-    override fun isCancelled() = cancelled
+    override fun isCancelled() = cancelledBool
 
     /**
      * Sets the cancellation state of this event. A cancelled event will not
@@ -22,6 +22,6 @@ class PlayerMoveBlockEvent(val player: Player, val from: Location, val to: Locat
      * @param cancel true if you wish to cancel this event
      */
     override fun setCancelled(cancel: Boolean) {
-        cancelled = cancel
+        cancelledBool = cancel
     }
 }
