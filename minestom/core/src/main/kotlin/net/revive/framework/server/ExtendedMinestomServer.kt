@@ -32,8 +32,7 @@ import java.util.logging.Logger
 open class ExtendedMinestomServer : IConfigProvider {
 
     override fun getBaseFolder(): File {
-        val path = Paths.get(ExtendedMinestomServer::class.java.protectionDomain.codeSource.location.toURI())
-        return path.toFile()
+        return File("configs")
     }
 
     /**
