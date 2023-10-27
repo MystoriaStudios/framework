@@ -1,14 +1,19 @@
 package net.revive.framework
 
+import net.revive.framework.config.MinestomConfig
 import net.revive.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.revive.framework.connection.mongo.impl.BasicFrameworkMongoConnection
 import net.revive.framework.connection.redis.AbstractFrameworkRedisConnection
 import net.revive.framework.connection.redis.impl.BasicFrameworkRedisConnection
+import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.IPermissionRegistry
 import java.util.logging.Logger
 
 object MinestomFramework : Framework() {
+
+    @Inject
+    lateinit var config: MinestomConfig
 
     override var permissionProvider: IPermissionProvider
         get() = TODO("Not yet implemented")
@@ -22,8 +27,8 @@ object MinestomFramework : Framework() {
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
         return BasicFrameworkRedisConnection(
             BasicFrameworkRedisConnection.Details(
-                "127.0.0.1",
-                6379
+                config.redisDetails.host,
+                config.redisDetails.port
             )
         )
     }
@@ -31,8 +36,8 @@ object MinestomFramework : Framework() {
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
         return BasicFrameworkMongoConnection(
             BasicFrameworkMongoConnection.Details(
-                "mongodb://localhost:27017",
-                "framework"
+                config.mongoDetails.uri,
+                config.mongoDetails.database
             )
         )
     }
