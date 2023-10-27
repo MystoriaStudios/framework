@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 
 object GsonSerializer : IFrameworkSerializer {
 
-    private val gsonBuilder = GsonBuilder()
+    var gsonBuilder = GsonBuilder()
         .setLongSerializationPolicy(LongSerializationPolicy.STRING)
         .setPrettyPrinting()
         .disableHtmlEscaping()

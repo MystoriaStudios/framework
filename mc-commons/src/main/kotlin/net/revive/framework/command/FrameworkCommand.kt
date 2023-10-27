@@ -8,5 +8,5 @@ open class FrameworkCommand : BaseCommand() {
 
     // default help command
     @HelpCommand
-    fun help(help: CommandHelp) = help.showHelp()
+    open fun help(help: CommandHelp) = help.showHelp()
 }
