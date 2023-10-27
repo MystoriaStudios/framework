@@ -23,6 +23,7 @@ import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -31,7 +32,8 @@ import java.util.logging.Logger
 open class ExtendedMinestomServer : IConfigProvider {
 
     override fun getBaseFolder(): File {
-        return File("TODO")
+        val path = Paths.get(ExtendedMinestomServer::class.java.protectionDomain.codeSource.location.toURI())
+        return path.toFile()
     }
 
     /**
