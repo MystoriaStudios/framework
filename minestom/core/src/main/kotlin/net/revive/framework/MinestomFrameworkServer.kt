@@ -50,7 +50,7 @@ fun main() {
     System.setProperty("minestom.chunk-view-distance", 8.toString())
     System.setProperty("minestom.entity-view-distance", 8.toString())
 
-    server.start("0.0.0.0", MinestomFrameworkServer.config.port)
+    server.start("0.0.0.0", 25565)
 
     MinestomFrameworkServer.terminalThread = thread(start = true, isDaemon = true, name = "FrameworkConsole") {
         Console.start()
@@ -62,9 +62,6 @@ fun main() {
 }
 
 object MinestomFrameworkServer : ExtendedMinestomServer() {
-
-    @Inject
-    lateinit var config: MinestomConfig
 
     lateinit var terminalThread: Thread
 
