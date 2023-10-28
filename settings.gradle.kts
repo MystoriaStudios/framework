@@ -18,6 +18,9 @@ include(":paper:nms")
 include("paper:nms:core")
 project(":paper:nms:core").name = "nms-core"
 
+include(":independent:protocol")
+include(":independent:protocol-stub")
+
 fun registerNMS(ver: String) {
     val module = "paper:nms:v$ver"
     include("paper:nms:v$ver")

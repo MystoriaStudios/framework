@@ -5,6 +5,15 @@ import org.jetbrains.gradle.ext.Gradle
 import org.jetbrains.gradle.ext.runConfigurations
 import org.jetbrains.gradle.ext.settings
 
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.9.1")
+    }
+}
+
 plugins {
     id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
@@ -13,7 +22,9 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("org.jetbrains.dokka") version "1.9.0"
     kotlin("kapt") version "1.9.10"
+    id("com.google.protobuf") version "0.9.1"
 }
+
 val sentry_auth: String by project
 
 sentry {
@@ -36,6 +47,7 @@ allprojects {
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
+    apply(plugin = "com.google.protobuf")
 
     group = "net.revive.framework"
     version = projectVer
@@ -63,6 +75,13 @@ allprojects {
 
         // Generate documentation
         dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
+
+        if (!project.name.contains("independent-api")) {
+            compileOnly("io.grpc:grpc-kotlin-stub:1.3.0")
+            compileOnly("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
+            compileOnly("com.google.protobuf:protobuf-java:3.17.3")
+            compileOnly("com.google.protobuf:protobuf-kotlin:3.17.3")
+        }
     }
 
     tasks.withType<ShadowJar> {
@@ -119,6 +138,14 @@ allprojects {
             }
         }
     }
+
+    tasks.withType<Copy> {
+        from("$projectDir/src/main/resources") {
+            include("**/*.proto")
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
+
 
     tasks["build"]
         .dependsOn(
