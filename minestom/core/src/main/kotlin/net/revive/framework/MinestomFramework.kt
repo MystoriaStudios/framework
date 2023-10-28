@@ -12,9 +12,6 @@ import java.util.logging.Logger
 
 object MinestomFramework : Framework() {
 
-    @Inject
-    lateinit var config: MinestomConfig
-
     override var permissionProvider: IPermissionProvider
         get() = TODO("Not yet implemented")
         set(value) {}
@@ -27,8 +24,8 @@ object MinestomFramework : Framework() {
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
         return BasicFrameworkRedisConnection(
             BasicFrameworkRedisConnection.Details(
-                config.redisDetails.host,
-                config.redisDetails.port
+                "127.0.0.1",
+                6379
             )
         )
     }
@@ -36,8 +33,8 @@ object MinestomFramework : Framework() {
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
         return BasicFrameworkMongoConnection(
             BasicFrameworkMongoConnection.Details(
-                config.mongoDetails.uri,
-                config.mongoDetails.database
+                "mongodb://localhost:27017",
+                "framework"
             )
         )
     }
