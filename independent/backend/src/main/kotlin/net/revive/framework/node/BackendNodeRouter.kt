@@ -5,25 +5,22 @@ import net.revive.framework.Framework
 import net.revive.framework.storage.type.FrameworkStorageType
 
 class BackendNodeRouter : ExpressRouter() {
+
+    val nodes = mutableMapOf<String, Node>()
+
     init {
         get("/api/nodes") { req, res ->
             println("nodes")
-            BackendNodeService.controller.loadAll(FrameworkStorageType.MONGO).thenAccept { result ->
-                res.send(Framework.useWithReturn {
-                    it.serializer.serialize(result.values)
-                })
-            }
+            res.send(Framework.useWithReturn {
+                it.serializer.serialize(nodes)
+            })
         }
         get("/api/nodes/add") { req, res ->
             println("nodes add")
-            BackendNodeService.controller.save(Node("test", "test.com", Node.State.ONLINE))
-            println("saved test node")
-            BackendNodeService.controller.loadAll(FrameworkStorageType.MONGO).thenAccept { result ->
-            println("loaded")
+            nodes["test"] = Node("test", "test.com", Node.State.ONLINE)
             res.send(Framework.useWithReturn {
-                    it.serializer.serialize(result.values)
-                })
-            }
+                it.serializer.serialize(nodes)
+            })
         }
     }
 }
