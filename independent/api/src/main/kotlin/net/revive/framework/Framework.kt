@@ -88,6 +88,7 @@ abstract class Framework {
     fun updateInstance() {
         InstanceService.local = InstanceService.byId(platform.id) ?: Instance.create(platform)
         InstanceService.local.provideData(platform)
+
         InstanceService.controller.save(InstanceService.local, FrameworkStorageType.REDIS)
     }
 }

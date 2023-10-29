@@ -10,6 +10,7 @@ listOf("paper", "velocity", "independent", "minestom").forEach {
             project(":$module").name = compat
         }
 }
+include(":independent:backend")
 
 include(":mc-commons")
 project(":mc-commons").name = "minecraft-platform"
