@@ -1,6 +1,7 @@
 package net.revive.framework
 
 import express.Express
+import net.revive.framework.blog.BlogPostRouter
 import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
@@ -35,10 +36,14 @@ object FrameworkApp : IConfigProvider {
             val port = settingsConfig.port
             express = Express("0.0.0.0")
             express.listen(port)
+            express.use { req, res ->
+                res.setHeader("Access-Control-Allow-Origin", "*")
+            }
 
             express.use(MojangUUIDCacheRouter)
 
             express.use(BackendNodeRouter())
+            express.use(BlogPostRouter())
 
             express.get("/") { _, res ->
                 res.send("{api: true}")
