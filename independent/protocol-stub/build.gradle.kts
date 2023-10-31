@@ -11,8 +11,6 @@ plugins {
 dependencies {
     protobuf(project(":independent:protocol"))
 
-    implementation("com.google.protobuf:protobuf-java:4.0.0-rc-2")
-
     api(kotlin("stdlib"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 

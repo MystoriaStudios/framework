@@ -79,6 +79,7 @@ allprojects {
         implementation("com.google.protobuf:protobuf-java:$protobufVersion")
         implementation("io.grpc:grpc-kotlin-stub:1.3.0")
         implementation("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
+        implementation("com.google.protobuf:protobuf-java:3.18.0")
 
 
         implementation("com.google.guava:guava:31.0.1-jre")
@@ -145,13 +146,9 @@ allprojects {
         }
     }
 
-    tasks.withType<Copy> {
-        from("$projectDir/src/main/resources") {
-            include("**/*.proto")
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        }
+    tasks.processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // or DuplicatesStrategy.FAIL
     }
-
 
     tasks["build"]
         .dependsOn(
