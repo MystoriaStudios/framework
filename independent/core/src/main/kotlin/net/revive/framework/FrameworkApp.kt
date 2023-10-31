@@ -2,7 +2,6 @@ package net.revive.framework
 
 import express.Express
 import net.revive.framework.annotation.container.ContainerEnable
-import net.revive.framework.api.OrganizationsRest
 import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
@@ -119,7 +118,7 @@ object FrameworkApp : IConfigProvider {
              */
             override fun run() {
                 Framework.useWithReturn {
-                    it.retrofit.create(OrganizationsRest::class.java).update_node(it.platform.id)
+                    //TODO: @Nopox PLEEASE DO THIS
                     Framework.instance.log("Heartbeat", "Beat.")
                 }
                 sleep(10000L)
