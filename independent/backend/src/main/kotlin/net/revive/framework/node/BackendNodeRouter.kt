@@ -17,9 +17,17 @@ class BackendNodeRouter : ExpressRouter() {
                 })
             })
         }
-        get("/api/nodes/:organization/add") { req, res ->
+        post("/api/nodes/:organization/add") { req, res ->
             println("nodes add")
-            nodes.add(Node("test", "test.com", req.getParam("organization"), Node.State.ONLINE))
+            val node = Framework.useWithReturn {
+                it.serializer.deserialize(Node::class, req.body.bufferedReader().readText())
+            }
+
+            nodes.removeIf {
+                it.identifier == node.identifier
+            }
+
+            nodes.add(node)
             res.send(Framework.useWithReturn {
                 it.serializer.serialize(nodes.filter {
                     it.organization == req.getParam("organization")
