@@ -10,4 +10,8 @@ dependencies {
     implementation(project(":independent:independent-api"))
     implementation("org.reflections:reflections:0.10.2")
     implementation("com.squareup.retrofit:retrofit:2.0.0-beta2")
+
+    // gRPC
+    runtimeOnly("io.grpc:grpc-netty:${rootProject.ext["grpcVersion"]}")
+    implementation(project(":independent:protocol-stub"))
 }

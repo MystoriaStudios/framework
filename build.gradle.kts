@@ -13,7 +13,7 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("org.jetbrains.dokka") version "1.9.0"
     kotlin("kapt") version "1.9.10"
-    id("com.google.protobuf") version "0.8.15"
+    id("com.google.protobuf") version "0.8.15" apply false
 }
 
 val sentry_auth: String by project
@@ -34,13 +34,6 @@ ext["grpcVersion"] = "1.37.0"
 ext["grpcKotlinVersion"] = "1.1.0"
 ext["protobufVersion"] = "3.15.8"
 
-val grpcVersion = "1.48.0"
-val grpcStubVersion = "1.48.0"
-val grpcKotlinVersion = "1.3.0"
-
-val protobufVersion = "3.21.9"
-val protobufPluginVersion = "0.8.19"
-
 allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
@@ -49,7 +42,6 @@ allprojects {
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
-    apply(plugin = "com.google.protobuf")
 
     group = "net.revive.framework"
     version = projectVer
@@ -69,18 +61,6 @@ allprojects {
         implementation("com.google.code.gson:gson:2.9.0")
         implementation("io.sentry:sentry:6.29.0")
         implementation("com.konghq:unirest-java:3.13.6:standalone")
-
-        implementation("io.grpc:grpc-netty:$grpcVersion")
-        implementation("io.grpc:grpc-stub:$grpcVersion")
-        implementation("io.grpc:grpc-all:$grpcVersion")
-        implementation("io.grpc:grpc-protobuf:$grpcVersion")
-        implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
-        implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-        implementation("com.google.protobuf:protobuf-java:$protobufVersion")
-        implementation("io.grpc:grpc-kotlin-stub:1.3.0")
-        implementation("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
-        implementation("com.google.protobuf:protobuf-java:3.18.0")
-
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")

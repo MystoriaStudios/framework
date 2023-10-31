@@ -8,8 +8,19 @@ plugins {
     id("com.google.protobuf")
 }
 
+
+val grpcVersion = "1.48.0"
+val grpcStubVersion = "1.48.0"
+val grpcKotlinVersion = "1.3.0"
+
+val protobufVersion = "3.21.9"
+val protobufPluginVersion = "0.8.19"
+
 dependencies {
     protobuf(project(":independent:protocol"))
+
+    api(kotlin("stdlib"))
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 
     api(kotlin("stdlib"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
