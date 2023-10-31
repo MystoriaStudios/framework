@@ -30,7 +30,8 @@ class BlogPostRouter : ExpressRouter() {
                     req.getFormQuery("title"),
                     req.getFormQuery("content"),
                     req.getFormQuery("author")
-                ))
+                )
+            )
             res.send(Framework.useWithReturn {
                 it.serializer.serialize(posts.filter {
                     it.key == req.getFormQuery("key")

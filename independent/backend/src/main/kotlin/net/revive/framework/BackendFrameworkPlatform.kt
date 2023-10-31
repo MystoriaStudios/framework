@@ -2,7 +2,6 @@ package net.revive.framework
 
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.instance.Instance
-import net.revive.framework.instance.InstanceService
 
 @JsonConfig("config.json")
 class BackendFrameworkPlatform(

@@ -10,8 +10,6 @@ import net.revive.framework.interceptor.FrameworkAuthenticationInterceptor
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.IPermissionRegistry
-import net.revive.framework.security.SecurityService
-import net.revive.framework.security.impl.Argon2HashingAlgorithm
 import net.revive.framework.sentry.SentryService
 import net.revive.framework.serializer.IFrameworkSerializer
 import net.revive.framework.serializer.impl.GsonSerializer
@@ -60,9 +58,14 @@ abstract class Framework {
         this.platform = platform
         instance.log("Framework", "Registered with extension class ${this::class.simpleName}")
 
-        sentryService.configure()
-        messageHandler.configure()
-        SecurityService.configure(Argon2HashingAlgorithm)
+        runCatching {
+            sentryService.configure()
+        }
+        /*runCatching {
+            messageHandler.configure()
+        }*/
+        //SecurityService.configure(Argon2HashingAlgorithm)
+        instance.log("Framework", "Setup securing hashing using TPM 2.1")
 
         retrofit = Retrofit.Builder()
             .baseUrl("${Deployment.Security.API_BASE_URL}/")

@@ -4,7 +4,7 @@ import net.revive.framework.updater.authentication.UpdaterAuthenticationService
 import net.revive.framework.updater.discovery.UpdaterDiscoveryService
 import java.io.File
 
-object UpdaterIndependentPlatform : IUpdaterPlatform {
+object UpdaterNodePlatform : IUpdaterPlatform {
 
     override fun configure() {
         UpdaterService.pluginContainer = File("modules")

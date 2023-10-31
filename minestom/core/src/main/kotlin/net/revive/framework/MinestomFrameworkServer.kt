@@ -9,10 +9,8 @@ import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.config.MinestomConfig
 import net.revive.framework.console.Console
 import net.revive.framework.controller.FrameworkObjectControllerCache
-import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.MinestomFrameworkItemStack

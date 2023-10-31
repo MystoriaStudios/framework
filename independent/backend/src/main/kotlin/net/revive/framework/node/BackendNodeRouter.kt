@@ -2,7 +2,6 @@ package net.revive.framework.node
 
 import express.ExpressRouter
 import net.revive.framework.Framework
-import net.revive.framework.storage.type.FrameworkStorageType
 
 class BackendNodeRouter : ExpressRouter() {
 

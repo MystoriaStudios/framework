@@ -9,12 +9,12 @@ import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
 import net.revive.framework.flavor.reflections.PackageIndexer
-import net.revive.framework.module.details.FrameworkModuleDetails
+import net.revive.framework.module.details.FrameworkNodeModuleDetails
 import net.revive.framework.utils.objectInstance
 import java.util.logging.Level
 import java.util.logging.Logger
 
-abstract class FrameworkModule {
+abstract class FrameworkNodeModule {
 
     val packageIndexer get() = this.flavor.reflections
 
@@ -30,10 +30,10 @@ abstract class FrameworkModule {
         flavor.lambda()
     }
 
-    lateinit var details: FrameworkModuleDetails
+    lateinit var details: FrameworkNodeModuleDetails
     lateinit var logger: Logger
 
-    fun load(details: FrameworkModuleDetails) {
+    fun load(details: FrameworkNodeModuleDetails) {
         this.details = details
 
         net.revive.framework.Framework.use {
@@ -55,11 +55,11 @@ abstract class FrameworkModule {
             }
 
         flavor().binders.add(
-            FlavorBinder(this@FrameworkModule::class)
-        ) to this@FrameworkModule
+            FlavorBinder(this@FrameworkNodeModule::class)
+        ) to this@FrameworkNodeModule
 
         flavor {
-            bind<FrameworkModule>() to this@FrameworkModule
+            bind<FrameworkNodeModule>() to this@FrameworkNodeModule
 
             bind<Logger>() to logger
         }

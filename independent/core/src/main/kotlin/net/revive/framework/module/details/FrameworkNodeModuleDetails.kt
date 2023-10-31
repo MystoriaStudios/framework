@@ -1,6 +1,6 @@
 package net.revive.framework.module.details
 
-class FrameworkModuleDetails(
+class FrameworkNodeModuleDetails(
     var name: String,
     var version: String,
     var main: String

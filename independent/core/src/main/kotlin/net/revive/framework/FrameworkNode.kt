@@ -9,7 +9,7 @@ import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.IPermissionRegistry
 import java.util.logging.Logger
 
-object IndependentFramework : Framework() {
+object FrameworkNode : Framework() {
     override var logger: Logger = FrameworkLogger()
 
     override var permissionProvider: IPermissionProvider

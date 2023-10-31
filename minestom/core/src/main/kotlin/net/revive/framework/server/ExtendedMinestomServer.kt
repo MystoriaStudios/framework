@@ -23,7 +23,6 @@ import org.apache.commons.lang3.JavaVersion
 import org.apache.commons.lang3.SystemUtils
 import java.io.File
 import java.io.FileNotFoundException
-import java.nio.file.Paths
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger

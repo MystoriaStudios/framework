@@ -3,14 +3,14 @@ package net.revive.framework.module.loader
 import express.ExpressRouter
 import net.revive.framework.FrameworkApp
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.module.FrameworkModule
-import net.revive.framework.module.details.FrameworkModuleDetails
+import net.revive.framework.module.FrameworkNodeModule
+import net.revive.framework.module.details.FrameworkNodeModuleDetails
 import org.apache.commons.io.IOUtils
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 
-class FrameworkModuleLoader(private val directory: File) {
+class FrameworkNodeModuleLoader(private val directory: File) {
 
     companion object {
         val loaders: MutableMap<String, URLClassLoader> = mutableMapOf()
@@ -55,10 +55,11 @@ class FrameworkModuleLoader(private val directory: File) {
                         ?: throw RuntimeException("Unable to load module from class ${file.name} as there is no module.json present.")
 
                     val content = IOUtils.toString(jarFile.getInputStream(entry), "UTF-8")
-                    val details = framework.serializer.deserialize(FrameworkModuleDetails::class, content)
+                    val details = framework.serializer.deserialize(FrameworkNodeModuleDetails::class, content)
 
                     val module =
-                        getModuleClass(file, details.main)?.getDeclaredConstructor()?.newInstance() as FrameworkModule?
+                        getModuleClass(file, details.main)?.getDeclaredConstructor()
+                            ?.newInstance() as FrameworkNodeModule?
                             ?: return@use
                     FrameworkApp.use {
                         it.modules[details.name.lowercase()] = module

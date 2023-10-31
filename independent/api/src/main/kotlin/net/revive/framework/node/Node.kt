@@ -1,7 +1,7 @@
 package net.revive.framework.node
 
 import net.revive.framework.storage.storable.IStorable
-import java.util.UUID
+import java.util.*
 
 class Node(
     val name: String,
