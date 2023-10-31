@@ -1,30 +1,128 @@
 package net.revive.framework
 
 import express.Express
+import io.kubernetes.client.custom.V1Patch
+import io.kubernetes.client.openapi.models.*
+import io.kubernetes.client.util.ClientBuilder
+import io.kubernetes.client.util.generic.GenericKubernetesApi
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.cache.MojangUUIDCacheRouter
-import net.revive.framework.module.FrameworkModule
-import net.revive.framework.module.loader.FrameworkModuleLoader
+import net.revive.framework.config.IConfigProvider
+import net.revive.framework.config.JsonConfig
+import net.revive.framework.config.load
+import net.revive.framework.module.FrameworkNodeModule
+import net.revive.framework.module.loader.FrameworkNodeModuleLoader
+import net.revive.framework.node.Node
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.lang.Thread.sleep
+import java.net.Inet4Address
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.full.findAnnotation
 
 fun main(args: Array<String>) {
     FrameworkApp.setup(args)
 }
 
-object FrameworkApp {
+object FrameworkApp : IConfigProvider {
+
+    override fun getBaseFolder(): File = File("configs")
 
     fun use(lambda: (FrameworkApp) -> Unit) = lambda.invoke(this)
     fun <T> useWithReturn(lambda: (FrameworkApp) -> T) = lambda.invoke(this)
 
-    lateinit var loader: FrameworkModuleLoader
+    lateinit var loader: FrameworkNodeModuleLoader
     lateinit var express: Express
+    lateinit var settingsConfig: FrameworkNodePlatform
 
-    val modules: MutableMap<String, FrameworkModule> = mutableMapOf()
+    val modules: MutableMap<String, FrameworkNodeModule> = mutableMapOf()
 
     fun setup(args: Array<String>) {
         println(args)
-        Framework.supply(IndependentFramework) {
-            val port = Integer.parseInt(System.getProperty("port") ?: "8080")
+        if (!getBaseFolder().exists()) getBaseFolder().mkdirs()
+
+        val pod = V1Pod()
+            .metadata(V1ObjectMeta().name("foo").namespace("default"))
+            .spec(
+                V1PodSpec()
+                    .containers(Arrays.asList(V1Container().name("c").image("test")))
+            )
+
+        val apiClient = ClientBuilder.standard().build()
+        val podClient = GenericKubernetesApi(
+            V1Pod::class.java,
+            V1PodList::class.java, "", "v1", "pods", apiClient
+        )
+
+        val latestPod = podClient.create(pod).throwsApiException().getObject()
+        println("Created!")
+
+        val patchedPod = podClient
+            .patch(
+                "default",
+                "foo",
+                V1Patch.PATCH_FORMAT_STRATEGIC_MERGE_PATCH,
+                V1Patch("{\"metadata\":{\"finalizers\":[\"example.io/foo\"]}}")
+            )
+            .throwsApiException()
+            .getObject()
+        println("Patched!")
+
+        val deletedPod = podClient.delete("default", "foo").throwsApiException().getObject()
+        if (deletedPod != null) {
+            println(
+                "Received after-deletion status of the requested object, will be deleting in background!"
+            )
+        }
+        println("Deleted!")
+
+        Framework.supply(FrameworkNode) {
+            val a = FrameworkNodePlatform::class.findAnnotation<JsonConfig>() ?: throw RuntimeException()
+            it.log("Framework", "Trying to load settings config")
+            settingsConfig = load<FrameworkNodePlatform>(a)
+
+            //TODO: @Nopox PLEEASE DO THIS
+            it.log("Heartbeat", "Beat.")
+            val request = Request.Builder()
+                .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                .post(
+                    it.serializer.serialize(
+                        Node(
+                            settingsConfig.id,
+                            Inet4Address.getLocalHost().hostAddress,
+                            settingsConfig.api_key,
+                            Node.State.BOOTING,
+                            settingsConfig.identifier
+                        )
+                    ).toRequestBody("text/json".toMediaType())
+                )
+                .build()
+
+            it.log("Heartbeat", "Trying to beat heart.")
+            it.okHttpClient.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val responseString = response.body?.string()
+                    // Handle the successful response here
+                    it.log("Heartbeat", "$responseString")
+                } else {
+                    // Handle the error
+                    it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
+                }
+            }
+
+            sleep(10000)
+
+            it.configure(settingsConfig)
+            it.log("Framework", "Loaded settings from config")
+
+            val port = settingsConfig.port
             express = Express("0.0.0.0")
             express.listen(port)
 
@@ -37,7 +135,7 @@ object FrameworkApp {
             it.log("Framework", "Starting express server on port ${port}.")
 
             it.log("Framework", "Starting module setup")
-            loader = FrameworkModuleLoader(File("modules"))
+            loader = FrameworkNodeModuleLoader(File("modules"))
             it.log("Framework", "Starting module loader")
             loader.startup()
         }
@@ -60,5 +158,86 @@ object FrameworkApp {
         }
         Framework.instance.log("Framework", "Finished loading modules")
 
+        val heartbeat: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+
+        Framework.instance.log("Heartbeat", "Starting the node heartbeat.")
+        heartbeat.scheduleAtFixedRate({
+            Framework.use {
+                //TODO: @Nopox PLEEASE DO THIS
+                it.log("Heartbeat", "Beat.")
+                val request = Request.Builder()
+                    .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                    .post(
+                        it.serializer.serialize(
+                            Node(
+                                settingsConfig.id,
+                                Inet4Address.getLocalHost().hostAddress,
+                                settingsConfig.api_key,
+                                Node.State.ONLINE,
+                                settingsConfig.identifier
+                            )
+                        ).toRequestBody("text/json".toMediaType())
+                    )
+                    .build()
+
+                it.log("Heartbeat", "Trying to beat heart.")
+                it.okHttpClient.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        val responseString = response.body?.string()
+                        // Handle the successful response here
+                        it.log("Heartbeat", "$responseString")
+                    } else {
+                        // Handle the error
+                        it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
+                    }
+                }
+            }
+        }, 0, 5, TimeUnit.SECONDS)
+
+        Runtime.getRuntime().addShutdownHook(object : Thread() {
+            /**
+             * If this thread was constructed using a separate
+             * `Runnable` run object, then that
+             * `Runnable` object's `run` method is called;
+             * otherwise, this method does nothing and returns.
+             *
+             *
+             * Subclasses of `Thread` should override this method.
+             *
+             * @see .start
+             * @see .stop
+             * @see .Thread
+             */
+            override fun run() {
+                Framework.use {
+                    val request = Request.Builder()
+                        .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                        .post(
+                            it.serializer.serialize(
+                                Node(
+                                    settingsConfig.id,
+                                    Inet4Address.getLocalHost().hostAddress,
+                                    settingsConfig.api_key,
+                                    Node.State.OFFLINE,
+                                    settingsConfig.identifier
+                                )
+                            ).toRequestBody("text/json".toMediaType())
+                        )
+                        .build()
+
+                    it.log("Heartbeat", "Trying to stop heart.")
+                    it.okHttpClient.newCall(request).execute().use { response ->
+                        if (response.isSuccessful) {
+                            val responseString = response.body?.string()
+                            // Handle the successful response here
+                            it.log("Heartbeat", "$responseString")
+                        } else {
+                            // Handle the error
+                            it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
+                        }
+                    }
+                }
+            }
+        })
     }
 }

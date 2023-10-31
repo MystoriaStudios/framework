@@ -1,39 +1,44 @@
 package net.revive.framework
 
+import io.kubernetes.client.custom.V1Patch
+import io.kubernetes.client.openapi.ApiClient
+import io.kubernetes.client.util.ClientBuilder
+import io.kubernetes.client.util.generic.GenericKubernetesApi
+import io.kubernetes.client.openapi.models.*
 import net.revive.framework.connection.mongo.AbstractFrameworkMongoConnection
 import net.revive.framework.connection.mongo.impl.BasicFrameworkMongoConnection
 import net.revive.framework.connection.redis.AbstractFrameworkRedisConnection
 import net.revive.framework.connection.redis.impl.BasicFrameworkRedisConnection
+import net.revive.framework.logger.FrameworkLogger
 import net.revive.framework.permission.IPermissionProvider
 import net.revive.framework.permission.IPermissionRegistry
+import java.util.*
 import java.util.logging.Logger
 
-object MinestomFramework : Framework() {
+
+object BackendFramework : Framework() {
+    override var logger: Logger = FrameworkLogger()
 
     override var permissionProvider: IPermissionProvider
         get() = TODO("Not yet implemented")
-        set(value) {}
+        set(value) {
+            println(value)
+        }
     override var permissionRegistry: IPermissionRegistry
         get() = TODO("Not yet implemented")
-        set(value) {}
+        set(value) {
+            println(value)
+        }
 
-    override var logger: Logger = Logger.getLogger("Framework")
+    init {
+
+    }
 
     override fun constructNewRedisConnection(): AbstractFrameworkRedisConnection {
-        return BasicFrameworkRedisConnection(
-            BasicFrameworkRedisConnection.Details(
-                "127.0.0.1",
-                6379
-            )
-        )
+        return BasicFrameworkRedisConnection(BasicFrameworkRedisConnection.Details())
     }
 
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
-        return BasicFrameworkMongoConnection(
-            BasicFrameworkMongoConnection.Details(
-                "mongodb://localhost:27017",
-                "framework"
-            )
-        )
+        return BasicFrameworkMongoConnection(BasicFrameworkMongoConnection.Details())
     }
 }

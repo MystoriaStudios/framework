@@ -11,7 +11,11 @@ object PlayerMoveBlockListener : Listener {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
         if (event.from.blockX != event.to.blockX || event.from.blockY != event.to.blockY || event.from.blockZ != event.to.blockZ) {
-            event.isCancelled = !PlayerMoveBlockEvent(event.player, event.from.toBlockLocation(), event.to.toBlockLocation()).callEvent()
+            event.isCancelled = !PlayerMoveBlockEvent(
+                event.player,
+                event.from.toBlockLocation(),
+                event.to.toBlockLocation()
+            ).callEvent()
         }
     }
 }

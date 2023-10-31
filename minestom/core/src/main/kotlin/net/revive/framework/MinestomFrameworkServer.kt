@@ -9,10 +9,8 @@ import net.revive.framework.adapters.ComponentAdapter
 import net.revive.framework.annotation.container.ContainerDisable
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
-import net.revive.framework.config.MinestomConfig
 import net.revive.framework.console.Console
 import net.revive.framework.controller.FrameworkObjectControllerCache
-import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.MinestomFrameworkItemStack
@@ -50,7 +48,7 @@ fun main() {
     System.setProperty("minestom.chunk-view-distance", 8.toString())
     System.setProperty("minestom.entity-view-distance", 8.toString())
 
-    server.start("0.0.0.0", MinestomFrameworkServer.config.port)
+    server.start("0.0.0.0", 25565)
 
     MinestomFrameworkServer.terminalThread = thread(start = true, isDaemon = true, name = "FrameworkConsole") {
         Console.start()
@@ -62,9 +60,6 @@ fun main() {
 }
 
 object MinestomFrameworkServer : ExtendedMinestomServer() {
-
-    @Inject
-    lateinit var config: MinestomConfig
 
     lateinit var terminalThread: Thread
 

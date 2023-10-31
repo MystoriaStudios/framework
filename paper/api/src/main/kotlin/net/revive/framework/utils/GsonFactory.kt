@@ -36,12 +36,12 @@ object GsonFactory {
     // START FRAMEWORK
     fun applyPlatformChanges() {
         GsonSerializer.gsonBuilder.addSerializationExclusionStrategy(ExposeExlusion())
-                .addDeserializationExclusionStrategy(ExposeExlusion())
-                .registerTypeHierarchyAdapter(ItemStack::class.java, ItemStackGsonAdapter())
-                .registerTypeAdapter(PotionEffect::class.java, PotionEffectGsonAdapter())
-                .registerTypeAdapter(Location::class.java, LocationGsonAdapter())
-                .registerTypeAdapter(Date::class.java, DateGsonAdapter())
-                .disableHtmlEscaping()
+            .addDeserializationExclusionStrategy(ExposeExlusion())
+            .registerTypeHierarchyAdapter(ItemStack::class.java, ItemStackGsonAdapter())
+            .registerTypeAdapter(PotionEffect::class.java, PotionEffectGsonAdapter())
+            .registerTypeAdapter(Location::class.java, LocationGsonAdapter())
+            .registerTypeAdapter(Date::class.java, DateGsonAdapter())
+            .disableHtmlEscaping()
     }
     // END FRAMEWORK
 

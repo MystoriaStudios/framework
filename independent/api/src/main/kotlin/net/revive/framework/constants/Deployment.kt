@@ -14,7 +14,7 @@ object Deployment {
     }
 
     object Security {
-        const val API_BASE_URL = "http://100.67.254.17:8080/"
+        const val API_BASE_URL = "http://localhost:7777/"
         const val API_KEY = ""
     }
 }
