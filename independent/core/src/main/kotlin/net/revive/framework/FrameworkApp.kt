@@ -195,19 +195,6 @@ object FrameworkApp : IConfigProvider {
         }, 0, 5, TimeUnit.SECONDS)
 
         Runtime.getRuntime().addShutdownHook(object : Thread() {
-            /**
-             * If this thread was constructed using a separate
-             * `Runnable` run object, then that
-             * `Runnable` object's `run` method is called;
-             * otherwise, this method does nothing and returns.
-             *
-             *
-             * Subclasses of `Thread` should override this method.
-             *
-             * @see .start
-             * @see .stop
-             * @see .Thread
-             */
             override fun run() {
                 Framework.use {
                     val request = Request.Builder()

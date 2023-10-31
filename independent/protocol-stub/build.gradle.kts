@@ -22,12 +22,9 @@ dependencies {
     api(kotlin("stdlib"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
 
-    api(kotlin("stdlib"))
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
-
-    api("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
-    api("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
-    api("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+    implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
+    implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
+    implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 }
 
 java {

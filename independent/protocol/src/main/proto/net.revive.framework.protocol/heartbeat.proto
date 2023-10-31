@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package net.revive.framework.protocol;
+
+option java_package = "net.revive.framework.protocol";
+option java_outer_classname = "HeartbeatProtocol";
+option java_multiple_files = true;
+
+import "net.revive.framework.protocol/util.proto";
+import "net.revive.framework.protocol/node.proto";
+
+service HeartbeatService {
+  rpc tick (Empty) returns (Heartbeat);
+}
+
+message Heartbeat {
+  // TODO: Everything here tbh. (reorder this) idk what else to add
+  NodeState state = 1;
+}
