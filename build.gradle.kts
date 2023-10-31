@@ -13,7 +13,9 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("org.jetbrains.dokka") version "1.9.0"
     kotlin("kapt") version "1.9.10"
+    id("com.google.protobuf") version "0.8.15" apply false
 }
+
 val sentry_auth: String by project
 
 sentry {
@@ -27,6 +29,10 @@ sentry {
 }
 
 var projectVer = "1.1.1-SNAPSHOT"
+
+ext["grpcVersion"] = "1.37.0"
+ext["grpcKotlinVersion"] = "1.1.0"
+ext["protobufVersion"] = "3.15.8"
 
 allprojects {
     apply(plugin = "maven-publish")
@@ -118,6 +124,10 @@ allprojects {
                 }
             }
         }
+    }
+
+    tasks.processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // or DuplicatesStrategy.FAIL
     }
 
     tasks["build"]
