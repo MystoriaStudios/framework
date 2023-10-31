@@ -10,10 +10,11 @@ import "net.revive.framework.protocol/util.proto";
 import "net.revive.framework.protocol/node.proto";
 
 service HeartbeatService {
-  rpc tick (Empty) returns (Heartbeat);
+  rpc beat (Heartbeat) returns (Empty);
 }
 
 message Heartbeat {
   // TODO: Everything here tbh. (reorder this) idk what else to add
-  NodeState state = 1;
+  string node = 1;
+  NodeState state = 2;
 }
