@@ -6,7 +6,7 @@ option java_package = "net.revive.framework.protocol";
 option java_outer_classname = "NodeProtocol";
 option java_multiple_files = true;
 
-enum NodeState {
+enum PodState {
     BOOTING = 0;
     ONLINE = 1;
     OFFLINE = 2;

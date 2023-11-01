@@ -14,7 +14,10 @@ service HeartbeatService {
 }
 
 message Heartbeat {
-  // TODO: Everything here tbh. (reorder this) idk what else to add
-  string node = 1;
-  NodeState state = 2;
+  string pod = 1;
+  PodState state = 2;
+  double tps = 3;
+  double mspt = 4;
+  double cpuUsage = 5;
+  int32 playersConnected = 6;
 }

@@ -21,6 +21,7 @@ import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.FlavorBinder
+import net.revive.framework.grpc.health.PodHeartbeatThread
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.PaperFrameworkItemStack
@@ -160,6 +161,12 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
                     }
                 }
             }
+
+        PodHeartbeatThread.sendHeartbeat(
+            PodHeartbeatThread.generateHeartbeat(
+                net.revive.framework.protocol.PodState.BOOTING
+            )
+        )
     }
 
     @ContainerDisable
@@ -167,6 +174,12 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         UpdaterService.reload()
         UpdaterConnector.applyPendingUpdates()
         FrameworkObjectControllerCache.closeAll()
+
+        PodHeartbeatThread.sendHeartbeat(
+            PodHeartbeatThread.generateHeartbeat(
+                net.revive.framework.protocol.PodState.OFFLINE
+            )
+        )
     }
 
     private fun getNMSVersion(): NMSVersion {

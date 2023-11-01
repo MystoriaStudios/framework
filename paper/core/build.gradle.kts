@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":independent:independent-api"))
     implementation(project(":paper:paper-api"))
     implementation(project(":minecraft-platform"))
+    implementation(project(":independent:protocol-stub"))
 
     // reference libraries
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
