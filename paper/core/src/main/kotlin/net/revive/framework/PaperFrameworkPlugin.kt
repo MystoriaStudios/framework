@@ -92,9 +92,11 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     @ContainerEnable
     fun containerEnable() {
         instance = this
+        Tasks.plugin = this
         nmsVersion = NMSVersion.V1_20_R1
 
         Framework.use { framework ->
+            framework.configure(PaperFrameworkPlatform)
             framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
 
@@ -121,8 +123,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
-
-        Tasks.plugin = this
 
         // RESOLVEE UUIDS
         UUIDCache.configure(PaperLocalUUIDCacheTranslator())
