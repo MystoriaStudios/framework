@@ -55,6 +55,7 @@ object FrameworkApp : IConfigProvider {
                     .containers(Arrays.asList(V1Container().name("c").image("test")))
             )
 
+        /*
         val apiClient = ClientBuilder.standard().build()
         val podClient = GenericKubernetesApi(
             V1Pod::class.java,
@@ -82,6 +83,8 @@ object FrameworkApp : IConfigProvider {
             )
         }
         println("Deleted!")
+
+         */
 
         Framework.supply(FrameworkNode) {
             val a = FrameworkNodePlatform::class.findAnnotation<JsonConfig>() ?: throw RuntimeException()

@@ -41,4 +41,8 @@ dependencies {
     //These don't use deobf because Official Mojang Mappings didn't exist for these.
     implementation(project(":paper:nms:nms-v1_12_R2"))
     implementation(project(":paper:nms:nms-v1_8_R8"))
+
+    implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
+    implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
+    implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 }

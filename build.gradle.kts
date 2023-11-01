@@ -42,6 +42,7 @@ allprojects {
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
+    apply(plugin = "com.google.protobuf")
 
     group = "net.revive.framework"
     version = projectVer
@@ -61,6 +62,10 @@ allprojects {
         implementation("com.google.code.gson:gson:2.9.0")
         implementation("io.sentry:sentry:6.29.0")
         implementation("com.konghq:unirest-java:3.13.6:standalone")
+
+        implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
+        implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
+        implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
