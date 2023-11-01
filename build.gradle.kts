@@ -42,7 +42,7 @@ allprojects {
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
-    apply(plugin = "com.google.protobuf")
+    //apply(plugin = "com.google.protobuf")
 
     group = "net.revive.framework"
     version = projectVer
@@ -132,7 +132,7 @@ allprojects {
     }
 
     tasks.processResources {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE // or DuplicatesStrategy.FAIL
+        duplicatesStrategy = DuplicatesStrategy.WARN // or DuplicatesStrategy.FAIL
     }
 
     tasks["build"]

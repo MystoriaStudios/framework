@@ -7,6 +7,14 @@ import net.revive.framework.server.IMinecraftPlatform
 import java.util.*
 
 object MinestomMinecraftPlatform : IMinecraftPlatform {
+    override fun getNodeIP(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun getNodePort(): Int {
+        TODO("Not yet implemented")
+    }
+
     override fun getOnlinePlayers(): MutableList<FrameworkPlayer> {
         return MinecraftServer.getConnectionManager()
             .onlinePlayers
@@ -23,6 +31,10 @@ object MinestomMinecraftPlatform : IMinecraftPlatform {
                     it
                 )
             }
+    }
+
+    override fun getPlayerCount(): Int {
+        TODO("Not yet implemented")
     }
 
 }

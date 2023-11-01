@@ -3,7 +3,7 @@ package net.revive.framework
 import net.revive.framework.instance.Instance
 import org.bukkit.Bukkit
 
-class PaperFrameworkPlatform : IFrameworkPlatform {
+object PaperFrameworkPlatform : IFrameworkPlatform {
 
     override val id: String = "unknown"
     override val groups: MutableList<String> = mutableListOf("unknown")
