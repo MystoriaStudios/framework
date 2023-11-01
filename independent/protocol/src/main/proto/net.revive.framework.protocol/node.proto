@@ -7,7 +7,8 @@ option java_outer_classname = "NodeProtocol";
 option java_multiple_files = true;
 
 enum PodState {
-    BOOTING = 0;
-    ONLINE = 1;
-    OFFLINE = 2;
+  BOOTING = 0;
+  SETUP = 1;
+  ONLINE = 2;
+  OFFLINE = 3;
 }

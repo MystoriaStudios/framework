@@ -8,10 +8,12 @@ class Node(
     val href: String,
     val organization: String,
     val state: State,
+    val pushedAt: Long = System.currentTimeMillis(),
     override val identifier: UUID = UUID.randomUUID()
 ) : IStorable {
     enum class State {
         BOOTING,
+        SETUP,
         ONLINE,
         OFFLINE
     }
