@@ -13,7 +13,6 @@ object FrameworkGRPCClient {
     @Inject
     lateinit var minecraftPlatform: IMinecraftPlatform
 
-    @Configure
     fun configure()
     {
         val client = ManagedChannelBuilder
