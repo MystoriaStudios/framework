@@ -31,6 +31,8 @@ import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.nms.NMSVersion
 import net.revive.framework.nms.annotation.NMSHandler
+import net.revive.framework.nms.menu.INMSMenuHandler
+import net.revive.framework.nms.menu.V1_20_R1MenuHandler
 import net.revive.framework.permission.impl.LuckPermsPermissionProvider
 import net.revive.framework.plugin.ExtendedKotlinPlugin
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
@@ -110,6 +112,11 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
             framework.flavor.bind<IDisguiseHandler>() to FrameworkDisguiseHandler()
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
+
+            framework.flavor.bind<INMSMenuHandler>() to V1_20_R1MenuHandler
+
+            framework.flavor.inject(PaperMinecraftPlatform)
+            framework.flavor.inject(FrameworkGRPCClient)
         }
 
         FrameworkGRPCClient.configure()

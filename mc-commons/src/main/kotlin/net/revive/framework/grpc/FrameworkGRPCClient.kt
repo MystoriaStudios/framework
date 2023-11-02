@@ -25,6 +25,7 @@ object FrameworkGRPCClient {
 
         Framework.use {
             it.flavor.bind<ManagedChannel>() to client
+            it.flavor.inject(PodHeartbeatThread)
         }
 
         PodHeartbeatThread.apply {
