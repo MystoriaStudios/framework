@@ -1,12 +1,14 @@
 package net.revive.framework.grpc.health
 
 import io.grpc.ManagedChannel
+import io.grpc.stub.StreamObserver
 import net.revive.framework.Framework
 import net.revive.framework.IFrameworkPlatform
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
+import net.revive.framework.protocol.Empty
 import net.revive.framework.protocol.Heartbeat
 import net.revive.framework.protocol.HeartbeatServiceGrpc
 import net.revive.framework.protocol.PodState
@@ -59,7 +61,7 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
             it.log("Framework Heart Beater", "Sending heart beat!!")
         }
 
-        heartbeatService.beat(heartbeat, null)
+        heartbeatService.beat(heartbeat, EMPTY_RESPONSE_OBSERVER)
     }
 
     fun generateHeartbeat(state: PodState = PodState.ONLINE): Heartbeat {
@@ -72,5 +74,22 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
             .setCpuUsage(5.00)
             .setPlayersConnected(minecraftPlatform.getPlayerCount())
             .build()
+    }
+
+    val EMPTY_RESPONSE_OBSERVER = object : StreamObserver<Empty> {
+        override fun onNext(value: Empty?) {
+
+        }
+
+        override fun onError(t: Throwable?) {
+            t?.printStackTrace()
+        }
+
+        override fun onCompleted() {
+            Framework.use {
+                it.log("Framework Heart Beater", "Successfully sent heartbeat and received success!")
+            }
+        }
+
     }
 }
