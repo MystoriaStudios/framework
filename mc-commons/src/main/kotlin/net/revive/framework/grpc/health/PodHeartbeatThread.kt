@@ -49,7 +49,7 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
 
     override fun run() {
         while (true) {
-            sleep(2000L) // reports every 2 seconds to the parent node.
+            sleep(3000L) // reports every 2 seconds to the parent node.
             sendHeartbeat(
                 generateHeartbeat()
             )

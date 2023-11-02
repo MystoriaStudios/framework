@@ -1,0 +1,65 @@
+package net.revive.framework.heartbeat
+
+import net.revive.framework.Framework
+import net.revive.framework.FrameworkApp
+import net.revive.framework.flavor.service.Configure
+import net.revive.framework.flavor.service.Service
+import net.revive.framework.node.Node
+import net.revive.framework.node.WrappedPodHeartbeat
+import net.revive.framework.protocol.Heartbeat
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+
+@Service
+object HeartbeatService {
+
+    val heartbeat: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+    val podBeats: MutableMap<String, WrappedPodHeartbeat> = mutableMapOf()
+
+    @Configure
+    fun configure()
+    {
+        Framework.instance.log("Heartbeat", "Starting the node heartbeat.")
+
+        heartbeat.scheduleAtFixedRate({
+              beat()
+        }, 0, 5, TimeUnit.SECONDS)
+    }
+
+    fun beat(state: Node.State? = null) {
+        Framework.use {
+            val request = Request.Builder()
+                .url("https://api.nopox.xyz/api/nodes/${FrameworkApp.settingsConfig.api_key}/add")
+                .post(
+                    it.serializer.serialize(
+                        Node(
+                            FrameworkApp.settingsConfig.id,
+                            "100.110.183.133",
+                            FrameworkApp.settingsConfig.api_key,
+                            state ?: FrameworkApp.state,
+                            System.currentTimeMillis(),
+                            FrameworkApp.settingsConfig.identifier,
+                            podBeats
+                        )
+                    ).toRequestBody("text/json".toMediaType())
+                )
+                .build()
+
+            it.log("Heartbeat", "Trying to beat heart.")
+            it.okHttpClient.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val responseString = response.body?.string()
+                    // Handle the successful response here
+                    it.log("Heartbeat", "$responseString")
+                } else {
+                    // Handle the error
+                    it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
+                }
+            }
+        }
+    }
+}

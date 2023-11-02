@@ -9,7 +9,8 @@ class Node(
     val organization: String,
     val state: State,
     val pushedAt: Long = System.currentTimeMillis(),
-    override val identifier: UUID = UUID.randomUUID()
+    override val identifier: UUID = UUID.randomUUID(),
+    val pods: MutableMap<String, WrappedPodHeartbeat>
 ) : IStorable {
     enum class State {
         BOOTING,

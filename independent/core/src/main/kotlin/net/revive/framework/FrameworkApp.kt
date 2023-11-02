@@ -13,6 +13,7 @@ import net.revive.framework.config.load
 import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
+import net.revive.framework.heartbeat.HeartbeatService
 import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
@@ -59,35 +60,7 @@ object FrameworkApp : IConfigProvider {
             it.flavor = Flavor(this::class, FlavorOptions())
             it.flavor.startup()
 
-            //TODO: @Nopox PLEEASE DO THIS
-            it.log("Heartbeat", "Beat.")
-            val request = Request.Builder()
-                .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
-                .post(
-                    it.serializer.serialize(
-                        Node(
-                            settingsConfig.id,
-                            "100.110.183.133",
-                            settingsConfig.api_key,
-                            Node.State.BOOTING,
-                            System.currentTimeMillis(),
-                            settingsConfig.identifier
-                        )
-                    ).toRequestBody("text/json".toMediaType())
-                )
-                .build()
-
-            it.log("Heartbeat", "Trying to beat heart.")
-            it.okHttpClient.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    val responseString = response.body?.string()
-                    // Handle the successful response here
-                    it.log("Heartbeat", "$responseString")
-                } else {
-                    // Handle the error
-                    it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
-                }
-            }
+            HeartbeatService.beat(Node.State.BOOTING)
 
             sleep(10000)
 
@@ -152,76 +125,15 @@ object FrameworkApp : IConfigProvider {
         }
         Framework.instance.log("Framework", "Finished loading modules")
 
-        val heartbeat: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
         Framework.instance.log("Heartbeat", "Starting the node heartbeat.")
-        heartbeat.scheduleAtFixedRate({
-            Framework.use {
-                //TODO: @Nopox PLEEASE DO THIS
-                it.log("Heartbeat", "Beat.")
-                val request = Request.Builder()
-                    .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
-                    .post(
-                        it.serializer.serialize(
-                            Node(
-                                settingsConfig.id,
-                                "100.110.183.133",
-                                settingsConfig.api_key,
-                                state,
-                                System.currentTimeMillis(),
-                                settingsConfig.identifier
-                            )
-                        ).toRequestBody("text/json".toMediaType())
-                    )
-                    .build()
-
-                it.log("Heartbeat", "Trying to beat heart.")
-                it.okHttpClient.newCall(request).execute().use { response ->
-                    if (response.isSuccessful) {
-                        val responseString = response.body?.string()
-                        // Handle the successful response here
-                        it.log("Heartbeat", "$responseString")
-                    } else {
-                        // Handle the error
-                        it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
-                    }
-                }
-            }
-        }, 0, 5, TimeUnit.SECONDS)
 
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 Framework.use {
                     it.flavor.close()
-                    val request = Request.Builder()
-                        .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
-                        .post(
-                            it.serializer.serialize(
-                                Node(
-                                    settingsConfig.id,
-                                    "100.110.183.133",
-                                    settingsConfig.api_key,
-                                    Node.State.OFFLINE,
-                                    System.currentTimeMillis(),
-                                    settingsConfig.identifier
-                                )
-                            ).toRequestBody("text/json".toMediaType())
-                        )
-                        .build()
-
                     FrameworkGRPCServer.server.shutdownNow()
-
-                    it.log("Heartbeat", "Trying to stop heart.")
-                    it.okHttpClient.newCall(request).execute().use { response ->
-                        if (response.isSuccessful) {
-                            val responseString = response.body?.string()
-                            // Handle the successful response here
-                            it.log("Heartbeat", "$responseString")
-                        } else {
-                            // Handle the error
-                            it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
-                        }
-                    }
+                    HeartbeatService.beat(Node.State.OFFLINE)
                 }
             }
         })
