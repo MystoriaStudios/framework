@@ -75,6 +75,8 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
 
+            it.flavor.inject(PodHeartbeatThread)
+
             if (it.serializer is GsonSerializer) {
                 GsonFactory.applyPlatformChanges()
                 (it.serializer as GsonSerializer).useGsonBuilderThenRebuild { gson ->
@@ -97,8 +99,9 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
         Framework.use { framework ->
             framework.configure(PaperFrameworkPlatform)
-            framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
+            framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
+            framework.flavor.bind<IFrameworkPlatform>() to PaperFrameworkPlatform
 
 
             val itemStackProvider = PaperItemStackProvider()

@@ -3,6 +3,7 @@ package net.revive.framework.grpc.health
 import io.grpc.ManagedChannel
 import net.revive.framework.IFrameworkPlatform
 import net.revive.framework.flavor.annotation.Inject
+import net.revive.framework.flavor.service.Service
 import net.revive.framework.protocol.*
 import net.revive.framework.server.IMinecraftPlatform
 

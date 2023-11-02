@@ -28,6 +28,11 @@ object FrameworkGRPCClient {
             it.flavor.bind<ManagedChannel>() to client
         }
 
-        PodHeartbeatThread.start()
+        PodHeartbeatThread.apply {
+            Framework.use {
+                it.flavor.inject(this)
+                start()
+            }
+        }
     }
 }
