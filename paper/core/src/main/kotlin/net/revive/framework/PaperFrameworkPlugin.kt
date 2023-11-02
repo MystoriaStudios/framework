@@ -71,6 +71,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     @ContainerPreEnable
     fun containerPreEnable() {
+        Tasks.plugin = this
         saveDefaultConfig()
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
