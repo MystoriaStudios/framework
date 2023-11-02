@@ -21,6 +21,7 @@ import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.FlavorBinder
+import net.revive.framework.grpc.FrameworkGRPCClient
 import net.revive.framework.grpc.health.PodHeartbeatThread
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
@@ -111,6 +112,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             framework.flavor.bind<IVisibilityHandler>() to FrameworkVisiblityHandler()
         }
 
+        FrameworkGRPCClient.configure()
 
         Tasks.asyncTimer(2L, 2L) {
             PaperMinecraftPlatform.getOnlinePlayers().forEach {
