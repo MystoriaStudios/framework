@@ -103,9 +103,15 @@ object FrameworkApp : IConfigProvider {
 
             express.get("/") { _, res ->
                 res.send("{api: true}")
+
             }
-            express.post("/setup") { req, res ->
-                val key = req.getFormQuery("key")
+
+            express.use { req, res ->
+                res.setHeader("Access-Control-Allow-Origin", "*")
+            }
+
+            express.post("/setup/:key") { req, res ->
+                val key = req.getParam("key")
 
                 state = Node.State.ONLINE
 
