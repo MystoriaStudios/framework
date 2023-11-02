@@ -30,7 +30,6 @@ object FrameworkGRPCClient {
 
         PodHeartbeatThread.apply {
             Framework.use {
-                it.flavor.inject(this)
                 start()
             }
         }

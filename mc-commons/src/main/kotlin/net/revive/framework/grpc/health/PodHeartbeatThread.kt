@@ -7,6 +7,7 @@ import net.revive.framework.flavor.service.Service
 import net.revive.framework.protocol.*
 import net.revive.framework.server.IMinecraftPlatform
 
+@Service
 object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
 
     @Inject

@@ -75,8 +75,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         Framework.supply(PaperFramework) {
             it.flavor = flavor()
 
-            it.flavor.inject(PodHeartbeatThread)
-
             if (it.serializer is GsonSerializer) {
                 GsonFactory.applyPlatformChanges()
                 (it.serializer as GsonSerializer).useGsonBuilderThenRebuild { gson ->
