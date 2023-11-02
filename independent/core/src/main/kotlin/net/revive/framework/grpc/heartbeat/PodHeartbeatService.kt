@@ -7,7 +7,7 @@ import net.revive.framework.protocol.Heartbeat
 import net.revive.framework.protocol.HeartbeatServiceGrpcKt
 
 @GRPCService
-class PodHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCoroutineImplBase() {
+object PodHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCoroutineImplBase() {
 
     override suspend fun beat(request: Heartbeat): Empty {
         // handle any heart beat logic here...

@@ -92,7 +92,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     @ContainerEnable
     fun containerEnable() {
         instance = this
-        Tasks.plugin = this
         nmsVersion = NMSVersion.V1_20_R1
 
         Framework.use { framework ->
@@ -162,12 +161,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
                     }
                 }
             }
-
-        PodHeartbeatThread.sendHeartbeat(
-            PodHeartbeatThread.generateHeartbeat(
-                net.revive.framework.protocol.PodState.BOOTING
-            )
-        )
     }
 
     @ContainerDisable
@@ -175,12 +168,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         UpdaterService.reload()
         UpdaterConnector.applyPendingUpdates()
         FrameworkObjectControllerCache.closeAll()
-
-        PodHeartbeatThread.sendHeartbeat(
-            PodHeartbeatThread.generateHeartbeat(
-                net.revive.framework.protocol.PodState.OFFLINE
-            )
-        )
     }
 
     private fun getNMSVersion(): NMSVersion {

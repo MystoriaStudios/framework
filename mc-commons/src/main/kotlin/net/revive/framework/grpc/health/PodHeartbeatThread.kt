@@ -1,10 +1,15 @@
 package net.revive.framework.grpc.health
 
 import io.grpc.ManagedChannel
+import net.revive.framework.Framework
 import net.revive.framework.IFrameworkPlatform
 import net.revive.framework.flavor.annotation.Inject
+import net.revive.framework.flavor.service.Close
+import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
-import net.revive.framework.protocol.*
+import net.revive.framework.protocol.Heartbeat
+import net.revive.framework.protocol.HeartbeatServiceGrpc
+import net.revive.framework.protocol.PodState
 import net.revive.framework.server.IMinecraftPlatform
 
 @Service
@@ -23,6 +28,24 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
         HeartbeatServiceGrpc.newStub(channel)
     }
 
+    @Configure
+    fun configure() {
+        sendHeartbeat(
+            generateHeartbeat(
+                PodState.BOOTING
+            )
+        )
+    }
+
+    @Close
+    fun close() {
+        sendHeartbeat(
+            generateHeartbeat(
+                PodState.OFFLINE
+            )
+        )
+    }
+
     override fun run() {
         while (true) {
             sleep(2000L) // reports every 2 seconds to the parent node.
@@ -32,8 +55,13 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
         }
     }
 
-    fun sendHeartbeat(heartbeat: Heartbeat)
-        = heartbeatService.beat(heartbeat, null)
+    fun sendHeartbeat(heartbeat: Heartbeat) {
+        Framework.use {
+            it.log("Framework Heart Beater", "Sending heart beat!!")
+        }
+
+        heartbeatService.beat(heartbeat, null)
+    }
 
     fun generateHeartbeat(state: PodState = PodState.ONLINE): Heartbeat {
         return Heartbeat
