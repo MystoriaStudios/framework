@@ -10,7 +10,7 @@ class FrameworkNodePlatform(
     override val groups: MutableList<String> = mutableListOf("NA"),
     val port: Int = 8080,
     val gRPCPort: Int = 8070,
-    val api_key: String = "org_2XQOxNamtty4AnwFGyepkxOdq7F",
+    var api_key: String = "org_2XQOxNamtty4AnwFGyepkxOdq7F",
     val identifier: UUID = UUID.randomUUID()
 ) : IFrameworkPlatform {
     override fun updateInstance(instance: Instance) {

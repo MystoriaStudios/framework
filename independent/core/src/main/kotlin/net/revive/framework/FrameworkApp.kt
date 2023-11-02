@@ -10,6 +10,7 @@ import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
@@ -36,6 +37,7 @@ object FrameworkApp : IConfigProvider {
     fun use(lambda: (FrameworkApp) -> Unit) = lambda.invoke(this)
     fun <T> useWithReturn(lambda: (FrameworkApp) -> T) = lambda.invoke(this)
 
+    var state = Node.State.SETUP
     lateinit var loader: FrameworkNodeModuleLoader
     lateinit var express: Express
     lateinit var settingsConfig: FrameworkNodePlatform
@@ -59,7 +61,7 @@ object FrameworkApp : IConfigProvider {
                     it.serializer.serialize(
                         Node(
                             settingsConfig.id,
-                            Inet4Address.getLocalHost().hostAddress,
+                            "100.110.183.133",
                             settingsConfig.api_key,
                             Node.State.BOOTING,
                             System.currentTimeMillis(),
@@ -92,8 +94,24 @@ object FrameworkApp : IConfigProvider {
 
             express.use(MojangUUIDCacheRouter)
 
+
             express.get("/") { _, res ->
                 res.send("{api: true}")
+            }
+            express.post("/setup") { req, res ->
+                val key = req.getFormQuery("key")
+
+                settingsConfig.api_key = req.getFormQuery("apikey")
+
+                res.redirect("https://framework-portal.vercel.app/dashboard/nodes/${key}")
+            }
+            express.get("/peak") { req, res ->
+                res.send(it.serializer.serialize(mapOf(
+                    "pods" to emptyList<Instance>(),
+                    "assignedMemory" to "4096MB",
+                    "usedMemory" to Runtime.getRuntime().totalMemory(),
+                    "availableCores" to Runtime.getRuntime().availableProcessors()
+                )))
             }
 
             it.log("Framework", "Starting express server on port ${port}.")
@@ -135,9 +153,9 @@ object FrameworkApp : IConfigProvider {
                         it.serializer.serialize(
                             Node(
                                 settingsConfig.id,
-                                Inet4Address.getLocalHost().hostAddress,
+                                "100.110.183.133",
                                 settingsConfig.api_key,
-                                Node.State.SETUP,
+                                state,
                                 System.currentTimeMillis(),
                                 settingsConfig.identifier
                             )
@@ -168,7 +186,7 @@ object FrameworkApp : IConfigProvider {
                             it.serializer.serialize(
                                 Node(
                                     settingsConfig.id,
-                                    Inet4Address.getLocalHost().hostAddress,
+                                    "100.110.183.133",
                                     settingsConfig.api_key,
                                     Node.State.OFFLINE,
                                     System.currentTimeMillis(),
