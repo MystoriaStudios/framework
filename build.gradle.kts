@@ -76,6 +76,8 @@ allprojects {
         archiveClassifier.set("")
         archiveFileName.set("framework-${project.name}.jar")
 
+        mergeServiceFiles()
+
         relocate("co.aikar.commands", "${project.group}.commands")
         relocate("co.aikar.locales", "${project.group}.locales")
         relocate("co.aikar.locales", "${project.group}.locales")
