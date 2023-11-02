@@ -6,7 +6,8 @@ data class WrappedPodHeartbeat(
     val tps: Double,
     val mspt: Double,
     val cpuUsage: Double,
-    val playersConnected: Int
+    val playersConnected: Int,
+    val timestamp: Long
 ) {
     enum class State {
         BOOTING,

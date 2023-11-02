@@ -22,7 +22,8 @@ object PodHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCoroutineImp
             request.tps,
             request.mspt,
             request.cpuUsage,
-            request.playersConnected
+            request.playersConnected,
+            request.timestamp
         )
 
         return Empty.getDefaultInstance()

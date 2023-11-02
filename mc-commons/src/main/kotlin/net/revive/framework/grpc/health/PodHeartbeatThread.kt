@@ -73,6 +73,7 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
             .setMspt(0.00)
             .setCpuUsage(5.00)
             .setPlayersConnected(minecraftPlatform.getPlayerCount())
+            .setTimestamp(System.currentTimeMillis())
             .build()
     }
 

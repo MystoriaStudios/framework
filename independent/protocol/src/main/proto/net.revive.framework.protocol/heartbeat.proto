@@ -20,4 +20,5 @@ message Heartbeat {
   double mspt = 4;
   double cpuUsage = 5;
   int32 playersConnected = 6;
+  int64 timestamp = 7;
 }

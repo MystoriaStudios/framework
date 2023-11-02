@@ -31,6 +31,17 @@ object HeartbeatService {
     }
 
     fun beat(state: Node.State? = null) {
+        val iterator = podBeats.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            val beat = entry.value
+
+            if (System.currentTimeMillis() < beat.timestamp.plus(TimeUnit.MINUTES.toMillis(3))) {
+                // Remove node
+                iterator.remove() // Safe removal using the iterator
+            }
+        }
+
         Framework.use {
             val request = Request.Builder()
                 .url("https://api.nopox.xyz/api/nodes/${FrameworkApp.settingsConfig.api_key}/add")
