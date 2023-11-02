@@ -101,7 +101,6 @@ object FrameworkApp : IConfigProvider {
             express.post("/setup") { req, res ->
                 val key = req.getFormQuery("key")
 
-                settingsConfig.api_key = req.getFormQuery("apikey")
                 state = Node.State.ONLINE
 
                 res.redirect("https://framework-portal.vercel.app/dashboard/nodes/${key}")
