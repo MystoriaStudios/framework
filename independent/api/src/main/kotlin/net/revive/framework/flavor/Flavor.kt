@@ -1,5 +1,6 @@
 package net.revive.framework.flavor
 
+import net.revive.framework.Framework
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.binder.FlavorBinderContainer
 import net.revive.framework.flavor.mappings.AnnotationMappings
@@ -269,6 +270,10 @@ class Flavor(
                         }
                     }
             }
+        }
+
+        Framework.use {
+            it.log("Flavor Binder", type.simpleName)
         }
 
         return bindersOfType.firstOrNull()?.instance
