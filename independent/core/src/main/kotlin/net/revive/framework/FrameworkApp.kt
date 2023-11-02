@@ -10,6 +10,7 @@ import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
@@ -197,6 +198,8 @@ object FrameworkApp : IConfigProvider {
                             ).toRequestBody("text/json".toMediaType())
                         )
                         .build()
+
+                    FrameworkGRPCServer.server.shutdownNow()
 
                     it.log("Heartbeat", "Trying to stop heart.")
                     it.okHttpClient.newCall(request).execute().use { response ->

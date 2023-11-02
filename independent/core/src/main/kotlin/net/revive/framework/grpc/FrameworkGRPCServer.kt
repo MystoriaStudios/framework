@@ -15,7 +15,7 @@ import net.revive.framework.utils.objectInstance
 @Service
 object FrameworkGRPCServer {
 
-    private lateinit var server: Server
+    lateinit var server: Server
 
     @Configure
     fun configure()
