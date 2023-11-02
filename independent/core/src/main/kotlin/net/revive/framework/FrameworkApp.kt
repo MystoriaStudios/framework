@@ -49,6 +49,7 @@ object FrameworkApp : IConfigProvider {
         if (!getBaseFolder().exists()) getBaseFolder().mkdirs()
 
         Framework.supply(FrameworkNode) {
+            it.flavor.startup()
             val a = FrameworkNodePlatform::class.findAnnotation<JsonConfig>() ?: throw RuntimeException()
             it.log("Framework", "Trying to load settings config")
             settingsConfig = load<FrameworkNodePlatform>(a)
@@ -180,6 +181,7 @@ object FrameworkApp : IConfigProvider {
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 Framework.use {
+                    it.flavor.close()
                     val request = Request.Builder()
                         .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
                         .post(
