@@ -7,9 +7,12 @@ import io.grpc.ServerBuilder
 import net.revive.framework.Framework
 import net.revive.framework.FrameworkApp
 import net.revive.framework.flavor.service.Configure
+import net.revive.framework.flavor.service.Service
 import net.revive.framework.grpc.annotation.GRPCService
+import net.revive.framework.grpc.heartbeat.PodHeartbeatService
 import net.revive.framework.utils.objectInstance
 
+@Service
 object FrameworkGRPCServer {
 
     private lateinit var server: Server
@@ -19,6 +22,7 @@ object FrameworkGRPCServer {
     {
         server = ServerBuilder
             .forPort(FrameworkApp.settingsConfig.gRPCPort)
+            .addService(PodHeartbeatService)
             .apply {
                 Framework.use {
                     it.flavor.reflections
@@ -33,5 +37,12 @@ object FrameworkGRPCServer {
                 }
             }
             .build()
+
+        server.start()
+        println("TESTING GRPC MESSAGE STARAT")
+
+        Framework.use {
+            it.log("Framework gRPC Server", "Successfully started gRPC server on port ${FrameworkApp.settingsConfig.gRPCPort}")
+        }
     }
 }

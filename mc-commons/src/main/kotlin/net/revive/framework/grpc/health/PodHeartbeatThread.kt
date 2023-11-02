@@ -12,7 +12,6 @@ import net.revive.framework.protocol.HeartbeatServiceGrpc
 import net.revive.framework.protocol.PodState
 import net.revive.framework.server.IMinecraftPlatform
 
-@Service
 object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
 
     @Inject
