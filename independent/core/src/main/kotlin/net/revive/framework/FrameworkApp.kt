@@ -13,10 +13,8 @@ import net.revive.framework.config.load
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.lang.Thread.sleep
@@ -48,44 +46,6 @@ object FrameworkApp : IConfigProvider {
         println(args)
         if (!getBaseFolder().exists()) getBaseFolder().mkdirs()
 
-        val pod = V1Pod()
-            .metadata(V1ObjectMeta().name("foo").namespace("default"))
-            .spec(
-                V1PodSpec()
-                    .containers(Arrays.asList(V1Container().name("c").image("test")))
-            )
-
-        /*
-        val apiClient = ClientBuilder.standard().build()
-        val podClient = GenericKubernetesApi(
-            V1Pod::class.java,
-            V1PodList::class.java, "", "v1", "pods", apiClient
-        )
-
-        val latestPod = podClient.create(pod).throwsApiException().getObject()
-        println("Created!")
-
-        val patchedPod = podClient
-            .patch(
-                "default",
-                "foo",
-                V1Patch.PATCH_FORMAT_STRATEGIC_MERGE_PATCH,
-                V1Patch("{\"metadata\":{\"finalizers\":[\"example.io/foo\"]}}")
-            )
-            .throwsApiException()
-            .getObject()
-        println("Patched!")
-
-        val deletedPod = podClient.delete("default", "foo").throwsApiException().getObject()
-        if (deletedPod != null) {
-            println(
-                "Received after-deletion status of the requested object, will be deleting in background!"
-            )
-        }
-        println("Deleted!")
-
-         */
-
         Framework.supply(FrameworkNode) {
             val a = FrameworkNodePlatform::class.findAnnotation<JsonConfig>() ?: throw RuntimeException()
             it.log("Framework", "Trying to load settings config")
@@ -94,7 +54,7 @@ object FrameworkApp : IConfigProvider {
             //TODO: @Nopox PLEEASE DO THIS
             it.log("Heartbeat", "Beat.")
             val request = Request.Builder()
-                .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
                 .post(
                     it.serializer.serialize(
                         Node(
@@ -102,6 +62,7 @@ object FrameworkApp : IConfigProvider {
                             Inet4Address.getLocalHost().hostAddress,
                             settingsConfig.api_key,
                             Node.State.BOOTING,
+                            System.currentTimeMillis(),
                             settingsConfig.identifier
                         )
                     ).toRequestBody("text/json".toMediaType())
@@ -169,14 +130,15 @@ object FrameworkApp : IConfigProvider {
                 //TODO: @Nopox PLEEASE DO THIS
                 it.log("Heartbeat", "Beat.")
                 val request = Request.Builder()
-                    .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                    .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
                     .post(
                         it.serializer.serialize(
                             Node(
                                 settingsConfig.id,
                                 Inet4Address.getLocalHost().hostAddress,
                                 settingsConfig.api_key,
-                                Node.State.ONLINE,
+                                Node.State.SETUP,
+                                System.currentTimeMillis(),
                                 settingsConfig.identifier
                             )
                         ).toRequestBody("text/json".toMediaType())
@@ -201,7 +163,7 @@ object FrameworkApp : IConfigProvider {
             override fun run() {
                 Framework.use {
                     val request = Request.Builder()
-                        .url("http://localhost:7777/api/nodes/${settingsConfig.api_key}/add")
+                        .url("https://api.nopox.xyz/api/nodes/${settingsConfig.api_key}/add")
                         .post(
                             it.serializer.serialize(
                                 Node(
@@ -209,6 +171,7 @@ object FrameworkApp : IConfigProvider {
                                     Inet4Address.getLocalHost().hostAddress,
                                     settingsConfig.api_key,
                                     Node.State.OFFLINE,
+                                    System.currentTimeMillis(),
                                     settingsConfig.identifier
                                 )
                             ).toRequestBody("text/json".toMediaType())

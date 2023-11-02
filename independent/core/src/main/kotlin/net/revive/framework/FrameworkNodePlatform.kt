@@ -6,7 +6,7 @@ import java.util.*
 
 @JsonConfig("platform.json")
 class FrameworkNodePlatform(
-    override val id: String = "na-node-country",
+    override val id: String = "test-node",
     override val groups: MutableList<String> = mutableListOf("NA"),
     val port: Int = 8080,
     val gRPCPort: Int = 8070,
