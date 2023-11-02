@@ -11,6 +11,8 @@ import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
 import net.revive.framework.grpc.FrameworkGRPCServer
+import net.revive.framework.flavor.Flavor
+import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
@@ -50,10 +52,12 @@ object FrameworkApp : IConfigProvider {
         if (!getBaseFolder().exists()) getBaseFolder().mkdirs()
 
         Framework.supply(FrameworkNode) {
-            it.flavor.startup()
             val a = FrameworkNodePlatform::class.findAnnotation<JsonConfig>() ?: throw RuntimeException()
             it.log("Framework", "Trying to load settings config")
             settingsConfig = load<FrameworkNodePlatform>(a)
+
+            it.flavor = Flavor(this::class, FlavorOptions())
+            it.flavor.startup()
 
             //TODO: @Nopox PLEEASE DO THIS
             it.log("Heartbeat", "Beat.")
