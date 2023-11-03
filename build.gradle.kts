@@ -62,7 +62,9 @@ allprojects {
         implementation("com.google.code.gson:gson:2.9.0")
         implementation("io.sentry:sentry:6.29.0")
         implementation("com.konghq:unirest-java:3.13.6:standalone")
-        implementation("com.github.docker-java:docker-java-transport-okhttp:3.3.4")
+
+        // Docker
+        implementation("com.github.docker-java:docker-java:3.3.4")
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")

@@ -1,18 +1,22 @@
 package net.revive.framework.deployment
 
+import com.github.dockerjava.api.DockerClient
+import com.github.dockerjava.api.command.CreateContainerResponse
+import com.github.dockerjava.api.command.InspectContainerResponse
+import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.core.DefaultDockerClientConfig
+import com.github.dockerjava.core.DockerClientBuilder
 import com.github.dockerjava.core.DockerClientConfig
-import com.github.dockerjava.okhttp.OkDockerHttpClient
-import com.github.dockerjava.transport.DockerHttpClient
 import net.revive.framework.FrameworkApp
+import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
-import net.revive.framework.deployment.docker.container.ListDockerContainers
 import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import java.io.File
+
 
 @Service
 object DeploymentService {
@@ -20,14 +24,9 @@ object DeploymentService {
     // Eager docker configuration on a locally hosted instance
     private val dockerConfig: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
         .withDockerHost("tcp://localhost:2376")
-        .build();
-
-    val dockerClient: OkDockerHttpClient = OkDockerHttpClient.Builder()
-        .dockerHost(dockerConfig.dockerHost)
-        .sslConfig(dockerConfig.sslConfig)
-        .connectTimeout(30 * 60)
-        .readTimeout(45 * 60)
         .build()
+
+    val dockerClient: DockerClient = DockerClientBuilder.getInstance(dockerConfig).build()
 
     private val templates: MutableMap<String, DeploymentTemplate> = mutableMapOf()
 
@@ -61,5 +60,29 @@ object DeploymentService {
         templates.values.forEach(DeploymentTemplate::save)
     }
 
-    fun deploy(template: DeploymentTemplate) {} // TO RETURN THE CONTAINER IT GETS DEEPLOYEEDE TO
+    fun deploy(template: DeploymentTemplate): InspectContainerResponse {
+        val allocation = AllocationService.take()
+
+        // Create container based on name, port, and image
+        val templateContainer: CreateContainerResponse =
+            dockerClient.createContainerCmd(template.dockerImage)
+                .withName(template.nameScheme)
+                .withIpv4Address(allocation.bindAddress)
+                .withExposedPorts(
+                    ExposedPort.tcp(
+                        allocation.port
+                    )
+                )
+                .withCmd(template.startupCommand)
+                .withAttachStderr(false)
+                .withAttachStdin(false)
+                .withAttachStdout(false)
+                .exec()
+
+        // Start container
+        dockerClient.startContainerCmd(templateContainer.id).exec();
+
+        // Return inspection
+        return dockerClient.inspectContainerCmd(templateContainer.id).exec()
+    }
 }
