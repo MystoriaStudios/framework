@@ -5,11 +5,13 @@ import io.kubernetes.client.custom.V1Patch
 import io.kubernetes.client.openapi.models.*
 import io.kubernetes.client.util.ClientBuilder
 import io.kubernetes.client.util.generic.GenericKubernetesApi
+import net.revive.framework.allocation.AllocationRouter
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.deployment.DeploymentRouter
 import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
@@ -73,6 +75,8 @@ object FrameworkApp : IConfigProvider {
             express.listen(port)
 
             express.use(MojangUUIDCacheRouter)
+            express.use(AllocationRouter)
+            express.use(DeploymentRouter)
 
 
             express.get("/") { _, res ->
