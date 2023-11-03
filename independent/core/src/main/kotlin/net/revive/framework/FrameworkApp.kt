@@ -13,6 +13,7 @@ import net.revive.framework.config.load
 import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
+import net.revive.framework.grpc.heartbeat.PodHeartbeatService
 import net.revive.framework.heartbeat.HeartbeatService
 import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
@@ -92,7 +93,7 @@ object FrameworkApp : IConfigProvider {
             }
             express.get("/peak") { req, res ->
                 res.send(it.serializer.serialize(mapOf(
-                    "pods" to emptyList<Instance>(),
+                    "pods" to HeartbeatService.podBeats.values,
                     "assignedMemory" to "4096MB",
                     "usedMemory" to Runtime.getRuntime().totalMemory(),
                     "availableCores" to Runtime.getRuntime().availableProcessors()
