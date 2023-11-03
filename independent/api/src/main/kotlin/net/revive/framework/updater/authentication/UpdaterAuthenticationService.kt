@@ -7,7 +7,7 @@ import net.revive.framework.updater.UpdaterService
 
 @Service(priority = 50)
 object UpdaterAuthenticationService {
-    var authentication: MystoriaConnectionAuthenticationWrapper = MystoriaConnectionAuthenticationWrapper()
+    var authentication: IConnectionAuthenticationWrapper = NexusConnectionAuthenticationWrapper()
 
     @Configure
     fun configure() {
@@ -16,9 +16,19 @@ object UpdaterAuthenticationService {
 
     fun getWrapper() = authentication
 
-    class MystoriaConnectionAuthenticationWrapper(
+    interface IConnectionAuthenticationWrapper
+
+    class JFrogConnectionAuthenticationWrapper(
         val apiKey: String = "AKCp8pQvVzYyzygdLTieUB4uMMWt5nGh8pFcd5qAfJP4xEoeWEwpjHSDimSehAQNN759yx4Mx"
-    ) : IAbstractTypeSerializable {
-        override fun getAbstractType() = MystoriaConnectionAuthenticationWrapper::class.java
+    ) : IConnectionAuthenticationWrapper, IAbstractTypeSerializable {
+        override fun getAbstractType() = JFrogConnectionAuthenticationWrapper::class.java
+    }
+
+
+    class NexusConnectionAuthenticationWrapper(
+        val username: String = "admin",
+        val password: String = "3493e83c-6e3b-4362-b71a-6618087cb26d"
+    ) : IConnectionAuthenticationWrapper, IAbstractTypeSerializable {
+        override fun getAbstractType() = NexusConnectionAuthenticationWrapper::class.java
     }
 }

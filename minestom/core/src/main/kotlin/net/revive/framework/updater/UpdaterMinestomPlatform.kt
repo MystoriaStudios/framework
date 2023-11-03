@@ -9,7 +9,7 @@ object UpdaterMinestomPlatform : IUpdaterPlatform {
         UpdaterService.pluginContainer = ExtensionBootstrap.getExtensionManager().extensionFolder
 
         // configuration
-        UpdaterService.authentication = UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper()
+        UpdaterService.authentication = UpdaterAuthenticationService.JFrogConnectionAuthenticationWrapper()
         UpdaterService.discoverable = UpdaterDiscoveryService.DiscoverableAssets()
     }
 }

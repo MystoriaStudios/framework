@@ -5,7 +5,7 @@ import net.minestom.server.event.player.PlayerLoginEvent
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.updater.UpdaterService
-import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.listener
 import java.util.concurrent.TimeUnit
@@ -23,7 +23,7 @@ object UpdaterListener {
                 val start = System.currentTimeMillis()
                 val pendingUpdates = mutableListOf<Pair<String, String>>()
 
-                UpdaterConnector
+                JFrogUpdaterConnector
                     .usePendingUpdates { asset, _, name ->
                         pendingUpdates += name to asset.version
                     }

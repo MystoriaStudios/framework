@@ -22,7 +22,6 @@ import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler
 import net.revive.framework.flavor.FlavorBinder
 import net.revive.framework.grpc.FrameworkGRPCClient
-import net.revive.framework.grpc.health.PodHeartbeatThread
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.PaperFrameworkItemStack
@@ -40,7 +39,7 @@ import net.revive.framework.serializer.impl.GsonSerializer
 import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterPaperPlatform
 import net.revive.framework.updater.UpdaterService
-import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.utils.GsonFactory
 import net.revive.framework.utils.Tasks
 import net.revive.framework.visibility.FrameworkVisiblityHandler
@@ -174,7 +173,7 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     @ContainerDisable
     fun containerDisable() {
         UpdaterService.reload()
-        UpdaterConnector.applyPendingUpdates()
+        JFrogUpdaterConnector.applyPendingUpdates()
         FrameworkObjectControllerCache.closeAll()
     }
 

@@ -2,7 +2,7 @@ package net.revive.framework.updater.artifactory
 
 import net.revive.framework.updater.artifactory.artifact.ArtifactMetadata
 import net.revive.framework.updater.artifactory.artifact.component.ArtifactComponentMetadata
-import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.updater.discovery.UpdaterDiscoveryService
 
 object JFrogArtifactory {
@@ -11,7 +11,7 @@ object JFrogArtifactory {
     ): ArtifactComponentMetadata {
         val assets = UpdaterDiscoveryService.discoverable
 
-        val body = UpdaterConnector
+        val body = JFrogUpdaterConnector
             .request(
                 "${assets.discoveryUrl}/artifactory/api/storage/${
                     repositoryOverride ?: assets.discoveryRepositories.first()
@@ -29,7 +29,7 @@ object JFrogArtifactory {
     ): ArtifactMetadata {
         val assets = UpdaterDiscoveryService.discoverable
 
-        val body = UpdaterConnector
+        val body = JFrogUpdaterConnector
             .request(
                 "${assets.discoveryUrl}/artifactory/api/storage/${
                     repositoryOverride ?: assets.discoveryRepositories.first()
