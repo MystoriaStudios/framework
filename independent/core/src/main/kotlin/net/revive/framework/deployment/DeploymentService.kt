@@ -50,10 +50,16 @@ object DeploymentService {
                 }
             }
         }
+
+        if (templates.isEmpty()) {
+            templates["example"] = DeploymentTemplate()
+        }
     }
 
     @Close
     fun close() {
         templates.values.forEach(DeploymentTemplate::save)
     }
+
+    fun deploy(template: DeploymentTemplate) {} // TO RETURN THE CONTAINER IT GETS DEEPLOYEEDE TO
 }

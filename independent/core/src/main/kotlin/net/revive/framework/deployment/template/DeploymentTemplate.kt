@@ -17,6 +17,7 @@ data class DeploymentTemplate(
     val templateKey: String = "example",
     val nameScheme: String = "example-%containerId%",
     val idScheme: String = "EXP-%containerId%",
+    val startupCommand: String = "java -jar server.jar",
     val persisted: Boolean = nameScheme.contains("%containerId%"),
 ) {
     fun save() {

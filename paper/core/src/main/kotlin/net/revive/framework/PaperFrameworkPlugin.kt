@@ -129,8 +129,6 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
             }
         }
 
-        Tasks.asyncTimer(200L, 200L, PaperFramework::updateInstance)
-
         UpdaterService.configure(UpdaterPaperPlatform)
         // bind the menu to the impleemnbtation here O,
 
