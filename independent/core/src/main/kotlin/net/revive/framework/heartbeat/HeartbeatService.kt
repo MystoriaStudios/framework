@@ -53,8 +53,7 @@ object HeartbeatService {
                             FrameworkApp.settingsConfig.api_key,
                             state ?: FrameworkApp.state,
                             System.currentTimeMillis(),
-                            FrameworkApp.settingsConfig.identifier,
-                            podBeats
+                            FrameworkApp.settingsConfig.identifier
                         )
                     ).toRequestBody("text/json".toMediaType())
                 )

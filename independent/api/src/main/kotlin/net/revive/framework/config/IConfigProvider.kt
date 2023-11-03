@@ -29,7 +29,7 @@ fun IConfigProvider.load(config: JsonConfig, clazz: KClass<*>): Any {
         throw FileNotFoundException()
     } else {
         Framework.useWithReturn {
-            it.serializer.deserialize(clazz::class, file.readText())
+            it.serializer.deserialize(clazz, file.readText())
         }
     }
 }

@@ -11,6 +11,7 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.config.save
 import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
@@ -32,13 +33,13 @@ object DeploymentService {
     @Configure
     fun configure() {
         FrameworkApp.use { app ->
-            val tempDirectory = File(app.getBaseFolder(), ".containers")
+            val tempDirectory = File("containers")
 
             if (!tempDirectory.exists()) {
                 tempDirectory.mkdir()
             }
 
-            val peristDirectory = File(app.getBaseFolder(), "persistent")
+            val peristDirectory = File("persistent")
 
             if (!peristDirectory.exists()) {
                 peristDirectory.mkdir()
@@ -52,25 +53,28 @@ object DeploymentService {
 
             directory.listFiles().forEach { file ->
                 app.load(
-                    JsonConfig(file.name),
+                    JsonConfig("templates/${file.name}"),
                     DeploymentTemplate::class
                 ).apply {
                     val template = this as DeploymentTemplate
                     templates[template.templateKey] = template
                 }
             }
+
+            if (templates.isEmpty()) {
+                templates["example"] = DeploymentTemplate().apply {
+                    this.save()
+                }
+            }
         }
 
-        if (templates.isEmpty()) {
-            templates["example"] = DeploymentTemplate()
-        }
     }
 
     @Close
     fun close() {
         templates.values.forEach(DeploymentTemplate::save)
         FrameworkApp.use { app ->
-            File(app.getBaseFolder(), ".containers").delete()
+            File("containers").delete()
         }
     }
 
@@ -88,7 +92,7 @@ object DeploymentService {
                     )
                 )
                 .withWorkingDir(FrameworkApp.useWithReturn {
-                    File(it.getBaseFolder(), if (template.persisted) "persistent" else ".containers").absolutePath
+                    File(if (template.persisted) "persistent" else "containers").absolutePath
                 })
                 .withCmd(template.startupCommand)
                 .withAttachStderr(false)

@@ -23,7 +23,7 @@ data class DeploymentTemplate(
 ) {
     fun save() {
         FrameworkApp.useWithReturn { app ->
-            app.save(JsonConfig("persistent/$nameScheme.json"), this)
+            app.save(JsonConfig("templates/$templateKey.json"), this)
         }
     }
 }
