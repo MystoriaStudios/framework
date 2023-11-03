@@ -10,9 +10,14 @@ object DeploymentRouter : ExpressRouter() {
             val template = DeploymentService.templates[req.getParam("template")]
 
             if (template != null) {
-                res.send(Framework.useWithReturn {
-                    it.serializer.serialize(DeploymentService.deploy(template))
-                })
+                Framework.use {
+                    println("deploying teemplate ${it.serializer.serialize(template)}")
+                    val response = DeploymentService.deploy(template)
+                    println("done.")
+                    println(it.serializer.serialize(response))
+
+                    res.send(it.serializer.serialize(response))
+                }
             } else {
                 res.send("Template not found")
             }

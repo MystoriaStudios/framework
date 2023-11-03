@@ -7,6 +7,7 @@ import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import com.github.dockerjava.core.DockerClientConfig
+import net.revive.framework.Framework
 import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
@@ -23,7 +24,7 @@ object DeploymentService {
 
     // Eager docker configuration on a locally hosted instance
     private val dockerConfig: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
-        .withDockerHost("tcp://localhost:2376")
+        .withDockerHost("tcp://localhost:2375")
         .build()
 
     val dockerClient: DockerClient = DockerClientBuilder.getInstance(dockerConfig).build()
@@ -51,7 +52,7 @@ object DeploymentService {
                 directory.mkdir()
             }
 
-            directory.listFiles().forEach { file ->
+            directory.listFiles()?.forEach { file ->
                 app.load(
                     JsonConfig("templates/${file.name}"),
                     DeploymentTemplate::class
@@ -79,12 +80,28 @@ object DeploymentService {
     }
 
     fun deploy(template: DeploymentTemplate): InspectContainerResponse {
-        val allocation = AllocationService.take()
+        val log: (String) -> Unit = { msg ->
+            Framework.instance.log("Deployment", msg)
+        }
+        log("Starting deployment of template ${template.templateKey}")
+
+        val allocation = AllocationService.take() ?: throw RuntimeException("No allocation available.")
+        log("Assigned allocation $allocation")
+
+
+        val directory = File(if (template.persisted) "persistent/${template.templateKey}" else "containers/${template.idScheme.replace("%containerId%", "${allocation.port}")}")
+        if (!directory.exists()) directory.mkdirs()
+        log("Created Directory ${directory.name}")
+
+        File("server.jar").copyTo(File(directory, "server.jar"))
+        log("Copied server jar file")
 
         // Create container based on name, port, and image
-        val templateContainer: CreateContainerResponse =
-            dockerClient.createContainerCmd(template.dockerImage)
-                .withName(template.nameScheme)
+        var templateContainer: CreateContainerResponse? = null
+
+        try {
+            templateContainer = dockerClient.createContainerCmd(template.dockerImage)
+                .withName(if (template.persisted) template.templateKey else template.idScheme.replace("%containerId%", "${allocation.port}"))
                 .withIpv4Address(allocation.bindAddress)
                 .withExposedPorts(
                     ExposedPort.tcp(
@@ -92,17 +109,28 @@ object DeploymentService {
                     )
                 )
                 .withWorkingDir(FrameworkApp.useWithReturn {
-                    File(if (template.persisted) "persistent" else "containers").absolutePath
+                    directory.absolutePath
                 })
                 .withCmd(template.startupCommand)
                 .withAttachStderr(false)
                 .withAttachStdin(false)
                 .withAttachStdout(false)
                 .exec()
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+        if (templateContainer != null) {
+            log("Created container with id ${templateContainer.id}")
+        } else {
+            log("Error creating container.")
+            throw RuntimeException()
+        }
 
         // Start container
+        log("Starting container ${templateContainer.id}")
         dockerClient.startContainerCmd(templateContainer.id).exec();
 
+        log("Inspecting container ${templateContainer.id}")
         // Return inspection
         return dockerClient.inspectContainerCmd(templateContainer.id).exec()
     }

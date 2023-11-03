@@ -35,11 +35,11 @@ object AllocationService {
         }
     }
 
-    fun take() : Allocation {
-        return config.allocations.first {
+    fun take() : Allocation? {
+        return config.allocations.firstOrNull {
             it.port !in usedPorts
         }.apply {
-            mark(this.port)
+            this?.let { mark(it.port) }
         }
     }
 
