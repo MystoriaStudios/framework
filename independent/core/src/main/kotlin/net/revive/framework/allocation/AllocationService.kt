@@ -12,6 +12,7 @@ import kotlin.reflect.full.findAnnotation
 @Service
 object AllocationService {
 
+    var usedPorts = mutableListOf<Int>()
     var config = AllocationConfig()
 
     @Configure
@@ -32,5 +33,17 @@ object AllocationService {
         FrameworkApp.use { app ->
             config = app.save(config::class.findAnnotation<JsonConfig>()!!, config)
         }
+    }
+
+    fun take() : Allocation {
+        return config.allocations.first {
+            it.port !in usedPorts
+        }.apply {
+            usedPorts.add(this.port)
+        }
+    }
+
+    fun unmark(port: Int) {
+        usedPorts.remove(port)
     }
 }
