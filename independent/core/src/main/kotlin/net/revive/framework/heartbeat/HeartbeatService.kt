@@ -49,7 +49,7 @@ object HeartbeatService {
                     it.serializer.serialize(
                         Node(
                             FrameworkApp.settingsConfig.id,
-                            "100.110.183.133",
+                            FrameworkApp.settingsConfig.publicAddress,
                             FrameworkApp.settingsConfig.api_key,
                             state ?: FrameworkApp.state,
                             System.currentTimeMillis(),
@@ -60,14 +60,8 @@ object HeartbeatService {
                 )
                 .build()
 
-            it.log("Heartbeat", "Trying to beat heart.")
             it.okHttpClient.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    val responseString = response.body?.string()
-                    // Handle the successful response here
-                    it.log("Heartbeat", "$responseString")
-                } else {
-                    // Handle the error
+                if (!response.isSuccessful) {
                     it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
                 }
             }

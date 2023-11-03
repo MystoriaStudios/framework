@@ -39,8 +39,12 @@ object AllocationService {
         return config.allocations.first {
             it.port !in usedPorts
         }.apply {
-            usedPorts.add(this.port)
+            mark(this.port)
         }
+    }
+
+    fun mark(port: Int) {
+        if (port !in usedPorts) usedPorts.add(port)
     }
 
     fun unmark(port: Int) {

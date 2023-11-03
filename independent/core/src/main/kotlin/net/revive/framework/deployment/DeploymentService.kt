@@ -17,7 +17,6 @@ import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import java.io.File
 
-
 @Service
 object DeploymentService {
 
@@ -28,12 +27,24 @@ object DeploymentService {
 
     val dockerClient: DockerClient = DockerClientBuilder.getInstance(dockerConfig).build()
 
-    private val templates: MutableMap<String, DeploymentTemplate> = mutableMapOf()
+    val templates: MutableMap<String, DeploymentTemplate> = mutableMapOf()
 
     @Configure
     fun configure() {
         FrameworkApp.use { app ->
-            val directory = File(app.getBaseFolder(), "persistent")
+            val tempDirectory = File(app.getBaseFolder(), ".containers")
+
+            if (!tempDirectory.exists()) {
+                tempDirectory.mkdir()
+            }
+
+            val peristDirectory = File(app.getBaseFolder(), "persistent")
+
+            if (!peristDirectory.exists()) {
+                peristDirectory.mkdir()
+            }
+
+            val directory = File(app.getBaseFolder(), "templates")
 
             if (!directory.exists()) {
                 directory.mkdir()
@@ -58,6 +69,9 @@ object DeploymentService {
     @Close
     fun close() {
         templates.values.forEach(DeploymentTemplate::save)
+        FrameworkApp.use { app ->
+            File(app.getBaseFolder(), ".containers").delete()
+        }
     }
 
     fun deploy(template: DeploymentTemplate): InspectContainerResponse {
@@ -73,6 +87,9 @@ object DeploymentService {
                         allocation.port
                     )
                 )
+                .withWorkingDir(FrameworkApp.useWithReturn {
+                    File(it.getBaseFolder(), if (template.persisted) "persistent" else ".containers").absolutePath
+                })
                 .withCmd(template.startupCommand)
                 .withAttachStderr(false)
                 .withAttachStdin(false)

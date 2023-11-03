@@ -6,6 +6,7 @@ import io.kubernetes.client.openapi.models.*
 import io.kubernetes.client.util.ClientBuilder
 import io.kubernetes.client.util.generic.GenericKubernetesApi
 import net.revive.framework.allocation.AllocationRouter
+import net.revive.framework.allocation.AllocationService
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
@@ -62,6 +63,9 @@ object FrameworkApp : IConfigProvider {
             it.flavor = Flavor(this::class, FlavorOptions())
             it.flavor.startup()
 
+            AllocationService.mark(settingsConfig.gRPCPort)
+            AllocationService.mark(settingsConfig.port)
+
             HeartbeatService.beat(Node.State.BOOTING)
 
             sleep(10000)
@@ -70,7 +74,7 @@ object FrameworkApp : IConfigProvider {
             it.log("Framework", "Loaded settings from config")
 
             val port = settingsConfig.port
-            express = Express("0.0.0.0")
+            express = Express(settingsConfig.hostAddress)
             express.listen(port)
 
             express.use(MojangUUIDCacheRouter)

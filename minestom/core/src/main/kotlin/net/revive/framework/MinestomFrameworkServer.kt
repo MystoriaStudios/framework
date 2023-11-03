@@ -99,9 +99,6 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
             }
         }
 
-
-        Tasks.asyncTimer(Duration.ofSeconds(10L), MinestomFramework::updateInstance)
-
         UpdaterService.configure(UpdaterMinestomPlatform)
     }
 
