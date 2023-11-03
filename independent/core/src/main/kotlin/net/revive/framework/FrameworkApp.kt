@@ -5,16 +5,19 @@ import io.kubernetes.client.custom.V1Patch
 import io.kubernetes.client.openapi.models.*
 import io.kubernetes.client.util.ClientBuilder
 import io.kubernetes.client.util.generic.GenericKubernetesApi
+import net.revive.framework.allocation.AllocationRouter
+import net.revive.framework.allocation.AllocationService
 import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.deployment.DeploymentRouter
 import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
+import net.revive.framework.grpc.heartbeat.PodHeartbeatService
 import net.revive.framework.heartbeat.HeartbeatService
-import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
@@ -60,6 +63,9 @@ object FrameworkApp : IConfigProvider {
             it.flavor = Flavor(this::class, FlavorOptions())
             it.flavor.startup()
 
+            AllocationService.mark(settingsConfig.gRPCPort)
+            AllocationService.mark(settingsConfig.port)
+
             HeartbeatService.beat(Node.State.BOOTING)
 
             sleep(10000)
@@ -68,10 +74,12 @@ object FrameworkApp : IConfigProvider {
             it.log("Framework", "Loaded settings from config")
 
             val port = settingsConfig.port
-            express = Express("0.0.0.0")
+            express = Express(settingsConfig.hostAddress)
             express.listen(port)
 
             express.use(MojangUUIDCacheRouter)
+            express.use(AllocationRouter)
+            express.use(DeploymentRouter)
 
 
             express.get("/") { _, res ->
@@ -92,7 +100,7 @@ object FrameworkApp : IConfigProvider {
             }
             express.get("/peak") { req, res ->
                 res.send(it.serializer.serialize(mapOf(
-                    "pods" to emptyList<Instance>(),
+                    "pods" to HeartbeatService.podBeats.values,
                     "assignedMemory" to "4096MB",
                     "usedMemory" to Runtime.getRuntime().totalMemory(),
                     "availableCores" to Runtime.getRuntime().availableProcessors()

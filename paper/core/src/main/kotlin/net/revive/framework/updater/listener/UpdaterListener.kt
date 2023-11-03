@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component
 import net.revive.framework.annotation.Listeners
 import net.revive.framework.constants.Tailwind
 import net.revive.framework.updater.UpdaterService
-import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.utils.buildComponent
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -26,7 +26,7 @@ object UpdaterListener : Listener {
             val start = System.currentTimeMillis()
             val pendingUpdates = mutableListOf<Pair<String, String>>()
 
-            UpdaterConnector
+            JFrogUpdaterConnector
                 .usePendingUpdates { asset, _, name ->
                     pendingUpdates += name to asset.version
                 }

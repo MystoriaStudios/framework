@@ -63,6 +63,9 @@ allprojects {
         implementation("io.sentry:sentry:6.29.0")
         implementation("com.konghq:unirest-java:3.13.6:standalone")
 
+        // Docker
+        implementation("com.github.docker-java:docker-java:3.3.4")
+
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
 

@@ -3,20 +3,24 @@ package net.revive.framework.updater
 import net.revive.framework.updater.authentication.UpdaterAuthenticationService
 import net.revive.framework.updater.discovery.UpdaterDiscoveryService
 import java.io.File
+import java.util.logging.Logger
 
 object UpdaterService {
 
     lateinit var pluginContainer: File
-    lateinit var authentication: UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper
+    lateinit var authentication: UpdaterAuthenticationService.IConnectionAuthenticationWrapper
     lateinit var discoverable: UpdaterDiscoveryService.DiscoverableAssets
+    lateinit var logger: Logger
 
     private lateinit var platform: IUpdaterPlatform
 
     fun configure(platform: IUpdaterPlatform) {
         net.revive.framework.Framework.use {
             this.platform = platform
+            this.logger = it.logger
             platform.configure()
             it.flavor.bind<UpdaterService>() to this
+            it.flavor.bind<IUpdaterPlatform>() to platform
         }
     }
 

@@ -6,7 +6,6 @@ import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import net.revive.framework.node.Node
 import net.revive.framework.node.WrappedPodHeartbeat
-import net.revive.framework.protocol.Heartbeat
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -49,25 +48,18 @@ object HeartbeatService {
                     it.serializer.serialize(
                         Node(
                             FrameworkApp.settingsConfig.id,
-                            "100.110.183.133",
+                            FrameworkApp.settingsConfig.publicAddress,
                             FrameworkApp.settingsConfig.api_key,
                             state ?: FrameworkApp.state,
                             System.currentTimeMillis(),
-                            FrameworkApp.settingsConfig.identifier,
-                            podBeats
+                            FrameworkApp.settingsConfig.identifier
                         )
                     ).toRequestBody("text/json".toMediaType())
                 )
                 .build()
 
-            it.log("Heartbeat", "Trying to beat heart.")
             it.okHttpClient.newCall(request).execute().use { response ->
-                if (response.isSuccessful) {
-                    val responseString = response.body?.string()
-                    // Handle the successful response here
-                    it.log("Heartbeat", "$responseString")
-                } else {
-                    // Handle the error
+                if (!response.isSuccessful) {
                     it.log("Heartbeat Error", "${response.code} - ${response.message}\"")
                 }
             }
