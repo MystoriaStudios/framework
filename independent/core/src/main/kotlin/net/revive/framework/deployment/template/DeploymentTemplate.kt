@@ -18,6 +18,7 @@ data class DeploymentTemplate(
     val nameScheme: String = "example-%containerId%",
     val idScheme: String = "EXP-%containerId%",
     val startupCommand: String = "java -jar server.jar",
+    val dockerImage: String = "ghcr.io/pterodactyl/yolks:java_18",
     val persisted: Boolean = nameScheme.contains("%containerId%"),
 ) {
     fun save() {
