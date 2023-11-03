@@ -6,7 +6,6 @@ import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import net.revive.framework.node.Node
 import net.revive.framework.node.WrappedPodHeartbeat
-import net.revive.framework.protocol.Heartbeat
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
