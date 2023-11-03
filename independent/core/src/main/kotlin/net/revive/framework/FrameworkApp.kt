@@ -17,7 +17,6 @@ import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.grpc.heartbeat.PodHeartbeatService
 import net.revive.framework.heartbeat.HeartbeatService
-import net.revive.framework.instance.Instance
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
