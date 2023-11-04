@@ -10,7 +10,7 @@ object UpdaterNodePlatform : IUpdaterPlatform {
         UpdaterService.pluginContainer = File("modules")
 
         // configuration
-        UpdaterService.authentication = UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper()
+        UpdaterService.authentication = UpdaterAuthenticationService.JFrogConnectionAuthenticationWrapper()
         UpdaterService.discoverable = UpdaterDiscoveryService.DiscoverableAssets()
             .apply {
                 assets += "net.revive.nebula:nebula-independent:Nebula"

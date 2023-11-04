@@ -22,7 +22,7 @@ import net.revive.framework.server.ExtendedMinestomServer
 import net.revive.framework.server.IMinecraftPlatform
 import net.revive.framework.updater.UpdaterMinestomPlatform
 import net.revive.framework.updater.UpdaterService
-import net.revive.framework.updater.connection.UpdaterConnector
+import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.utils.Tasks
 import org.fusesource.jansi.AnsiConsole
 import java.time.Duration
@@ -99,16 +99,13 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
             }
         }
 
-
-        Tasks.asyncTimer(Duration.ofSeconds(10L), MinestomFramework::updateInstance)
-
         UpdaterService.configure(UpdaterMinestomPlatform)
     }
 
     @ContainerDisable
     fun containerDisable() {
         UpdaterService.reload()
-        UpdaterConnector.applyPendingUpdates()
+        JFrogUpdaterConnector.applyPendingUpdates()
         FrameworkObjectControllerCache.closeAll()
     }
 }

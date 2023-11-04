@@ -28,7 +28,7 @@ sentry {
     authToken.set(sentry_auth)
 }
 
-var projectVer = "1.1.1-SNAPSHOT"
+var projectVer = "1.2.0"
 
 ext["grpcVersion"] = "1.57.2"
 ext["grpcKotlinVersion"] = "1.4.0" // CURRENT_GRPC_KOTLIN_VERSION
@@ -62,6 +62,9 @@ allprojects {
         implementation("com.google.code.gson:gson:2.9.0")
         implementation("io.sentry:sentry:6.29.0")
         implementation("com.konghq:unirest-java:3.13.6:standalone")
+
+        // Docker
+        implementation("com.github.docker-java:docker-java:3.3.4")
 
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")

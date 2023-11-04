@@ -14,7 +14,7 @@ object UpdaterPaperPlatform : IUpdaterPlatform {
         )
 
         // configuration
-        UpdaterService.authentication = UpdaterAuthenticationService.MystoriaConnectionAuthenticationWrapper()
+        UpdaterService.authentication = UpdaterAuthenticationService.NexusConnectionAuthenticationWrapper()
         UpdaterService.discoverable = UpdaterDiscoveryService.DiscoverableAssets()
             .apply {
                 assets += "net.revive.framework:paper-core:Framework"

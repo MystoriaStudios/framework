@@ -17,8 +17,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-@Service(priority = 40)
-object UpdaterConnector {
+object JFrogUpdaterConnector {
 
     @Configure
     fun configure() {
@@ -157,7 +156,7 @@ object UpdaterConnector {
     }
 
     fun request(request: String): GetRequest {
-        val wrapper = UpdaterAuthenticationService.getWrapper()
+        val wrapper = UpdaterAuthenticationService.getWrapper() as UpdaterAuthenticationService.JFrogConnectionAuthenticationWrapper
 
         return Unirest.get(request)
             .header("X-JFrog-Art-Api", wrapper.apiKey)
