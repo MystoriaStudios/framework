@@ -12,7 +12,6 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
-import net.revive.framework.config.save
 import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
