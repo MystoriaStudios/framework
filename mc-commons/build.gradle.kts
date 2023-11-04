@@ -4,7 +4,7 @@ dependencies {
     compileOnly("net.kyori:adventure-text-minimessage:4.10.1")
 
     implementation("co.aikar:acf-core:0.5.1-SNAPSHOT")
-    compileOnly(project(":independent:independent-api"))
+    implementation(project(":independent:independent-api"))
 
     implementation("io.grpc:grpc-netty:${rootProject.ext["grpcVersion"]}")
     implementation(project(":independent:protocol-stub"))
