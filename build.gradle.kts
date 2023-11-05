@@ -87,9 +87,6 @@ allprojects {
         relocate("co.aikar.commands", "${project.group}.commands")
         relocate("co.aikar.locales", "${project.group}.locales")
         relocate("co.aikar.locales", "${project.group}.locales")
-        relocate("net.wesjd.anvilgui", "${project.group}.anvil")
-
-        relocate("fr.mrmicky.fastboard", "${project.group}.scoreboard.sidebar")
     }
 
     tasks.withType<DokkaTaskPartial>().configureEach {

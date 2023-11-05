@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
@@ -22,11 +24,11 @@ dependencies {
 
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     // final compilation libraries
-    implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
-    implementation("net.kyori:adventure-text-serializer-gson:4.10.1")
-    implementation("net.kyori:adventure-text-minimessage:4.10.1")
-    implementation("fr.mrmicky:fastboard:2.0.0")
-    implementation("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
+    compileOnly("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
+    compileOnly("net.kyori:adventure-text-serializer-gson:4.10.1")
+    compileOnly("net.kyori:adventure-text-minimessage:4.10.1")
+    compileOnly("fr.mrmicky:fastboard:2.0.0")
+    compileOnly("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
     compileOnly("me.lucko:helper:5.6.10")
     kapt("me.lucko:helper:5.6.10")
 
@@ -44,4 +46,23 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
     implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
     implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+}
+
+val dependsToExclude = listOf(
+    "retrofit",
+    "retrofit2",
+    "reactor",
+    "org",
+    "okio",
+    "okhttp3",
+    "io",
+    "google",
+    "eu",
+    "com"
+)
+
+tasks.named<ShadowJar>("shadowJar") {
+    this.exclude {
+        it.name == ""
+    }
 }
