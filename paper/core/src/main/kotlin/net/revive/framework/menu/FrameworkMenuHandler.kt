@@ -95,7 +95,7 @@ object FrameworkMenuHandler : IMenuHandler {
         val openInventory = bukkitPlayer.openInventory
 
         // check if top inv size is the same as new menu size and if the titles match
-        if (nmsMenuHandler.isSameInventory(inventory, openInventory, menu.getTitle(player))) {
+        if (nmsMenuHandler.isSameInventory(inventory.inventory!!, openInventory, menu.getTitle(player))) {
             openInventory.topInventory.contents = (inventory.inventory as Inventory).contents
             return
         }
