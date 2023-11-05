@@ -87,6 +87,21 @@ allprojects {
         relocate("co.aikar.commands", "${project.group}.commands")
         relocate("co.aikar.locales", "${project.group}.locales")
         relocate("co.aikar.locales", "${project.group}.locales")
+
+        val packagesToExclude = listOf(
+            "retrofit",
+            "retrofit2",
+            "reactor",
+            "org",
+            "okio",
+            "okhttp3",
+            "io",
+            "google",
+            "eu",
+            "com"
+        )
+
+        this.exclude(packagesToExclude)
     }
 
     tasks.withType<DokkaTaskPartial>().configureEach {
