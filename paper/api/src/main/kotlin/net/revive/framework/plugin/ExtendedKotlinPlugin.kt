@@ -221,6 +221,15 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
                     .getPlayer(it.issuer.uniqueId) as PaperFrameworkPlayer
             }
 
+        commandManager
+            .commandContexts
+            .registerIssuerAwareContext(AbstractFrameworkPlayer::class.java) {
+                if (!it.issuer.isPlayer) return@registerIssuerAwareContext null
+
+                return@registerIssuerAwareContext minecraftPlatform
+                    .getPlayer(it.issuer.uniqueId)
+            }
+
 
         var commands = 0
         this.packageIndexer
