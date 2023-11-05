@@ -57,20 +57,26 @@ allprojects {
         implementation(kotlin("stdlib"))
         implementation(kotlin("reflect")) // Add this line
 
-        implementation("org.mongodb:mongo-java-driver:3.12.11")
-        implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
-        implementation("com.google.code.gson:gson:2.9.0")
-        implementation("io.sentry:sentry:6.29.0")
-        implementation("com.konghq:unirest-java:3.13.6:standalone")
+        val dependencies = listOf(
+            "org.mongodb:mongo-java-driver:3.12.11",
+            "io.lettuce:lettuce-core:6.2.4.RELEASE",
+            "com.google.code.gson:gson:2.9.0",
+            "io.sentry:sentry:6.29.0",
+            "com.konghq:unirest-java:3.13.6:standalone",
+            "com.github.docker-java:docker-java:3.3.4",
+            "com.github.robinbraemer:CloudflareAPI:1.4.1",
+            "com.google.guava:guava:31.0.1-jre",
+            "commons-io:commons-io:2.11.0"
+        )
 
-        // Docker
-        implementation("com.github.docker-java:docker-java:3.3.4")
+        dependencies.forEach { dep ->
+            if (this@allprojects.name.contains("paper") || project.name.contains("core")) {
+                compileOnly(dep)
+            } else {
+                implementation(dep)
+            }
+        }
 
-        // Cloudflare
-        implementation("com.github.robinbraemer:CloudflareAPI:1.4.1")
-
-        implementation("com.google.guava:guava:31.0.1-jre")
-        implementation("commons-io:commons-io:2.11.0")
 
         testImplementation(kotlin("test"))
 
