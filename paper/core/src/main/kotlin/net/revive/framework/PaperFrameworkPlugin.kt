@@ -136,7 +136,7 @@ import java.util.concurrent.TimeUnit
 @MavenLibrary(
     "io.lettuce",
     "lettuce-core",
-    "6.2.4-RELEASE"
+    "6.2.4.RELEASE"
 )
 @MavenLibrary(
     "com.google.code.gson",
