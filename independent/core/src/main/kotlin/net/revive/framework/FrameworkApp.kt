@@ -1,10 +1,6 @@
 package net.revive.framework
 
 import express.Express
-import io.kubernetes.client.custom.V1Patch
-import io.kubernetes.client.openapi.models.*
-import io.kubernetes.client.util.ClientBuilder
-import io.kubernetes.client.util.generic.GenericKubernetesApi
 import net.revive.framework.allocation.AllocationRouter
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.annotation.container.ContainerEnable
@@ -12,26 +8,20 @@ import net.revive.framework.cache.MojangUUIDCacheRouter
 import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.config.save
 import net.revive.framework.deployment.DeploymentRouter
 import net.revive.framework.deployment.DeploymentService
-import net.revive.framework.grpc.FrameworkGRPCServer
+import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions
-import net.revive.framework.grpc.heartbeat.PodHeartbeatService
+import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.heartbeat.HeartbeatService
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.lang.Thread.sleep
-import java.net.Inet4Address
 import java.util.*
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 import kotlin.reflect.full.findAnnotation
 
 fun main(args: Array<String>) {
@@ -45,7 +35,6 @@ object FrameworkApp : IConfigProvider {
     fun use(lambda: (FrameworkApp) -> Unit) = lambda.invoke(this)
     fun <T> useWithReturn(lambda: (FrameworkApp) -> T) = lambda.invoke(this)
 
-    var state = Node.State.SETUP
     lateinit var loader: FrameworkNodeModuleLoader
     lateinit var express: Express
     lateinit var settingsConfig: FrameworkNodePlatform
@@ -69,7 +58,7 @@ object FrameworkApp : IConfigProvider {
 
             HeartbeatService.beat(Node.State.BOOTING)
 
-            sleep(10000)
+            sleep(3000)
 
             it.configure(settingsConfig)
             it.log("Framework", "Loaded settings from config")
@@ -89,13 +78,14 @@ object FrameworkApp : IConfigProvider {
             }
 
             express.use { req, res ->
-                res.setHeader("Access-Control-Allow-Origin", "*")
+                res.setHeader("Access-Control-Allow-Origin", "*") // TODO: WHEEN MOVING TO FULL PROD CHASNGE THIS TO https://framework-portal.veercel.app or wtvr we depeloymenet it too i think not suree
             }
 
             express.post("/setup/:key") { req, res ->
                 val key = req.getParam("key")
 
-                state = Node.State.ONLINE
+                settingsConfig.runningState = Node.State.ONLINE
+                save(settingsConfig::class.findAnnotation<JsonConfig>()!!, settingsConfig)
 
                 res.redirect("https://framework-portal.vercel.app/dashboard/nodes/${key}")
             }
@@ -134,15 +124,13 @@ object FrameworkApp : IConfigProvider {
         }
         Framework.instance.log("Framework", "Finished loading modules")
 
-
-        Framework.instance.log("Heartbeat", "Starting the node heartbeat.")
-
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 Framework.use {
+                    // SSAFELY LCOSES EALL THE EFUCKING DEEPLOYMEENTSS
+                    HeartbeatService.beat(Node.State.OFFLINE)
                     it.flavor.close()
                     FrameworkGRPCServer.server.shutdownNow()
-                    HeartbeatService.beat(Node.State.OFFLINE)
                 }
             }
         })

@@ -76,6 +76,8 @@ object DeploymentService {
                 }
             }
         }
+
+        deploy(templates.values.first())
     }
 
     fun initializeGlobalDirectory(target: File? = null) {
@@ -88,9 +90,10 @@ object DeploymentService {
         if (target != null) {
             if (target.exists() && target.isDirectory) {
                 globalDirectory.listFiles()?.forEach {
-                    it.copyRecursively(target, true)
+                    it.copyRecursively(File(target, it.name), true)
+                } ?: {
+                    log("Copied all global files into runtime.")
                 }
-                log("Copied all global files into runtime.")
             }
         }
     }
@@ -110,8 +113,12 @@ object DeploymentService {
         log("Assigned allocation $allocation")
 
         val directory = File(if (template.persisted) "persistent/${template.templateKey}" else "containers/${template.idScheme.replace("%containerId%", "${allocation.port}")}")
+        if (!directory.exists()) {
+            directory.mkdirs()
+            if (!template.persisted) directory.deleteOnExit()
+        }
 
-        if (!directory.exists() && template.directory.copyRecursively(directory, true)) {
+        if (directory.exists() && template.directory.copyRecursively(directory, true)) {
             log("Copied Template Directory")
             val cacheDirectory = File("cache")
             val jarFileName = template.serverExecutableOrigin.substringAfterLast("/")
@@ -144,6 +151,8 @@ object DeploymentService {
             initializeGlobalDirectory(directory)
 
             log("Parsing Template for environment startup.")
+
+
 
             log("Parsing environment type startup.")
             // implement an environemnt check to see if there on what ever seerveer typee andd then do thee files accordingly mhjm

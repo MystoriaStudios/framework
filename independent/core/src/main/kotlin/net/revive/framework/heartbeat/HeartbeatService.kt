@@ -50,7 +50,7 @@ object HeartbeatService {
                             FrameworkApp.settingsConfig.id,
                             FrameworkApp.settingsConfig.publicAddress,
                             FrameworkApp.settingsConfig.api_key,
-                            state ?: FrameworkApp.state,
+                            state ?: FrameworkApp.settingsConfig.runningState,
                             System.currentTimeMillis(),
                             FrameworkApp.settingsConfig.identifier
                         )
