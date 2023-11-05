@@ -8,6 +8,7 @@ data class MarketplaceShowcaseData(
     override val identifier: UUID,
     var displayName: String,
     var purchases: Int,
+    var supportedPlatforms: MutableList<String> = mutableListOf(),
     var price: Double, // Price in USD
 ) : IStorable {
 }
