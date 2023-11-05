@@ -1,6 +1,7 @@
 package net.revive.framework.command
 
 import co.aikar.commands.CommandManager
+import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
@@ -20,13 +21,6 @@ object FrameworkCommandCustomizer {
     @Configure
     fun configure()
     {
-        commandManager
-            .commandContexts
-            .registerIssuerAwareContext(FrameworkSender::class.java) {
-                return@registerIssuerAwareContext minecraftPlatform
-                    .getPlayer(it.issuer.uniqueId)
-            }
-
         commandManager.setDefaultHelpPerPage(6)
     }
 }
