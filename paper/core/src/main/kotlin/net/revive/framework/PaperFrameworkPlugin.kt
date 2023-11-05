@@ -28,6 +28,8 @@ import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.PaperFrameworkItemStack
 import net.revive.framework.item.PaperItemStackProvider
+import net.revive.framework.maven.MavenLibrary
+import net.revive.framework.maven.Repository
 import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.nms.NMSVersion
@@ -65,6 +67,32 @@ import java.util.concurrent.TimeUnit
     ]
 )
 @HelperImplementationPlugin
+@MavenLibrary(
+    "net.wesjd",
+    "anvilgui",
+    "1.9.0-SNAPSHOT",
+    Repository("https://repo.codemc.io/repository/maven-snapshots/")
+)
+@MavenLibrary(
+    "net.kyori",
+    "adventure-text-serializer-gson",
+    "4.10.1",
+)
+@MavenLibrary(
+    "net.kyori",
+    "adventure-text-minimessage",
+    "4.10.1"
+)
+@MavenLibrary(
+    "fr.mrmicky",
+    "fastboard",
+    "2.0.0"
+)
+@MavenLibrary(
+    "com.github.cryptomorin",
+    "XSeries",
+    "9.5.0"
+)
 class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     companion object {

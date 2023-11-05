@@ -6,6 +6,7 @@ import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.PaperFrameworkPlayer
 import net.revive.framework.server.IMinecraftPlatform
 import org.bukkit.Bukkit
+import java.io.File
 import java.util.*
 
 object PaperMinecraftPlatform : IMinecraftPlatform {
@@ -31,5 +32,11 @@ object PaperMinecraftPlatform : IMinecraftPlatform {
 
     override fun getPlayerCount(): Int {
         return Bukkit.getOnlinePlayers().size
+    }
+
+    override fun getDataFolder(): File {
+        return Bukkit.getPluginManager()
+            .getPlugin("Framework")!!
+            .dataFolder
     }
 }

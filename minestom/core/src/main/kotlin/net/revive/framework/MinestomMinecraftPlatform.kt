@@ -4,6 +4,7 @@ import net.minestom.server.MinecraftServer
 import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.MinestomFrameworkPlayer
 import net.revive.framework.server.IMinecraftPlatform
+import java.io.File
 import java.util.*
 
 object MinestomMinecraftPlatform : IMinecraftPlatform {
@@ -34,6 +35,10 @@ object MinestomMinecraftPlatform : IMinecraftPlatform {
     }
 
     override fun getPlayerCount(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun getDataFolder(): File {
         TODO("Not yet implemented")
     }
 
