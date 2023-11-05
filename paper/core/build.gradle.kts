@@ -61,7 +61,7 @@ val dependsToExclude = listOf(
     "com"
 )
 
-tasks.named<ShadowJar>("shadowJar") {
+tasks.withType<ShadowJar> {
     dependsToExclude.forEach {
         this.exclude(it)
     }
