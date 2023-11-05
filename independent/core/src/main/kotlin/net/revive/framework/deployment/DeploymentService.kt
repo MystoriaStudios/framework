@@ -22,10 +22,14 @@ import java.io.FileOutputStream
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.Properties
 
 @Service
 object DeploymentService {
 
+    val log: (String) -> Unit = { msg ->
+        Framework.instance.log("Deployment", msg)
+    }
     private val dockerConfig: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
         .withDockerHost("tcp://localhost:2375")
         .build()
@@ -49,6 +53,13 @@ object DeploymentService {
                 directory.mkdir()
             }
 
+            val global = File("global")
+            if (!global.exists()) {
+                initializeGlobalDirectory()
+
+                File(global, "eula.txt").writeText("eula=true")
+            }
+
             directory.listFiles().filter(File::isDirectory).forEach {
                 app.load(
                     JsonConfig("templates/${it.name}/template.json"),
@@ -67,17 +78,19 @@ object DeploymentService {
         }
     }
 
-    fun initializeGlobalDirectory() {
-        FrameworkApp.use { app ->
-            val globalDirectory = File("global")
-            if (!globalDirectory.exists()) {
-                globalDirectory.mkdir()
-            }
-            for (template in templates.values) {
-                val templateDirectory = File("templates/${template.templateKey}")
-                if (templateDirectory.exists() && templateDirectory.isDirectory) {
-                    templateDirectory.copyRecursively(File(globalDirectory, template.templateKey), true)
+    fun initializeGlobalDirectory(target: File? = null) {
+        val globalDirectory = File("global")
+        if (!globalDirectory.exists()) {
+            globalDirectory.mkdir()
+            log("Created global directory for templates.")
+        }
+
+        if (target != null) {
+            if (target.exists() && target.isDirectory) {
+                globalDirectory.listFiles()?.forEach {
+                    it.copyRecursively(target, true)
                 }
+                log("Copied all global files into runtime.")
             }
         }
     }
@@ -91,9 +104,6 @@ object DeploymentService {
     }
 
     fun deploy(template: DeploymentTemplate): InspectContainerResponse? {
-        val log: (String) -> Unit = { msg ->
-            Framework.instance.log("Deployment", msg)
-        }
         log("Starting deployment of template ${template.templateKey}")
 
         val allocation = AllocationService.take() ?: throw RuntimeException("No allocation available.")
@@ -131,7 +141,25 @@ object DeploymentService {
 
                 Files.copy(cachedJarFile.toPath(), File(directory, jarFileName).toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
-            initializeGlobalDirectory()
+            initializeGlobalDirectory(directory)
+
+            log("Parsing Template for environment startup.")
+
+            log("Parsing environment type startup.")
+            // implement an environemnt check to see if there on what ever seerveer typee andd then do thee files accordingly mhjm
+            File(directory, "server.properties").apply {
+                log("Setting up server.properties.")
+                val properties = Properties()
+                if (this.exists()) properties.load(this.inputStream())
+
+                properties.setProperty("host", allocation.bindAddress)
+                properties.setProperty("port", allocation.port.toString())
+                properties.store(this.outputStream(), null)
+            }
+
+
+            log("Finished Parsing Template proceeding to contact Docker.")
+
             var templateContainer: CreateContainerResponse? = null
 
             try {

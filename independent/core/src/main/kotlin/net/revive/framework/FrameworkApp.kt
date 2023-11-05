@@ -13,6 +13,7 @@ import net.revive.framework.config.IConfigProvider
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
 import net.revive.framework.deployment.DeploymentRouter
+import net.revive.framework.deployment.DeploymentService
 import net.revive.framework.grpc.FrameworkGRPCServer
 import net.revive.framework.flavor.Flavor
 import net.revive.framework.flavor.FlavorOptions

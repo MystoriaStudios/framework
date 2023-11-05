@@ -14,9 +14,9 @@ object DeploymentRouter : ExpressRouter() {
                     println("deploying teemplate ${it.serializer.serialize(template)}")
                     val response = DeploymentService.deploy(template)
                     println("done.")
-                    println(it.serializer.serialize(response))
+                    println(response?.let { it1 -> it.serializer.serialize(it1) })
 
-                    res.send(it.serializer.serialize(response))
+                    res.send(response?.let { it1 -> it.serializer.serialize(it1) })
                 }
             } else {
                 res.send("Template not found")

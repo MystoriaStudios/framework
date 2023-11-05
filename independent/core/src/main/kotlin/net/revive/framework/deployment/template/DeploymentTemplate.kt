@@ -5,6 +5,7 @@ import net.revive.framework.FrameworkNodePlatform
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
 import net.revive.framework.config.save
+import net.revive.framework.metadata.IMetaDataHolder
 import java.io.File
 
 /**
@@ -22,7 +23,9 @@ data class DeploymentTemplate(
     val startupCommand: String = "java -Xms4096M -Xmx4096M --add-modules=jdk.incubator.vector -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -Dterminal.ansi=true -jar %originJar%", // THISS WILL BEE T HE STARTUP COMMAND MAKEE SUREE TO INCLUDEE %originJar% OR U WILL F UCK UP THEE DOWNLOADDEEEEEERRRR
     val dockerImage: String = "bellsoft/liberica-openjdk-alpine:11.0.18", // THIS WILL BEE THE JAVA VERSION!
     val persisted: Boolean = !nameScheme.contains("%containerId%"),
-) {
+    override val metaData: MutableMap<String, String> = mutableMapOf()
+
+) : IMetaDataHolder {
     @Transient val directory = File(FrameworkApp.getBaseFolder(), "templates/$templateKey")
 
     fun save() {
