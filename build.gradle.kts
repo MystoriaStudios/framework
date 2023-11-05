@@ -66,6 +66,9 @@ allprojects {
         // Docker
         implementation("com.github.docker-java:docker-java:3.3.4")
 
+        // Cloudflare
+        implementation("com.github.robinbraemer:CloudflareAPI:1.4.1")
+
         implementation("com.google.guava:guava:31.0.1-jre")
         implementation("commons-io:commons-io:2.11.0")
 
