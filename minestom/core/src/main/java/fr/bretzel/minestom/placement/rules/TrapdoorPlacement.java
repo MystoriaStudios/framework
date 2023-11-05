@@ -40,11 +40,9 @@ public class TrapdoorPlacement extends PlacementRule {
         } else {
             var hit = placementState.cursorPosition();
 
-            if (hit != null) {
-                var y = hit.y() - ((int) hit.y());
+            var y = hit.y() - ((int) hit.y());
 
-                blockState.set((y >= 0.45) ? Half.TOP : Half.BOTTOM);
-            }
+            blockState.set((y >= 0.45) ? Half.TOP : Half.BOTTOM);
         }
 
         if (facing.getAxis().isHorizontal())

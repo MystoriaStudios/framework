@@ -77,8 +77,10 @@ object MavenLibraryLoader {
     }
 
     private val libFolder: File
-        private get() {
-            val pluginDataFolder: File = minecraftPlatform.getDataFolder()
+        get() {
+            val pluginDataFolder: File = File("libs").also {
+                if (!it.exists()) it.mkdirs()
+            }
             val pluginsDir = pluginDataFolder.parentFile
             val helperDir = File(pluginsDir, "Framework")
             val libs = File(helperDir, "libraries")
