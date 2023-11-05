@@ -9,10 +9,21 @@ repositories {
 
 dependencies {
     // local project includes
-    implementation(project(":independent:independent-api"))
-    implementation(project(":paper:paper-api"))
-    implementation(project(":minecraft-platform"))
-    implementation(project(":independent:protocol-stub"))
+    implementation(project(":independent:independent-api")) {
+        isTransitive = false
+    }
+
+    implementation(project(":paper:paper-api")) {
+        isTransitive = false
+    }
+
+    implementation(project(":minecraft-platform")) {
+        isTransitive = false
+    }
+
+    implementation(project(":independent:protocol-stub")) {
+        isTransitive = false
+    }
 
     // reference libraries
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
