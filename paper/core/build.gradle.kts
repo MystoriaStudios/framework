@@ -44,17 +44,31 @@ dependencies {
     kapt("me.lucko:helper:5.6.10")
 
     // NMS Stuff
-    implementation(project(":paper:nms:nms-core"))
-    implementation(project(":paper:nms:nms-v1_20_R1", "reobf"))
-    implementation(project(":paper:nms:nms-v1_19_R4", "reobf"))
-    implementation(project(":paper:nms:nms-v1_18_R2", "reobf"))
-    implementation(project(":paper:nms:nms-v1_17_R1", "reobf"))
+    implementation(project(":paper:nms:nms-core")) {
+        isTransitive = false
+    }
+    implementation(project(":paper:nms:nms-v1_20_R1", "reobf")) {
+        isTransitive = false
+    }
+    implementation(project(":paper:nms:nms-v1_19_R4", "reobf")) {
+        isTransitive = false
+    }
+    implementation(project(":paper:nms:nms-v1_18_R2", "reobf")) {
+        isTransitive = false
+    }
+    implementation(project(":paper:nms:nms-v1_17_R1", "reobf")) {
+        isTransitive = false
+    }
 
     //These don't use deobf because Official Mojang Mappings didn't exist for these.
-    implementation(project(":paper:nms:nms-v1_12_R2"))
-    implementation(project(":paper:nms:nms-v1_8_R8"))
+    implementation(project(":paper:nms:nms-v1_12_R2")) {
+        isTransitive = false
+    }
+    implementation(project(":paper:nms:nms-v1_8_R8")) {
+        isTransitive = false
+    }
 
-    implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
-    implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
-    implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+    compileOnly("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
+    compileOnly("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
+    compileOnly("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 }
