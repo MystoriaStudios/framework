@@ -24,7 +24,7 @@ dependencies {
 
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     // final compilation libraries
-    compileOnly("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
+    implementation("net.wesjd:anvilgui:1.9.0-SNAPSHOT")
     compileOnly("net.kyori:adventure-text-serializer-gson:4.10.1")
     compileOnly("net.kyori:adventure-text-minimessage:4.10.1")
     compileOnly("fr.mrmicky:fastboard:2.0.0")

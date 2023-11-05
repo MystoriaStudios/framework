@@ -68,12 +68,6 @@ import java.util.concurrent.TimeUnit
 )
 @HelperImplementationPlugin
 @MavenLibrary(
-    "net.wesjd",
-    "anvilgui",
-    "1.9.0-SNAPSHOT",
-    Repository("https://repo.codemc.io/repository/maven-snapshots/")
-)
-@MavenLibrary(
     "net.kyori",
     "adventure-text-serializer-gson",
     "4.10.1",
