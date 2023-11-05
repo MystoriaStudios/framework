@@ -20,11 +20,12 @@ import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 @Service
 object DeploymentService {
 
-    // Eager docker configuration on a locally hosted instance
     private val dockerConfig: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
         .withDockerHost("tcp://localhost:2375")
         .build()
@@ -36,16 +37,10 @@ object DeploymentService {
     @Configure
     fun configure() {
         FrameworkApp.use { app ->
-            val tempDirectory = File("containers")
+            val cacheDirectory = File("cache")
 
-            if (!tempDirectory.exists()) {
-                tempDirectory.mkdir()
-            }
-
-            val peristDirectory = File("persistent")
-
-            if (!peristDirectory.exists()) {
-                peristDirectory.mkdir()
+            if (!cacheDirectory.exists()) {
+                cacheDirectory.mkdir()
             }
 
             val directory = File(app.getBaseFolder(), "templates")
@@ -70,7 +65,6 @@ object DeploymentService {
                 }
             }
         }
-
     }
 
     @Close
@@ -90,32 +84,38 @@ object DeploymentService {
         val allocation = AllocationService.take() ?: throw RuntimeException("No allocation available.")
         log("Assigned allocation $allocation")
 
-
         val directory = File(if (template.persisted) "persistent/${template.templateKey}" else "containers/${template.idScheme.replace("%containerId%", "${allocation.port}")}")
+
         if (!directory.exists() && template.directory.copyRecursively(directory, true)) {
             log("Copied Template Directory")
+            val cacheDirectory = File("cache")
+            val jarFileName = template.serverExecutableOrigin.substringAfterLast("/")
+            val cachedJarFile = File(cacheDirectory, jarFileName)
 
-            // todo make local cache for server jars to copy from if downloaded once already in the node cache folder mhm @98Ping sirr yees do that
-            val url = URL(template.serverExecutableOrigin)
-            val connection = url.openConnection()
-            connection.connect()
+            if (cachedJarFile.exists()) {
+                Files.copy(cachedJarFile.toPath(), File(directory, jarFileName).toPath(), StandardCopyOption.REPLACE_EXISTING)
+                log("Using cached server jar from $cacheDirectory")
+            } else {
+                val url = URL(template.serverExecutableOrigin)
+                val connection = url.openConnection()
+                connection.connect()
 
-            val inputStream = BufferedInputStream(url.openStream())
-            val fileOutput = FileOutputStream(directory)
+                val inputStream = BufferedInputStream(url.openStream())
+                val fileOutput = FileOutputStream(cachedJarFile)
 
-            val buffer = ByteArray(1024)
-            var bytesRead: Int
+                val buffer = ByteArray(1024)
+                var bytesRead: Int
 
-            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                fileOutput.write(buffer, 0, bytesRead)
+                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                    fileOutput.write(buffer, 0, bytesRead)
+                }
+
+                fileOutput.close()
+                inputStream.close()
+                log("Downloaded server jar file to cache")
+
+                Files.copy(cachedJarFile.toPath(), File(directory, jarFileName).toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
-
-            fileOutput.close()
-            inputStream.close()
-            log("Downloaded server jar file")
-
-            val splitOrigin = template.serverExecutableOrigin.split("/")
-            var jarFile = splitOrigin[splitOrigin.size - 1]
 
             var templateContainer: CreateContainerResponse? = null
 
@@ -131,8 +131,7 @@ object DeploymentService {
                     .withWorkingDir(FrameworkApp.useWithReturn {
                         directory.absolutePath
                     })
-
-                    .withCmd(template.startupCommand.replace("%originJar%", jarFile))
+                    .withCmd(template.startupCommand.replace("%originJar%", jarFileName))
                     .withAttachStderr(false)
                     .withAttachStdin(false)
                     .withAttachStdout(false)
@@ -147,15 +146,13 @@ object DeploymentService {
                 throw RuntimeException()
             }
 
-            // Start container
             log("Starting container ${templateContainer.id}")
-            dockerClient.startContainerCmd(templateContainer.id).exec();
+            dockerClient.startContainerCmd(templateContainer.id).exec()
 
             log("Inspecting container ${templateContainer.id}")
-            // Return inspection
             return dockerClient.inspectContainerCmd(templateContainer.id).exec()
         } else {
-            // smt is vewy bad mhm, need force kill fr.
+            // Handle the case where the directory exists already
         }
 
         return null
