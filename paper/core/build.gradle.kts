@@ -47,24 +47,3 @@ dependencies {
     implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
     implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 }
-
-val packagesToExclude = listOf(
-    "retrofit",
-    "retrofit2",
-    "reactor",
-    "org",
-    "okio",
-    "okhttp3",
-    "io",
-    "google",
-    "eu",
-    "com"
-)
-
-tasks.withType<ShadowJar> {
-    dependencies {
-        packagesToExclude.forEach { packageName ->
-            exclude("$packageName.**")
-        }
-    }
-}
