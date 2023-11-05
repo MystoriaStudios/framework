@@ -70,7 +70,7 @@ allprojects {
         )
 
         dependencies.forEach { dep ->
-            if (this@allprojects.name.contains("paper") || project.name.contains("core")) {
+            if (project.name.contains("paper-core")) {
                 compileOnly(dep)
             } else {
                 implementation(dep)
