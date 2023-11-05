@@ -67,6 +67,21 @@ object DeploymentService {
         }
     }
 
+    fun initializeGlobalDirectory() {
+        FrameworkApp.use { app ->
+            val globalDirectory = File("global")
+            if (!globalDirectory.exists()) {
+                globalDirectory.mkdir()
+            }
+            for (template in templates.values) {
+                val templateDirectory = File("templates/${template.templateKey}")
+                if (templateDirectory.exists() && templateDirectory.isDirectory) {
+                    templateDirectory.copyRecursively(File(globalDirectory, template.templateKey), true)
+                }
+            }
+        }
+    }
+
     @Close
     fun close() {
         templates.values.forEach(DeploymentTemplate::save)
@@ -116,7 +131,7 @@ object DeploymentService {
 
                 Files.copy(cachedJarFile.toPath(), File(directory, jarFileName).toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
-
+            initializeGlobalDirectory()
             var templateContainer: CreateContainerResponse? = null
 
             try {
