@@ -66,7 +66,14 @@ public class Linux extends HWInfo {
 
     @Override
     public long getSystemMemoryUsed() {
-        //TODO
-        return 0;
+        long totalMemory = getSystemMaxMemory();
+        long freeMemory = getSystemFreeMemory();
+
+        if (totalMemory > 0 && freeMemory >= 0) {
+            long usedMemory = totalMemory - freeMemory;
+            return usedMemory;
+        } else {
+            return -1;
+        }
     }
 }
