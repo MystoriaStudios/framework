@@ -99,9 +99,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             Bukkit.shutdown()
             return
         }
-
         MavenLibraryLoader.loadAll(this::class.java)
-
         this.flavor =
             Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
         this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this.classLoader))

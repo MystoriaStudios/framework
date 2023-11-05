@@ -56,32 +56,14 @@ object MavenLibraryLoader {
     }
 
     fun load(d: Dependency) {
-        Framework.use {
-            it.log("Maven Downloader",
-                String.format(
-                    "Loading dependency %s:%s:%s from %s",
-                    d.groupId,
-                    d.artifactId,
-                    d.version,
-                    d.repoUrl
-                )
-            )
-        }
         val name = d.artifactId + "-" + d.version
         val saveLocation = File(libFolder, "$name.jar")
         if (!saveLocation.exists()) {
             try {
-                Framework.use {
-                    it.log("Maven Downloader", "Dependency '$name' is not already in the libraries folder. Attempting to download...")
-                }
                 val url = d.url
                 url.openStream().use { `is` -> Files.copy(`is`, saveLocation.toPath()) }
             } catch (e: Exception) {
                 e.printStackTrace()
-            }
-
-            Framework.use {
-                it.log("Maven Downloader", "Dependency '$name' successfully downloaded.")
             }
         }
         if (!saveLocation.exists()) {
@@ -91,10 +73,6 @@ object MavenLibraryLoader {
             URL_INJECTOR.get().addURL(saveLocation.toURI().toURL())
         } catch (e: Exception) {
             throw RuntimeException("Unable to load dependency: $saveLocation", e)
-        }
-
-        Framework.use {
-            it.log("Maven Downloader", "Loaded dependency '$name' successfully.")
         }
     }
 
