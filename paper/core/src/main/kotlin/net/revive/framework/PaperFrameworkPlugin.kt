@@ -155,8 +155,9 @@ import java.util.concurrent.TimeUnit
 )
 @MavenLibrary(
     "com.github.robinbraemer",
-    "CloudflareAPI",
-    "1.4.1"
+    "cloudflareapi",
+    "1.4.1",
+    Repository("https://jitpack.io")
 )
 @MavenLibrary(
     "com.google.guava",
