@@ -21,10 +21,12 @@ object FrameworkCommandCustomizer {
     fun configure()
     {
         commandManager
-            .getCommandContexts()
+            .commandContexts
             .registerIssuerAwareContext(FrameworkSender::class.java) {
                 return@registerIssuerAwareContext minecraftPlatform
                     .getPlayer(it.issuer.uniqueId)
             }
+
+        commandManager.setDefaultHelpPerPage(6)
     }
 }

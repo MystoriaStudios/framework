@@ -1,5 +1,6 @@
 package net.revive.framework
 
+import co.aikar.commands.CommandManager
 import com.google.common.base.Stopwatch
 import me.lucko.helper.Events
 import me.lucko.helper.internal.HelperImplementationPlugin
@@ -17,6 +18,7 @@ import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.cache.PaperLocalUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCache
+import net.revive.framework.command.FrameworkCommandManager
 import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler

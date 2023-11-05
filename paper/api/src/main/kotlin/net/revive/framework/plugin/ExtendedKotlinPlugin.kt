@@ -2,6 +2,7 @@ package net.revive.framework.plugin
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.BukkitCommandManager
+import co.aikar.commands.CommandManager
 import co.aikar.commands.PaperCommandManager
 import me.lucko.helper.plugin.ExtendedJavaPlugin
 import net.revive.framework.annotation.Listeners
@@ -194,6 +195,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
 
         flavor {
             bind<FrameworkCommandManager>() to commandManager
+            bind<CommandManager<*, *, *, *, *, *>>() to commandManager
             bind<BukkitCommandManager>() to commandManager
             bind<PaperCommandManager>() to commandManager
         }
