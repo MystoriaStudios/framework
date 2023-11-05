@@ -11,6 +11,7 @@ import net.revive.framework.annotation.container.ContainerEnable
 import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.console.Console
 import net.revive.framework.controller.FrameworkObjectControllerCache
+import net.revive.framework.grpc.FrameworkGRPCClient
 import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.MinestomFrameworkItemStack
@@ -88,7 +89,11 @@ object MinestomFrameworkServer : ExtendedMinestomServer() {
             framework.flavor.bind<IItemStackProvider<*>>() to itemStackProvider
             framework.flavor.bind<IItemStackProvider<FrameworkItemStack>>() to itemStackProvider
             framework.flavor.bind<IItemStackProvider<MinestomFrameworkItemStack>>() to itemStackProvider
+            framework.flavor.inject(FrameworkGRPCClient)
         }
+
+
+        FrameworkGRPCClient.configure()
 
         // state tasks for minestom
         Tasks.asyncTimer(Duration.ofSeconds(1L)) {

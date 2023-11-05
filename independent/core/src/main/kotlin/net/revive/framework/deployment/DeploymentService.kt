@@ -16,7 +16,10 @@ import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 
 @Service
 object DeploymentService {
@@ -51,9 +54,9 @@ object DeploymentService {
                 directory.mkdir()
             }
 
-            directory.listFiles()?.forEach { file ->
+            directory.listFiles().filter(File::isDirectory).forEach {
                 app.load(
-                    JsonConfig("templates/${file.name}"),
+                    JsonConfig("templates/${it.name}/template.json"),
                     DeploymentTemplate::class
                 ).apply {
                     val template = this as DeploymentTemplate
@@ -78,7 +81,7 @@ object DeploymentService {
         }
     }
 
-    fun deploy(template: DeploymentTemplate): InspectContainerResponse {
+    fun deploy(template: DeploymentTemplate): InspectContainerResponse? {
         val log: (String) -> Unit = { msg ->
             Framework.instance.log("Deployment", msg)
         }
@@ -89,48 +92,72 @@ object DeploymentService {
 
 
         val directory = File(if (template.persisted) "persistent/${template.templateKey}" else "containers/${template.idScheme.replace("%containerId%", "${allocation.port}")}")
-        if (!directory.exists()) directory.mkdirs()
-        log("Created Directory ${directory.name}")
+        if (!directory.exists() && template.directory.copyRecursively(directory, true)) {
+            log("Copied Template Directory")
 
-        File("server.jar").copyTo(File(directory, "server.jar"))
-        log("Copied server jar file")
+            // todo make local cache for server jars to copy from if downloaded once already in the node cache folder mhm @98Ping sirr yees do that
+            val url = URL(template.serverExecutableOrigin)
+            val connection = url.openConnection()
+            connection.connect()
 
-        // Create container based on name, port, and image
-        var templateContainer: CreateContainerResponse? = null
+            val inputStream = BufferedInputStream(url.openStream())
+            val fileOutput = FileOutputStream(directory)
 
-        try {
-            templateContainer = dockerClient.createContainerCmd(template.dockerImage)
-                .withName(if (template.persisted) template.templateKey else template.idScheme.replace("%containerId%", "${allocation.port}"))
-                .withIpv4Address(allocation.bindAddress)
-                .withExposedPorts(
-                    ExposedPort.tcp(
-                        allocation.port
+            val buffer = ByteArray(1024)
+            var bytesRead: Int
+
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                fileOutput.write(buffer, 0, bytesRead)
+            }
+
+            fileOutput.close()
+            inputStream.close()
+            log("Downloaded server jar file")
+
+            val splitOrigin = template.serverExecutableOrigin.split("/")
+            var jarFile = splitOrigin[splitOrigin.size - 1]
+
+            var templateContainer: CreateContainerResponse? = null
+
+            try {
+                templateContainer = dockerClient.createContainerCmd(template.dockerImage)
+                    .withName(if (template.persisted) template.templateKey else template.idScheme.replace("%containerId%", "${allocation.port}"))
+                    .withIpv4Address(allocation.bindAddress)
+                    .withExposedPorts(
+                        ExposedPort.tcp(
+                            allocation.port
+                        )
                     )
-                )
-                .withWorkingDir(FrameworkApp.useWithReturn {
-                    directory.absolutePath
-                })
-                .withCmd(template.startupCommand)
-                .withAttachStderr(false)
-                .withAttachStdin(false)
-                .withAttachStdout(false)
-                .exec()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-        if (templateContainer != null) {
-            log("Created container with id ${templateContainer.id}")
+                    .withWorkingDir(FrameworkApp.useWithReturn {
+                        directory.absolutePath
+                    })
+
+                    .withCmd(template.startupCommand.replace("%originJar%", jarFile))
+                    .withAttachStderr(false)
+                    .withAttachStdin(false)
+                    .withAttachStdout(false)
+                    .exec()
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+            if (templateContainer != null) {
+                log("Created container with id ${templateContainer.id}")
+            } else {
+                log("Error creating container.")
+                throw RuntimeException()
+            }
+
+            // Start container
+            log("Starting container ${templateContainer.id}")
+            dockerClient.startContainerCmd(templateContainer.id).exec();
+
+            log("Inspecting container ${templateContainer.id}")
+            // Return inspection
+            return dockerClient.inspectContainerCmd(templateContainer.id).exec()
         } else {
-            log("Error creating container.")
-            throw RuntimeException()
+            // smt is vewy bad mhm, need force kill fr.
         }
 
-        // Start container
-        log("Starting container ${templateContainer.id}")
-        dockerClient.startContainerCmd(templateContainer.id).exec();
-
-        log("Inspecting container ${templateContainer.id}")
-        // Return inspection
-        return dockerClient.inspectContainerCmd(templateContainer.id).exec()
+        return null
     }
 }

@@ -3,6 +3,7 @@ package net.revive.framework.command
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.ConditionFailedException
 import co.aikar.commands.annotation.*
+import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
@@ -103,6 +104,11 @@ object FrameworkTestCommand : FrameworkCommand() {
     @Subcommand("test-menu")
     fun testMenu(player: Player) {
         player.pvc.openMenu(TestMenu())
+    }
+
+    @Subcommand("asf")
+    fun msg(player: Player) {
+
     }
 
     @Subcommand("test-menu-color")
