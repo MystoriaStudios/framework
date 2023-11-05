@@ -48,7 +48,7 @@ dependencies {
     implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
 }
 
-val dependsToExclude = listOf(
+val packagesToExclude = listOf(
     "retrofit",
     "retrofit2",
     "reactor",
@@ -62,7 +62,9 @@ val dependsToExclude = listOf(
 )
 
 tasks.withType<ShadowJar> {
-    dependsToExclude.forEach {
-        this.exclude(it)
+    dependencies {
+        packagesToExclude.forEach { packageName ->
+            exclude("$packageName.**")
+        }
     }
 }
