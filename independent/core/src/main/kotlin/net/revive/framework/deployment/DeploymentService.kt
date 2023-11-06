@@ -12,10 +12,13 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.deployment.cloudflare.CloudflareCredentialService
+import net.revive.framework.deployment.cloudflare.CloudflareRequestController
 import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
+import org.apache.http.conn.HttpHostConnectException
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -34,6 +37,8 @@ object DeploymentService {
         .withDockerHost("tcp://localhost:2375")
         .build()
 
+    lateinit var cloudflareController: CloudflareRequestController
+
     val dockerClient: DockerClient = DockerClientBuilder.getInstance(dockerConfig).build()
 
     val templates: MutableMap<String, DeploymentTemplate> = mutableMapOf()
@@ -41,8 +46,25 @@ object DeploymentService {
     @Configure
     fun configure() {
         FrameworkApp.use { app ->
-            val cacheDirectory = File("cache")
+            if (app.settingsConfig.cloudflare_token.isNotEmpty()) {
+                CloudflareCredentialService.withToken(app.settingsConfig.cloudflare_token)
+                cloudflareController = CloudflareCredentialService.requestController
+                log("Initializing cloudflare connections")
 
+                cloudflareController.listZones().forEach {
+                    log("Found zone with name ${it.name}")
+                    log("FOUND RECORDS:")
+                    cloudflareController.listDNSRecords(it.name).forEach { record ->
+                        log(Framework.useWithReturn {
+                            it.serializer.serialize(record)
+                        })
+                    }
+                }
+            }
+
+
+            val cacheDirectory = File("cache")
+2
             if (!cacheDirectory.exists()) {
                 cacheDirectory.mkdir()
             }
@@ -77,7 +99,11 @@ object DeploymentService {
             }
         }
 
-        deploy(templates.values.first())
+        runCatching {
+            deploy(templates.values.first())
+        }.onFailure {
+            log("There was an error connecting to your docker instance are you sure you have configured it correctly?")
+        }
     }
 
     fun initializeGlobalDirectory(target: File? = null) {

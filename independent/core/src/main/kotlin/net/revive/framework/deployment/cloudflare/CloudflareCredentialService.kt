@@ -11,14 +11,12 @@ object CloudflareCredentialService {
         cloudflareAccess = CloudflareAccess(
             apiKey,
             email
-        ).apply {
-            requestController = CloudflareRequestController(cloudflareAccess)
-        }
+        )
+        requestController = CloudflareRequestController(cloudflareAccess)
     }
 
     fun withToken(token: String) {
-        cloudflareAccess = CloudflareAccess(token).apply {
-            requestController = CloudflareRequestController(cloudflareAccess)
-        }
+        cloudflareAccess = CloudflareAccess(token)
+        requestController = CloudflareRequestController(cloudflareAccess)
     }
 }

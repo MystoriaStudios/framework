@@ -13,6 +13,7 @@ class FrameworkNodePlatform(
     val port: Int = 8080,
     val gRPCPort: Int = 8070,
     var api_key: String = "org_2XQOxNamtty4AnwFGyepkxOdq7F",
+    var cloudflare_token: String = "32u0WEcQZDAMms1kUMBWnludsMiFglt-Bp_jeFsi",
     val identifier: UUID = UUID.randomUUID(),
     var runningState: Node.State = Node.State.SETUP
 ) : IFrameworkPlatform
