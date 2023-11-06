@@ -70,8 +70,7 @@ allprojects {
         )
 
         dependencies.forEach { dep ->
-            println("DOING DEPENDS FOR ${name}")
-            if (name.contains("paper") && name.contains("core")) {
+            if (name.contains("paper-core")) {
                 compileOnly(dep)
             } else {
                 implementation(dep)
