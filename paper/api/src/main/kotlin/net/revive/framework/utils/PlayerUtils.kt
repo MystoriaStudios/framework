@@ -5,4 +5,4 @@ import net.revive.framework.sender.PaperFrameworkPlayer
 import org.bukkit.entity.Player
 
 val Player.pvc: FrameworkPlayer
-    get() = PaperFrameworkPlayer(this)
+    get() = PaperFrameworkPlayer(this) // TODO: this may be mem leaking :nerd:

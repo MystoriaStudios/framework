@@ -28,7 +28,7 @@ sentry {
     authToken.set(sentry_auth)
 }
 
-var projectVer = "1.2.1"
+var projectVer = "1.2.2"
 
 ext["grpcVersion"] = "1.57.2"
 ext["grpcKotlinVersion"] = "1.4.0" // CURRENT_GRPC_KOTLIN_VERSION

@@ -3,7 +3,6 @@ package net.revive.framework.command
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.ConditionFailedException
 import co.aikar.commands.annotation.*
-import net.kyori.adventure.chat.ChatType
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.Style
 import net.kyori.adventure.text.format.TextColor
@@ -18,8 +17,6 @@ import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.openMenuTemplate
 import net.revive.framework.menu.template.MenuTemplateService
 import net.revive.framework.menu.test.TestMenu
-import net.revive.framework.scoreboard.IScoreboard
-import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.pvc
 import org.bukkit.Bukkit

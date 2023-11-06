@@ -33,10 +33,7 @@ import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.MenuService.minecraftPlatform
 import net.revive.framework.message.FrameworkMessageHandler
 import net.revive.framework.plugin.event.KotlinPluginEnableEvent
-import net.revive.framework.scoreboard.IScoreboard
-import net.revive.framework.scoreboard.ScoreboardService
 import net.revive.framework.sender.AbstractFrameworkPlayer
-import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.sender.FrameworkSender
 import net.revive.framework.sender.PaperFrameworkPlayer
 import net.revive.framework.sentry.SentryService

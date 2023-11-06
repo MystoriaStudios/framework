@@ -5,6 +5,7 @@ import me.lucko.helper.Events
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import net.revive.framework.utils.Tasks
+import net.revive.framework.utils.pvc
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
@@ -53,10 +54,10 @@ object ScoreboardService {
         } ?: return
 
         val scoreboard = playerScoreboards.getOrDefault(player.uniqueId, primaryScoreboard) ?: return
-        if (!scoreboard.shouldDisplay(player)) return
+        if (!scoreboard.shouldDisplay(player.pvc)) return
 
-        board.updateTitle(scoreboard.getTitle(player))
-        board.updateLines(scoreboard.getScores(player))
+        board.updateTitle(scoreboard.getTitle(player.pvc))
+        board.updateLines(scoreboard.getScores(player.pvc))
     }
 
     fun apply(player: Player, scoreboard: IScoreboard) {
