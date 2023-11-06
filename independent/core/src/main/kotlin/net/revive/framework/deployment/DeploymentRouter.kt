@@ -37,7 +37,7 @@ object DeploymentRouter : ExpressRouter() {
 
         get("/deployment/templates") { req, res ->
             res.send(Framework.useWithReturn {
-                it.serializer.serialize(DeploymentService.templates)
+                it.serializer.serialize(DeploymentService.templates.values)
             })
         }
     }
