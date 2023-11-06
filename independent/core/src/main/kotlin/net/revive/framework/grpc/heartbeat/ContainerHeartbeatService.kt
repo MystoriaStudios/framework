@@ -9,11 +9,11 @@ import net.revive.framework.protocol.Heartbeat
 import net.revive.framework.protocol.HeartbeatServiceGrpcKt
 
 @GRPCService
-object PodHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCoroutineImplBase() {
+object ContainerHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCoroutineImplBase() {
 
     override suspend fun beat(request: Heartbeat): Empty {
         Framework.use {
-            it.log("Pod Heartbeat Service", "Received Heartbeat from pod: ${request.container}, state: ${request.state}")
+            it.log("Pod Heartbeat Service", "Received Heartbeat from container: ${request.container}, state: ${request.state}")
         }
 
         HeartbeatService.podBeats[request.container] = WrappedContainerHeartbeat(

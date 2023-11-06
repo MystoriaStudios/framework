@@ -16,6 +16,7 @@ dependencies {
     implementation("io.grpc:grpc-protobuf:${rootProject.ext["grpcVersion"]}")
     implementation("com.google.protobuf:protobuf-java-util:${rootProject.ext["protobufVersion"]}")
     implementation("io.grpc:grpc-kotlin-stub:${rootProject.ext["grpcKotlinVersion"]}")
+    implementation("com.rabbitmq:amqp-client:5.14.0")
     implementation(project(":independent:protocol-stub"))
 
     implementation("io.kubernetes:client-java-api:15.0.1")

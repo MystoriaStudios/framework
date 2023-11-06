@@ -1,7 +1,6 @@
 package net.revive.framework.grpc
 
 import io.grpc.BindableService
-import io.grpc.ManagedChannelBuilder
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import net.revive.framework.Framework
@@ -9,7 +8,7 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import net.revive.framework.grpc.annotation.GRPCService
-import net.revive.framework.grpc.heartbeat.PodHeartbeatService
+import net.revive.framework.grpc.heartbeat.ContainerHeartbeatService
 import net.revive.framework.utils.objectInstance
 
 @Service
@@ -22,7 +21,7 @@ object FrameworkGRPCServer {
     {
         server = ServerBuilder
             .forPort(FrameworkApp.settingsConfig.gRPCPort)
-            .addService(PodHeartbeatService)
+            .addService(ContainerHeartbeatService)
             .apply {
                 Framework.use {
                     it.flavor.reflections
