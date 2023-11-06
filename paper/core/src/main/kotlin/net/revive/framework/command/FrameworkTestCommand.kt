@@ -17,6 +17,9 @@ import net.revive.framework.menu.openMenu
 import net.revive.framework.menu.openMenuTemplate
 import net.revive.framework.menu.template.MenuTemplateService
 import net.revive.framework.menu.test.TestMenu
+import net.revive.framework.scoreboard.IScoreboard
+import net.revive.framework.scoreboard.ScoreboardService
+import net.revive.framework.sender.FrameworkPlayer
 import net.revive.framework.utils.buildComponent
 import net.revive.framework.utils.pvc
 import org.bukkit.Bukkit
@@ -71,7 +74,7 @@ object FrameworkTestCommand : FrameworkCommand() {
         if (scoreboardService.primaryScoreboard != null) throw RuntimeException("There is already a primary scoreboard provider.")
 
         scoreboardService.updatePrimaryProvider(object : IScoreboard {
-            override fun getTitle(player: Player): Component {
+            override fun getTitle(player: FrameworkPlayer): Component {
                 return Component
                     .text(Deployment.SERVER_NAME)
                     .style(
@@ -81,7 +84,7 @@ object FrameworkTestCommand : FrameworkCommand() {
                     )
             }
 
-            override fun getScores(player: Player): List<Component> {
+            override fun getScores(player: FrameworkPlayer): List<Component> {
                 return listOf(
                     Component.empty(),
                     Component.text("this is a test of").color(TextColor.fromHexString(Tailwind.GRAY_100)),
