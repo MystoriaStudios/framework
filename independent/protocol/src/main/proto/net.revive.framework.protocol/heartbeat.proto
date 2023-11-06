@@ -14,8 +14,8 @@ service HeartbeatService {
 }
 
 message Heartbeat {
-  string pod = 1;
-  PodState state = 2;
+  string container = 1;
+  ContainerState state = 2;
   double tps = 3;
   double mspt = 4;
   double cpuUsage = 5;

@@ -1,6 +1,6 @@
 package net.revive.framework.node
 
-data class WrappedPodHeartbeat(
+data class WrappedContainerHeartbeat(
     val pod: String,
     val state: State,
     val tps: Double,

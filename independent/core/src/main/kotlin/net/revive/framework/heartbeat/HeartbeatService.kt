@@ -5,7 +5,7 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.flavor.service.Configure
 import net.revive.framework.flavor.service.Service
 import net.revive.framework.node.Node
-import net.revive.framework.node.WrappedPodHeartbeat
+import net.revive.framework.node.WrappedContainerHeartbeat
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 object HeartbeatService {
 
     val heartbeat: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-    val podBeats: MutableMap<String, WrappedPodHeartbeat> = mutableMapOf()
+    val podBeats: MutableMap<String, WrappedContainerHeartbeat> = mutableMapOf()
 
     @Configure
     fun configure()

@@ -21,8 +21,8 @@ data class DeploymentTemplate(
     val templateKey: String = "example",
     val nameScheme: String = "example-%containerId%",
     val idScheme: String = "example-%containerId%",
-    val serverExecutableOrigin: String = "https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/278/downloads/paper-1.20.2-278.jar",
-    val startupCommand: String = """
+    var serverExecutableOrigin: String = "https://api.papermc.io/v2/projects/paper/versions/1.20.2/builds/278/downloads/paper-1.20.2-278.jar",
+    var startupCommand: String = """
         java -Xms4096M -Xmx4096M --add-modules=jdk.incubator.vector
         -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200
         -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch
@@ -33,7 +33,7 @@ data class DeploymentTemplate(
         -Daikars.new.flags=true -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40
         -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -Dterminal.ansi=true -jar %originJar%
     """.trimIndent(),
-    val dockerImage: String = "bellsoft/liberica-openjdk-alpine:11.0.18",
+    var dockerImage: String = "bellsoft/liberica-openjdk-alpine:11.0.18",
     val persisted: Boolean = !nameScheme.contains("%containerId%"),
     override val metaData: MutableMap<String, String> = mutableMapOf()
 ) : IMetaDataHolder {

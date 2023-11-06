@@ -7,14 +7,10 @@ import net.revive.framework.IFrameworkPlatform
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
-import net.revive.framework.flavor.service.Service
-import net.revive.framework.protocol.Empty
-import net.revive.framework.protocol.Heartbeat
-import net.revive.framework.protocol.HeartbeatServiceGrpc
-import net.revive.framework.protocol.PodState
+import net.revive.framework.protocol.*
 import net.revive.framework.server.IMinecraftPlatform
 
-object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
+object ContainerHeartbeatThread : Thread("Framework-Container Health Reporter") {
 
     @Inject
     lateinit var minecraftPlatform: IMinecraftPlatform
@@ -33,7 +29,7 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
     fun configure() {
         sendHeartbeat(
             generateHeartbeat(
-                PodState.BOOTING
+                ContainerState.STARTING
             )
         )
     }
@@ -42,7 +38,7 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
     fun close() {
         sendHeartbeat(
             generateHeartbeat(
-                PodState.OFFLINE
+                ContainerState.STOPPING
             )
         )
     }
@@ -64,10 +60,10 @@ object PodHeartbeatThread : Thread("Framework-Pod Health Reporter") {
         heartbeatService.beat(heartbeat, EMPTY_RESPONSE_OBSERVER)
     }
 
-    fun generateHeartbeat(state: PodState = PodState.ONLINE): Heartbeat {
+    fun generateHeartbeat(state: ContainerState = ContainerState.RUNNING): Heartbeat {
         return Heartbeat
             .newBuilder()
-            .setPod(platform.id)
+            .setContainer(platform.id)
             .setState(state)
             .setTps(0.00)
             .setMspt(0.00)

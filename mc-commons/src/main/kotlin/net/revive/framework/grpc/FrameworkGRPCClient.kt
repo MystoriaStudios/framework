@@ -4,8 +4,7 @@ import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import net.revive.framework.Framework
 import net.revive.framework.flavor.annotation.Inject
-import net.revive.framework.flavor.service.Configure
-import net.revive.framework.grpc.health.PodHeartbeatThread
+import net.revive.framework.grpc.health.ContainerHeartbeatThread
 import net.revive.framework.server.IMinecraftPlatform
 
 object FrameworkGRPCClient {
@@ -25,10 +24,10 @@ object FrameworkGRPCClient {
 
         Framework.use {
             it.flavor.bind<ManagedChannel>() to client
-            it.flavor.inject(PodHeartbeatThread)
+            it.flavor.inject(ContainerHeartbeatThread)
         }
 
-        PodHeartbeatThread.apply {
+        ContainerHeartbeatThread.apply {
             Framework.use {
                 start()
             }

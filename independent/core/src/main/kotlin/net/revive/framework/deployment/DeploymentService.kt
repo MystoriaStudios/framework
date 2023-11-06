@@ -14,6 +14,7 @@ import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
 import net.revive.framework.deployment.cloudflare.CloudflareCredentialService
 import net.revive.framework.deployment.cloudflare.CloudflareRequestController
+import net.revive.framework.deployment.docker.WrappedDockerContainer
 import net.revive.framework.deployment.template.DeploymentTemplate
 import net.revive.framework.flavor.service.Close
 import net.revive.framework.flavor.service.Configure
@@ -42,6 +43,7 @@ object DeploymentService {
     val dockerClient: DockerClient = DockerClientBuilder.getInstance(dockerConfig).build()
 
     val templates: MutableMap<String, DeploymentTemplate> = mutableMapOf()
+    val containers: MutableMap<String, WrappedDockerContainer> = mutableMapOf()
 
     @Configure
     fun configure() {
@@ -226,6 +228,12 @@ object DeploymentService {
 
             log("Starting container ${templateContainer.id}")
             dockerClient.startContainerCmd(templateContainer.id).exec()
+
+            containers[templateContainer.id] = WrappedDockerContainer(
+                template,
+                templateContainer,
+                allocation
+            )
 
             log("Inspecting container ${templateContainer.id}")
             return dockerClient.inspectContainerCmd(templateContainer.id).exec()
