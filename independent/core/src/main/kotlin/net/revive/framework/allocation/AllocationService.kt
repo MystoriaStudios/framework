@@ -25,6 +25,11 @@ object AllocationService {
             } catch (_: Exception) {
                 app.save<AllocationConfig>(annotation, config)
             }
+            config.allocations = config.allocations.map {
+                it.apply {
+                    state = Allocation.State.FREE
+                }
+            }.toMutableList()
         }
     }
 

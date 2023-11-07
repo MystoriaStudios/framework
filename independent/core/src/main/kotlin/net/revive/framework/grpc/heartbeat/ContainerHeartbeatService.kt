@@ -1,6 +1,7 @@
 package net.revive.framework.grpc.heartbeat
 
 import net.revive.framework.Framework
+import net.revive.framework.deployment.DeploymentService
 import net.revive.framework.grpc.annotation.GRPCService
 import net.revive.framework.heartbeat.HeartbeatService
 import net.revive.framework.node.WrappedContainerHeartbeat
@@ -16,7 +17,7 @@ object ContainerHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCorout
             it.log("Pod Heartbeat Service", "Received Heartbeat from container: ${request.container}, state: ${request.state}")
         }
 
-        HeartbeatService.podBeats[request.container] = WrappedContainerHeartbeat(
+        WrappedContainerHeartbeat(
             request.container,
             WrappedContainerHeartbeat.State.valueOf(request.state.name),
             request.tps,
@@ -24,7 +25,15 @@ object ContainerHeartbeatService : HeartbeatServiceGrpcKt.HeartbeatServiceCorout
             request.cpuUsage,
             request.playersConnected,
             request.timestamp
-        )
+        ).also {
+            HeartbeatService.podBeats[request.container] = it
+            DeploymentService.containers[request.container].apply {
+                if (this != null) {
+                    heartbeat = it
+                }
+            }
+        }
+
 
         return Empty.getDefaultInstance()
     }

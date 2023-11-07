@@ -1,13 +1,17 @@
 package net.revive.framework.deployment
 
 import com.github.dockerjava.api.DockerClient
+import com.github.dockerjava.api.command.BuildImageCmd
+import com.github.dockerjava.api.command.BuildImageResultCallback
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse
+import com.github.dockerjava.api.command.InspectImageResponse
 import com.github.dockerjava.api.model.ExposedPort
 import com.github.dockerjava.api.model.Volume
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import com.github.dockerjava.core.DockerClientConfig
+import com.github.dockerjava.core.exec.BuildImageCmdExec
 import net.revive.framework.Framework
 import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
@@ -36,7 +40,9 @@ object DeploymentService {
         Framework.instance.log("Deployment", msg)
     }
     private val dockerConfig: DockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
-        .withDockerHost("tcp://localhost:2375")
+        .withDockerHost(File("docker.host").apply {
+            if (!this.exists()) this.writeText("tcp://localhost:2375")
+        }.readText())
         .build()
 
     lateinit var cloudflareController: CloudflareRequestController
@@ -108,6 +114,7 @@ object DeploymentService {
             }?.let { log(it) }
         }.onFailure {
             log("There was an error connecting to your docker instance are you sure you have configured it correctly?")
+            log(it.message ?: it::class.simpleName ?: "Please contact support with the error codee #TEMPLATE-NO-THROWABLE-FAILURE")
         }
     }
 
@@ -197,15 +204,31 @@ object DeploymentService {
 
             File(directory, "start.sh").apply {
                 log("Setting up startup script")
-                this.writeText(template.startupCommand.replace("%originJar%", jarFileName))
+                this.writeText(template.startupCommand.replace("%originJar%", File(directory, jarFileName).name))
             }
-
             log("Finished Parsing Template proceeding to contact Docker.")
+
+            val image: BuildImageResultCallback = dockerClient.buildImageCmd(File(directory, "Dockerfile").apply {
+                log("Building bootable server image")
+                this.writeText("""
+                    FROM ${template.dockerImage}
+                    WORKDIR ${directory.absolutePath}
+                    COPY . .
+                    RUN chmod +x start.sh
+                    CMD ./start.sh
+                    EXPOSE ${allocation.port}
+                """.trimIndent()
+                )
+            }).start()
+            log("Fetching dynamic image id.")
+
+            val imageId = image.awaitImageId()
+            log("Loaded image id $imageId")
 
             var templateContainer: CreateContainerResponse? = null
 
             try {
-                templateContainer = dockerClient.createContainerCmd(template.dockerImage)
+                templateContainer = dockerClient.createContainerCmd(imageId)
                     .withName(if (template.persisted) template.templateKey else template.idScheme.replace("%containerId%", "${allocation.port}"))
                     .withIpv4Address(allocation.bindAddress)
                     .withExposedPorts(
@@ -213,13 +236,9 @@ object DeploymentService {
                             allocation.port
                         )
                     )
-                    .withWorkingDir(FrameworkApp.useWithReturn {
-                        directory.absolutePath
-                    })
                     .withVolumes(Volume(
                         directory.absolutePath
                     ))
-                    .withCmd(".${File(directory, "start.sh").absolutePath}")
                     .withAttachStderr(false)
                     .withAttachStdin(false)
                     .withAttachStdout(false)

@@ -91,7 +91,9 @@ object FrameworkApp : IConfigProvider {
             }
             express.get("/peak") { req, res ->
                 res.send(it.serializer.serialize(mapOf(
-                    "pods" to HeartbeatService.podBeats.values,
+                    "containers" to DeploymentService.containers.size,
+                    "templates" to DeploymentService.templates.size,
+                    "modules" to modules.size,
                     "assignedMemory" to "4096MB",
                     "usedMemory" to Runtime.getRuntime().totalMemory(),
                     "availableCores" to Runtime.getRuntime().availableProcessors()
