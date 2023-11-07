@@ -219,7 +219,7 @@ object DeploymentService {
                     .withVolumes(Volume(
                         directory.absolutePath
                     ))
-                    .withCmd("bash ${File(directory, "start.sh").absolutePath}")
+                    .withCmd(".${File(directory, "start.sh").absolutePath}")
                     .withAttachStderr(false)
                     .withAttachStdin(false)
                     .withAttachStdout(false)
