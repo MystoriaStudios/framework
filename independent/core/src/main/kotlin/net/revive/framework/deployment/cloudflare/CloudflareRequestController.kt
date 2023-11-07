@@ -1,19 +1,30 @@
 package net.revive.framework.deployment.cloudflare
 
+import com.google.gson.JsonObject
 import eu.roboflax.cloudflare.CloudflareAccess
-import eu.roboflax.cloudflare.CloudflareCallback
 import eu.roboflax.cloudflare.CloudflareRequest
-import eu.roboflax.cloudflare.CloudflareResponse
 import eu.roboflax.cloudflare.constants.Category
 import eu.roboflax.cloudflare.http.HttpMethod
 import eu.roboflax.cloudflare.objects.dns.DNSRecord
 import eu.roboflax.cloudflare.objects.zone.Zone
 import net.revive.framework.Framework
-import net.revive.framework.deployment.DeploymentService
+import net.revive.framework.FrameworkApp
 
 class CloudflareRequestController(
     private val cfAccess: CloudflareAccess
 ) {
+    private val backingZoneTracker: MutableMap<String, Zone> = mutableMapOf()
+
+    init {
+        propegateZonesIntoTracker()
+    }
+
+    fun propegateZonesIntoTracker() {
+        listZones().forEach {
+            backingZoneTracker[it.name] = it
+        }
+    }
+
     fun listZones() : List<Zone> {
         val request = CloudflareRequest(
             Category.LIST_ZONES,
@@ -29,10 +40,46 @@ class CloudflareRequestController(
         }
     }
 
-    fun listDNSRecords(zoneName: String) : List<DNSRecord> {
-        val target = listZones().firstOrNull {
+    fun createZone(accountId: String, name: String, type: String) : Zone? {
+        val requestObject = JsonObject().apply {
+            this.addProperty("name", name)
+            this.addProperty("type", type)
+
+            val accountObject = JsonObject().also {
+                it.addProperty("id", accountId)
+            }
+
+            this.addProperty("account", Framework.useWithReturn {
+                it.serializer.serialize(accountObject)
+            })
+        }
+        
+        val request = CloudflareRequest(
+            Category.CREATE_ZONE,
+            cfAccess
+        ).body(
+            Framework.useWithReturn {
+                it.serializer.serialize(requestObject)
+            }
+        ).asObject(
+            Zone::class.java
+        )
+
+        return if (request.isSuccessful) {
+            request.`object`
+        } else {
+            null
+        }
+    }
+
+    fun getZoneByName(zoneName: String) : Zone? {
+        return backingZoneTracker[zoneName] ?: listZones().firstOrNull {
             it.name.equals(zoneName, true)
-        } ?: return emptyList()
+        }
+    }
+
+    fun listDNSRecords(zoneName: String) : List<DNSRecord> {
+        val target = getZoneByName(zoneName) ?: return emptyList()
 
         val request = CloudflareRequest(
             HttpMethod.GET,
@@ -62,9 +109,7 @@ class CloudflareRequestController(
     }
 
     fun createDNSRecord(zoneName: String, record: DNSRecord) : DNSRecord? {
-        val target = listZones().firstOrNull {
-            it.name.equals(zoneName, true)
-        } ?: return null
+        val target = getZoneByName(zoneName) ?: return null
 
         val request = CloudflareRequest(
             HttpMethod.POST,
