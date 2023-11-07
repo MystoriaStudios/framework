@@ -4,6 +4,7 @@ import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.InspectContainerResponse
 import com.github.dockerjava.api.model.ExposedPort
+import com.github.dockerjava.api.model.Volume
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import com.github.dockerjava.core.DockerClientConfig
@@ -102,7 +103,9 @@ object DeploymentService {
         }
 
         runCatching {
-            deploy(templates.values.first())
+            Framework.useWithReturn {
+                deploy(templates.values.first())?.let { it1 -> it.serializer.serialize(it1) }
+            }?.let { log(it) }
         }.onFailure {
             log("There was an error connecting to your docker instance are you sure you have configured it correctly?")
         }
@@ -180,8 +183,6 @@ object DeploymentService {
 
             log("Parsing Template for environment startup.")
 
-
-
             log("Parsing environment type startup.")
             // implement an environemnt check to see if there on what ever seerveer typee andd then do thee files accordingly mhjm
             File(directory, "server.properties").apply {
@@ -194,6 +195,10 @@ object DeploymentService {
                 properties.store(this.outputStream(), null)
             }
 
+            File(directory, "start.sh").apply {
+                log("Setting up startup script")
+                this.writeText(template.startupCommand.replace("%originJar%", jarFileName))
+            }
 
             log("Finished Parsing Template proceeding to contact Docker.")
 
@@ -211,7 +216,10 @@ object DeploymentService {
                     .withWorkingDir(FrameworkApp.useWithReturn {
                         directory.absolutePath
                     })
-                    .withCmd(template.startupCommand.replace("%originJar%", jarFileName))
+                    .withVolumes(Volume(
+                        directory.absolutePath
+                    ))
+                    .withCmd("bash ${File(directory, "start.sh").absolutePath}")
                     .withAttachStderr(false)
                     .withAttachStdin(false)
                     .withAttachStdout(false)

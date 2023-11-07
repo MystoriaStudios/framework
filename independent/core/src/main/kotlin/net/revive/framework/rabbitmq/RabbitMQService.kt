@@ -9,7 +9,7 @@ import net.revive.framework.rabbitmq.consumer.IRabbitMQCacheConsumer
 import net.revive.framework.utils.objectInstance
 import java.nio.charset.Charset
 
-@Service
+//@Service
 object RabbitMQService {
 
     lateinit var connection: Connection
