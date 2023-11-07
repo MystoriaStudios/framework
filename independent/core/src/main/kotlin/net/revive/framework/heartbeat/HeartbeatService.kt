@@ -25,7 +25,7 @@ object HeartbeatService {
         Framework.instance.log("Heartbeat", "Starting the node heartbeat.")
 
         heartbeat.scheduleAtFixedRate({
-              beat()
+            beat()
         }, 0, 5, TimeUnit.SECONDS)
     }
 

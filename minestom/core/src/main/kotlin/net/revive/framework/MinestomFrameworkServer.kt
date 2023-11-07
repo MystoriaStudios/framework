@@ -1,5 +1,6 @@
 package net.revive.framework
 
+import com.google.common.primitives.Ints
 import fr.bretzel.minestom.placement.BlockPlacementManager
 import net.hollowcube.minestom.extensions.ExtensionBootstrap
 import net.kyori.adventure.text.Component
@@ -26,7 +27,9 @@ import net.revive.framework.updater.UpdaterService
 import net.revive.framework.updater.connection.JFrogUpdaterConnector
 import net.revive.framework.utils.Tasks
 import org.fusesource.jansi.AnsiConsole
+import java.io.File
 import java.time.Duration
+import java.util.Properties
 import kotlin.concurrent.thread
 
 fun main() {
@@ -49,7 +52,20 @@ fun main() {
     System.setProperty("minestom.chunk-view-distance", 8.toString())
     System.setProperty("minestom.entity-view-distance", 8.toString())
 
-    server.start("0.0.0.0", 25565)
+    File("server.properties").apply {
+        if (this.exists()) {
+            val properties = Properties()
+            properties.load(this.bufferedReader())
+
+            server.start(
+                properties.getProperty("server-host") ?: "0.0.0.0",
+                Ints.tryParse(properties.getProperty("server-port")) ?: 25565
+            )
+        } else {
+            server.start("0.0.0.0", 25565)
+        }
+    }
+
 
     MinestomFrameworkServer.terminalThread = thread(start = true, isDaemon = true, name = "FrameworkConsole") {
         Console.start()

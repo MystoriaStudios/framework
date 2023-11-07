@@ -190,8 +190,8 @@ object DeploymentService {
                 val properties = Properties()
                 if (this.exists()) properties.load(this.inputStream())
 
-                properties.setProperty("host", allocation.bindAddress)
-                properties.setProperty("port", allocation.port.toString())
+                properties.setProperty("server-ip", allocation.bindAddress)
+                properties.setProperty("server-port", allocation.port.toString())
                 properties.store(this.outputStream(), null)
             }
 
