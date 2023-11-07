@@ -53,7 +53,7 @@ class CloudflareRequestController(
                 it.serializer.serialize(accountObject)
             })
         }
-        
+
         val request = CloudflareRequest(
             Category.CREATE_ZONE,
             cfAccess
