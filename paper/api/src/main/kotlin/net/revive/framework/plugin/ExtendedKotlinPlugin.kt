@@ -55,6 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.FileNotFoundException
 import java.util.logging.Level
 import java.util.logging.Logger
+import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.hasAnnotation
 
 /**
@@ -126,6 +127,17 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             .forEach {
                 kotlin.runCatching {
                     it.invoke(this)
+                }.onFailure { throwable ->
+                    logger.log(Level.WARNING, "Failed to enable container part!", throwable)
+                }
+            }
+
+        this::class.declaredFunctions
+            .filter {
+                it.hasAnnotation<ContainerPreEnable>()
+            }.forEach {
+                kotlin.runCatching {
+                    it.call()
                 }.onFailure { throwable ->
                     logger.log(Level.WARNING, "Failed to enable container part!", throwable)
                 }

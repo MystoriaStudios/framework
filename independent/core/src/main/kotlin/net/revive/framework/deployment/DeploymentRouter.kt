@@ -2,6 +2,10 @@ package net.revive.framework.deployment
 
 import express.ExpressRouter
 import net.revive.framework.Framework
+import org.apache.http.client.entity.UrlEncodedFormEntity
+import java.net.URLDecoder
+import java.net.URLEncoder
+import javax.sound.sampled.AudioFormat.Encoding
 
 object DeploymentRouter : ExpressRouter() {
 
@@ -35,15 +39,13 @@ object DeploymentRouter : ExpressRouter() {
             }
         }
 
-
-
         post("/deployment/template/:template") { req, res ->
             val template = DeploymentService.templates[req.getParam("template")]
 
             if (template != null) {
-                template.serverExecutableOrigin = req.getFormQuery("serverExecutableOrigin")
-                template.startupCommand = req.getFormQuery("startupCommand")
-                template.dockerImage = req.getFormQuery("dockerImage")
+                template.serverExecutableOrigin = URLDecoder.decode(req.getFormQuery("serverExecutableOrigin"), "UTF-8")
+                template.startupCommand = URLDecoder.decode(req.getFormQuery("startupCommand"), "UTF-8")
+                template.dockerImage = URLDecoder.decode(req.getFormQuery("dockerImage"), "UTF-8")
 
                 res.send(Framework.useWithReturn {
                     it.serializer.serialize(template)
