@@ -2,6 +2,9 @@ package net.revive.framework.deployment
 
 import express.ExpressRouter
 import net.revive.framework.Framework
+import net.revive.framework.allocation.Allocation
+import net.revive.framework.allocation.AllocationService
+import net.revive.framework.deployment.docker.DockerContainerController
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -22,6 +25,22 @@ object DeploymentRouter : ExpressRouter() {
 
                     res.send(response?.let { it1 -> it.serializer.serialize(it1) })
                 }
+            } else {
+                res.send("Template not found")
+            }
+        }
+
+
+        get("/deployment/eol/:container") { req, res ->
+            val container = DeploymentService.containers[req.getParam("container")]
+
+            if (container != null) {
+                AllocationService.unmark(container.allocation.port)
+
+                //TIODO MAKE THIS ALL WWOOPP DEEE DOOP LIKE YOU K NOW WWWORKING WITH FUCKING THE WHOLEE EDEPLOYMENT SERVICE THIS IS AIDS
+                DockerContainerController.killContainer(container.container.id)
+                DockerContainerController.removeContainer(container.container.id)
+                DeploymentService.containers.remove(req.getParam("container"))
             } else {
                 res.send("Template not found")
             }

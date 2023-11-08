@@ -17,6 +17,7 @@ import net.revive.framework.FrameworkApp
 import net.revive.framework.allocation.AllocationService
 import net.revive.framework.config.JsonConfig
 import net.revive.framework.config.load
+import net.revive.framework.constants.Deployment
 import net.revive.framework.deployment.cloudflare.CloudflareCredentialService
 import net.revive.framework.deployment.cloudflare.CloudflareRequestController
 import net.revive.framework.deployment.docker.WrappedDockerContainer
@@ -201,6 +202,11 @@ object DeploymentService {
                 properties.setProperty("server-port", allocation.port.toString())
                 properties.store(this.outputStream(), null)
             }
+
+            Deployment.Info(
+                template.idScheme.replace("%containerId%", "${allocation.port}"),
+                template.templateGroups
+            ).save(File(directory, "deployment.json"))
 
             File(directory, "start.sh").apply {
                 log("Setting up startup script")

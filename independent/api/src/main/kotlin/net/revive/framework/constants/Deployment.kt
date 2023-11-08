@@ -1,16 +1,30 @@
 package net.revive.framework.constants
 
-object Deployment {
-    const val SERVER_NAME = "PXLMC"
-    const val WEBSITE_URL = "www.pxlmc.net"
-    const val STORE_URL = "store.pxlmc.net"
+import net.revive.framework.Framework
+import java.io.File
 
-    object Socials {
-        const val X = "@PxlMC"
-        const val YOUTUBE = "https://youtube.com/c/pxlmc"
-        const val TIK_TOK = "@PxlMC"
-        const val INSTAGRAM = "@PxlMC"
-        const val DISCORD = "discord.gg/pxlmc"
+object Deployment {
+    lateinit var info: Info
+
+    class Info(
+        val serverId: String,
+        val serverGroups: List<String>
+    ) {
+        fun save(path: File) {
+            path.writeText(Framework.useWithReturn {
+                it.serializer.serialize(this)
+            })
+        }
+    }
+
+    fun scanForInformation() {
+        val file = File("deployment.json")
+
+        if (file.exists()) {
+            info = Framework.useWithReturn {
+                it.serializer.deserialize(Info::class, file.readText())
+            }
+        }
     }
 
     object Security {

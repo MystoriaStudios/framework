@@ -204,10 +204,11 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
         nmsVersion = NMSVersion.V1_20_R1
 
         Framework.use { framework ->
-            framework.configure(PaperFrameworkPlatform)
+            val platform = PaperFrameworkPlatform()
+            framework.configure(platform)
             framework.flavor.bind<IMenuHandler>() to FrameworkMenuHandler
             framework.flavor.bind<IMinecraftPlatform>() to PaperMinecraftPlatform
-            framework.flavor.bind<IFrameworkPlatform>() to PaperFrameworkPlatform
+            framework.flavor.bind<IFrameworkPlatform>() to platform
 
 
             val itemStackProvider = PaperItemStackProvider()
