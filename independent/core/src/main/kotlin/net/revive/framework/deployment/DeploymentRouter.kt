@@ -30,6 +30,17 @@ object DeploymentRouter : ExpressRouter() {
             }
         }
 
+        get("/deployment/log/:container") { req, res ->
+            val container = DeploymentService.containers[req.getParam("container")]
+
+            if (container != null) {
+                res.send(Framework.useWithReturn {
+                    it.serializer.serialize(DockerContainerController.getContainerLogs(container.container.id))
+                })
+            } else {
+                res.send("Template not found")
+            }
+        }
 
         get("/deployment/eol/:container") { req, res ->
             val container = DeploymentService.containers[req.getParam("container")]

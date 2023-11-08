@@ -19,6 +19,7 @@ import net.revive.framework.annotation.container.ContainerPreEnable
 import net.revive.framework.cache.PaperLocalUUIDCacheTranslator
 import net.revive.framework.cache.UUIDCache
 import net.revive.framework.command.FrameworkCommandManager
+import net.revive.framework.constants.Deployment
 import net.revive.framework.controller.FrameworkObjectControllerCache
 import net.revive.framework.disguise.FrameworkDisguiseHandler
 import net.revive.framework.disguise.IDisguiseHandler
@@ -202,6 +203,8 @@ class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
     fun containerEnable() {
         instance = this
         nmsVersion = NMSVersion.V1_20_R1
+
+        Deployment.scanForInformation()
 
         Framework.use { framework ->
             val platform = PaperFrameworkPlatform()

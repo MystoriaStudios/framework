@@ -1,8 +1,10 @@
 package net.revive.framework.deployment.docker
 
+import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.command.InspectContainerResponse
-import com.github.dockerjava.api.command.InspectImageResponse
 import com.github.dockerjava.api.model.Container
+import com.github.dockerjava.api.model.Frame
+import com.github.dockerjava.core.command.LogContainerResultCallback
 import net.revive.framework.deployment.DeploymentService
 
 /**
@@ -15,6 +17,28 @@ import net.revive.framework.deployment.DeploymentService
 object DockerContainerController {
 
     fun listContainers(): List<Container> = DeploymentService.dockerClient.listContainersCmd().exec()
+
+    fun getContainerLogs(containerId: String) : MutableList<String> {
+        val logs = mutableListOf<String>()
+
+        val command = DeploymentService.dockerClient.logContainerCmd(containerId)
+        command.withStdOut(true).withStdErr(true)
+        command.withSince((System.currentTimeMillis() / 1000).toInt() + 5)
+
+        command.withTimestamps(true)
+
+        try {
+            command.exec(object : ResultCallback.Adapter<Frame>() {
+                override fun onNext(item: Frame) {
+                    logs.add(item.toString())
+                }
+            }).awaitCompletion()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+
+        return logs
+    }
 
     fun getContainerInspection(containerId: String): InspectContainerResponse =
         DeploymentService.dockerClient.inspectContainerCmd(containerId).exec()

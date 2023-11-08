@@ -68,39 +68,6 @@ object FrameworkTestCommand : FrameworkCommand() {
         throw RuntimeException("This is a test of the auto sentry system.")
     }
 
-    @Subcommand("test-scoreboard")
-    fun testScoreboard(player: Player) {
-        player.sendMessage(buildComponent("testing scoreboard", Tailwind.GREEN_600))
-        if (scoreboardService.primaryScoreboard != null) throw RuntimeException("There is already a primary scoreboard provider.")
-
-        scoreboardService.updatePrimaryProvider(object : IScoreboard {
-            override fun getTitle(player: FrameworkPlayer): Component {
-                return Component
-                    .text(Deployment.SERVER_NAME)
-                    .style(
-                        Style
-                            .style(TextDecoration.BOLD)
-                            .color(TextColor.fromHexString(Tailwind.ORANGE_400))
-                    )
-            }
-
-            override fun getScores(player: FrameworkPlayer): List<Component> {
-                return listOf(
-                    Component.empty(),
-                    Component.text("this is a test of").color(TextColor.fromHexString(Tailwind.GRAY_100)),
-                    Component.text("the scoreboard provider").color(TextColor.fromHexString(Tailwind.GRAY_100)),
-                    Component.text("built into framework").color(TextColor.fromHexString(Tailwind.GRAY_100)),
-                    Component.empty(),
-                    Component.text(Deployment.WEBSITE_URL).color(TextColor.fromHexString(Tailwind.AMBER_300)),
-                )
-            }
-        })
-
-        Bukkit.getServer().onlinePlayers.forEach {
-            scoreboardService.refresh(it)
-        }
-    }
-
     @Subcommand("test-menu")
     fun testMenu(player: Player) {
         player.pvc.openMenu(TestMenu())

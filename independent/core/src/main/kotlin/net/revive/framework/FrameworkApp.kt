@@ -19,9 +19,12 @@ import net.revive.framework.heartbeat.HeartbeatService
 import net.revive.framework.module.FrameworkNodeModule
 import net.revive.framework.module.loader.FrameworkNodeModuleLoader
 import net.revive.framework.node.Node
+import org.glassfish.jersey.spi.ThreadPoolExecutorProvider
 import java.io.File
 import java.lang.Thread.sleep
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
 import kotlin.reflect.full.findAnnotation
 
 fun main(args: Array<String>) {
@@ -63,9 +66,9 @@ object FrameworkApp : IConfigProvider {
             it.configure(settingsConfig)
             it.log("Framework", "Loaded settings from config")
 
+            it.log("Framework", "Starting express routing")
             val port = settingsConfig.port
             express = Express(settingsConfig.hostAddress)
-            express.listen(port)
 
             express.use(MojangUUIDCacheRouter)
             express.use(AllocationRouter)
@@ -136,5 +139,10 @@ object FrameworkApp : IConfigProvider {
                 }
             }
         })
+
+        Executors.newSingleThreadExecutor().submit {
+            express.listen(settingsConfig.port)
+            Framework.instance.log("Framework", "Listening on port ${settingsConfig.port}")
+        }
     }
 }
