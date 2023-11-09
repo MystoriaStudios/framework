@@ -78,11 +78,11 @@ abstract class Framework {
     abstract fun constructNewRedisConnection(): AbstractFrameworkRedisConnection
     abstract fun constructNewMongoConnection(): AbstractFrameworkMongoConnection
 
-    fun log(from: String, message: String) {
+    open fun log(from: String, message: String) {
         logger.log(Level.INFO, "[$from] $message")
     }
 
-    fun severe(from: String, message: String) {
+    open fun severe(from: String, message: String) {
         logger.log(Level.SEVERE, "[$from] $message")
     }
 }

@@ -25,6 +25,7 @@ import java.lang.Thread.sleep
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
+import kotlin.math.exp
 import kotlin.reflect.full.findAnnotation
 
 fun main(args: Array<String>) {
@@ -41,6 +42,7 @@ object FrameworkApp : IConfigProvider {
     lateinit var loader: FrameworkNodeModuleLoader
     lateinit var express: Express
     lateinit var settingsConfig: FrameworkNodePlatform
+    val logs: MutableList<String> = mutableListOf()
 
     val modules: MutableMap<String, FrameworkNodeModule> = mutableMapOf()
 
@@ -101,6 +103,11 @@ object FrameworkApp : IConfigProvider {
                     "usedMemory" to Runtime.getRuntime().totalMemory(),
                     "availableCores" to Runtime.getRuntime().availableProcessors()
                 )))
+            }
+            express.get("/console") { req, res ->
+                res.send(it.serializer.serialize(
+                    logs
+                ))
             }
 
             it.log("Framework", "Starting express server on port ${port}.")

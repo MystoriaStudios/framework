@@ -30,4 +30,9 @@ object FrameworkNode : Framework() {
     override fun constructNewMongoConnection(): AbstractFrameworkMongoConnection {
         return BasicFrameworkMongoConnection(BasicFrameworkMongoConnection.Details())
     }
+
+    override fun log(from: String, message: String) {
+        FrameworkApp.logs.add("[$from] $message")
+        super.log(from, message)
+    }
 }
