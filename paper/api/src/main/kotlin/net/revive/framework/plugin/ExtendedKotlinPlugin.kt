@@ -28,7 +28,6 @@ import net.revive.framework.flavor.FlavorOptions
 import net.revive.framework.flavor.annotation.IgnoreDependencyInjection
 import net.revive.framework.flavor.annotation.Inject
 import net.revive.framework.flavor.reflections.PackageIndexer
-import net.revive.framework.maven.MavenLibraryLoader
 import net.revive.framework.menu.IMenu
 import net.revive.framework.menu.MenuService.minecraftPlatform
 import net.revive.framework.message.FrameworkMessageHandler
@@ -99,7 +98,7 @@ open class ExtendedKotlinPlugin : ExtendedJavaPlugin(), IConfigProvider {
             Bukkit.shutdown()
             return
         }
-        MavenLibraryLoader.loadAll(this::class.java)
+
         this.flavor = Flavor.create((Bukkit.getPluginManager().getPlugin(description.name) ?: this)::class, FlavorOptions(logger))
         this.flavor.reflections = PackageIndexer(this::class, FlavorOptions(logger), listOf(this.classLoader))
         this.packageIndexer = this.flavor.reflections

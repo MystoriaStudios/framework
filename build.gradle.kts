@@ -6,13 +6,13 @@ import org.jetbrains.gradle.ext.runConfigurations
 import org.jetbrains.gradle.ext.settings
 
 plugins {
+    kotlin("jvm") version "1.9.10"
+    kotlin("kapt") version "1.9.10"
     id("maven-publish")
     id("io.sentry.jvm.gradle") version "3.12.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    kotlin("jvm") version "1.9.10"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("org.jetbrains.dokka") version "1.9.0"
-    kotlin("kapt") version "1.9.10"
     id("com.google.protobuf") version "0.9.4" apply false
 }
 
@@ -39,7 +39,6 @@ allprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "kotlin")
     apply(plugin = "com.github.johnrengelman.shadow")
-    apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.kapt")
@@ -53,35 +52,59 @@ allprojects {
         maven("https://jitpack.io")
     }
 
-    dependencies {
-        implementation(kotlin("stdlib"))
-        implementation(kotlin("reflect")) // Add this line
+    fun applyGlobalDepends(scope: DependencyHandlerScope, shade: Boolean = false) {
+        scope {
+            if (!shade) {
+                compileOnly(kotlin("stdlib"))
+                compileOnly(kotlin("reflect")) // Add this line
 
-        val dependencies = listOf(
-            "org.mongodb:mongo-java-driver:3.12.11",
-            "io.lettuce:lettuce-core:6.2.4.RELEASE",
-            "com.google.code.gson:gson:2.9.0",
-            "io.sentry:sentry:6.29.0",
-            "com.konghq:unirest-java:3.13.6:standalone",
-            "com.github.docker-java:docker-java:3.3.4",
-            "com.github.robinbraemer:CloudflareAPI:1.4.1",
-            "com.google.guava:guava:31.0.1-jre",
-            "commons-io:commons-io:2.11.0"
-        )
+                compileOnly("org.mongodb:mongo-java-driver:3.12.11")
+                compileOnly("io.lettuce:lettuce-core:6.2.4.RELEASE")
+                compileOnly("io.sentry:sentry:6.29.0")
+                compileOnly("com.konghq:unirest-java:3.13.6:standalone")
 
-        dependencies.forEach { dep ->
-            if (!name.contains("api") || name.contains("core")) {
-                implementation(dep)
+                // Docker
+                compileOnly("com.github.docker-java:docker-java:3.3.4")
+
+                // Cloudflare
+                compileOnly("com.github.robinbraemer:CloudflareAPI:1.4.1")
+
+                compileOnly("com.google.guava:guava:31.0.1-jre")
+                compileOnly("commons-io:commons-io:2.11.0")
             } else {
-                compileOnly(dep)
+                implementation(kotlin("stdlib"))
+                implementation(kotlin("reflect")) // Add this line
+
+                implementation("org.mongodb:mongo-java-driver:3.12.11")
+                implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
+                implementation("com.google.code.gson:gson:2.9.0")
+                implementation("io.sentry:sentry:6.29.0")
+                implementation("com.konghq:unirest-java:3.13.6:standalone")
+
+                // Docker
+                implementation("com.github.docker-java:docker-java:3.3.4")
+
+                // Cloudflare
+                implementation("com.github.robinbraemer:CloudflareAPI:1.4.1")
+
+                implementation("com.google.guava:guava:31.0.1-jre")
+                implementation("commons-io:commons-io:2.11.0")
             }
         }
+    }
 
-
-        testImplementation(kotlin("test"))
-
+    dependencies {
         // Generate documentation
         dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
+
+        if (name.contains("api") || name.contains("protocol") || name.contains("minecraft-platform") || name == "paper-core") {
+            applyGlobalDepends(this)
+        } else if ((name.contains("core") && !name.contains("paper") && !name.contains("nms")) || name.contains("backend")) {
+            applyGlobalDepends(this, true)
+        } else {
+            compileOnly(kotlin("stdlib"))
+            compileOnly(kotlin("reflect")) // Add this line
+        }
     }
 
     tasks.withType<ShadowJar> {
@@ -93,21 +116,6 @@ allprojects {
         relocate("co.aikar.commands", "${project.group}.commands")
         relocate("co.aikar.locales", "${project.group}.locales")
         relocate("co.aikar.locales", "${project.group}.locales")
-
-        val packagesToExclude = listOf(
-            "retrofit",
-            "retrofit2",
-            "reactor",
-            "org",
-            "okio",
-            "okhttp3",
-            "io",
-            "google",
-            "eu",
-            "com"
-        )
-
-        this.exclude(packagesToExclude)
     }
 
     tasks.withType<DokkaTaskPartial>().configureEach {
@@ -157,11 +165,7 @@ allprojects {
         duplicatesStrategy = DuplicatesStrategy.WARN // or DuplicatesStrategy.FAIL
     }
 
-    tasks["build"]
-        .dependsOn(
-            "shadowJar",
-            "publishMavenJavaPublicationToMavenLocalRepository",
-        )
+    tasks["build"].dependsOn("shadowJar")
 }
 
 kotlin {

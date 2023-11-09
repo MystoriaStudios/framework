@@ -29,8 +29,6 @@ import net.revive.framework.item.FrameworkItemStack
 import net.revive.framework.item.IItemStackProvider
 import net.revive.framework.item.PaperFrameworkItemStack
 import net.revive.framework.item.PaperItemStackProvider
-import net.revive.framework.maven.MavenLibrary
-import net.revive.framework.maven.Repository
 import net.revive.framework.menu.FrameworkMenuHandler
 import net.revive.framework.menu.IMenuHandler
 import net.revive.framework.nms.NMSVersion
@@ -68,108 +66,6 @@ import java.util.concurrent.TimeUnit
     ]
 )
 @HelperImplementationPlugin
-@MavenLibrary(
-    "net.kyori",
-    "adventure-text-serializer-gson",
-    "4.10.1",
-)
-@MavenLibrary(
-    "net.kyori",
-    "adventure-text-minimessage",
-    "4.10.1"
-)
-@MavenLibrary(
-    "fr.mrmicky",
-    "fastboard",
-    "2.0.0"
-)
-@MavenLibrary(
-    "com.github.cryptomorin",
-    "XSeries",
-    "9.5.0"
-)
-@MavenLibrary(
-    "com.squareup.retrofit2",
-    "retrofit",
-    "2.9.0",
-
-)
-@MavenLibrary(
-    "com.squareup.retrofit2",
-    "converter-gson",
-    "2.9.0"
-)
-@MavenLibrary(
-    "io.grpc",
-    "grpc-netty",
-    "1.57.2"
-)
-@MavenLibrary(
-    "io.grpc",
-    "grpc-protobuf",
-    "1.57.2"
-)
-@MavenLibrary(
-    "com.google.protobuf",
-    "protobuf-java-util",
-    "3.24.1"
-)
-@MavenLibrary(
-    "io.grpc",
-    "grpc-kotlin-stub",
-    "1.4.0"
-)
-@MavenLibrary(
-    "org.reflections",
-    "reflections",
-    "0.10.2"
-)
-@MavenLibrary(
-    "com.github.ben-manes.caffeine",
-    "caffeine",
-    "3.1.8"
-)
-@MavenLibrary(
-    "org.mongodb",
-    "mongo-java-driver",
-    "3.12.11"
-)
-@MavenLibrary(
-    "io.lettuce",
-    "lettuce-core",
-    "6.2.4.RELEASE"
-)
-@MavenLibrary(
-    "com.google.code.gson",
-    "gson",
-    "2.9.0"
-)
-@MavenLibrary(
-    "io.sentry",
-    "sentry",
-    "6.29.0"
-)
-@MavenLibrary(
-    "com.github.docker-java",
-    "docker-java",
-    "3.3.4"
-)
-@MavenLibrary(
-    "com.github.robinbraemer",
-    "cloudflareapi",
-    "1.4.1",
-    Repository("https://jitpack.io")
-)
-@MavenLibrary(
-    "com.google.guava",
-    "guava",
-    "31.0.1-jre"
-)
-@MavenLibrary(
-    "commons-io",
-    "commons-io",
-    "2.11.0"
-)
 class PaperFrameworkPlugin : ExtendedKotlinPlugin() {
 
     companion object {
