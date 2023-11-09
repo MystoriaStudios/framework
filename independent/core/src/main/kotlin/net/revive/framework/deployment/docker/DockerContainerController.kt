@@ -16,7 +16,8 @@ import net.revive.framework.deployment.DeploymentService
  */
 object DockerContainerController {
 
-    fun listContainers(): List<Container> = DeploymentService.dockerClient.listContainersCmd().exec()
+    fun listContainers(): List<Container> =
+        DeploymentService.dockerClient.listContainersCmd().exec()
 
     fun getContainerLogs(containerId: String) : MutableList<String> {
         val logs = mutableListOf<String>()
