@@ -32,7 +32,9 @@ object DockerContainerController {
                 override fun onNext(item: Frame) {
                     logs.add(item.toString())
                 }
-            }).awaitCompletion()
+            }).onError(
+                Exception("Frame iteration could not complete!")
+            )
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
