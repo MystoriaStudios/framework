@@ -10,4 +10,8 @@ class WrappedDockerContainer(
     val container: CreateContainerResponse,
     val allocation: Allocation,
     var heartbeat: WrappedContainerHeartbeat? = null
-)
+) {
+    //todo @98Ping makee esomeething heere wheere you can access the logs of the server and make sure it is addeed to the @DeploymentRouter
+    fun stop() = DockerContainerController.stopContainer(container.id)
+    fun kill() = DockerContainerController.killContainer(container.id)
+}

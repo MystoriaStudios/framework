@@ -49,6 +49,10 @@ object DockerContainerController {
         DeploymentService.dockerClient.killContainerCmd(containerId).exec()
     }
 
+    fun stopContainer(containerId: String) {
+        DeploymentService.dockerClient.stopContainerCmd(containerId).exec()
+    }
+
     fun removeContainer(containerId: String) {
         DeploymentService.dockerClient.removeContainerCmd(containerId).exec()
     }
