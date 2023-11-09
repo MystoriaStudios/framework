@@ -25,7 +25,6 @@ object DockerContainerController {
         val command = DeploymentService.dockerClient.logContainerCmd(containerId)
         command.withStdOut(true).withStdErr(true)
         command.withSince((System.currentTimeMillis() / 1000).toInt() + 5)
-
         command.withTimestamps(true)
 
         try {
