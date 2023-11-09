@@ -97,9 +97,9 @@ allprojects {
         // Generate documentation
         dokkaPlugin("org.jetbrains.dokka:versioning-plugin:1.9.0")
 
-        if (name.contains("api") || name.contains("protocol") || name.contains("minecraft-platform") || name == "paper-core") {
+        if (name.contains("api") || name.contains("protocol") || name.contains("minecraft-platform")) {
             applyGlobalDepends(this)
-        } else if ((name.contains("core") && !name.contains("paper") && !name.contains("nms")) || name.contains("backend")) {
+        } else if ((name.contains("core") && !name.contains("nms")) || name.contains("backend")) {
             applyGlobalDepends(this, true)
         } else {
             compileOnly(kotlin("stdlib"))
