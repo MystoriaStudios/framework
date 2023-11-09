@@ -49,7 +49,7 @@ object DeploymentRouter : ExpressRouter() {
                 AllocationService.unmark(container.allocation.port)
 
                 //TIODO MAKE THIS ALL WWOOPP DEEE DOOP LIKE YOU K NOW WWWORKING WITH FUCKING THE WHOLEE EDEPLOYMENT SERVICE THIS IS AIDS
-                DockerContainerController.killContainer(container.container.id)
+                container.kill()
                 DockerContainerController.removeContainer(container.container.id)
                 DeploymentService.containers.remove(req.getParam("container"))
             } else {

@@ -58,7 +58,7 @@ fun main() {
             properties.load(this.bufferedReader())
 
             server.start(
-                properties.getProperty("server-host") ?: "0.0.0.0",
+                properties.getProperty("server-ip") ?: "0.0.0.0",
                 Ints.tryParse(properties.getProperty("server-port")) ?: 25565
             )
         } else {

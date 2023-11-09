@@ -140,9 +140,16 @@ object DeploymentService {
     @Close
     fun close() {
         templates.values.forEach(DeploymentTemplate::save)
+        containers.values.forEach {
+            it.kill()
+            log("Killing container ${it.container.id} hosted as ${it.template.idScheme.replace("%containerId%", it.allocation.port.toString())}.")
+            dockerClient.removeContainerCmd(it.container.id).exec()
+            log("Removing container ${it.container.id}.")
+        }
         FrameworkApp.use { app ->
             File("containers").delete()
         }
+
     }
 
     fun deploy(template: DeploymentTemplate): InspectContainerResponse? {

@@ -49,6 +49,10 @@ object DockerContainerController {
         DeploymentService.dockerClient.killContainerCmd(containerId).exec()
     }
 
+    fun send(containerId: String, input: String) {
+        // TODO @98PING PLS THIS ONE TOO TO SSESEND LIKEE COMMANDS SAND INPUT INTO THE DOCKER ECONTAINREEE AS A CONSOLE USEER TYYY
+    }
+
     fun stopContainer(containerId: String) {
         DeploymentService.dockerClient.stopContainerCmd(containerId).exec()
     }
