@@ -12,7 +12,7 @@ class WrappedDockerContainer(
     var heartbeat: WrappedContainerHeartbeat? = null
 ) {
     //todo @98Ping makee esomeething heere wheere you can access the logs of the server and make sure it is addeed to the @DeploymentRouter
-    fun send(command: String) = DockerContainerController.
+    fun send(command: String) = DockerContainerController.send(container.id, command)
     fun stop() = DockerContainerController.stopContainer(container.id)
     fun kill() = DockerContainerController.killContainer(container.id)
 }
