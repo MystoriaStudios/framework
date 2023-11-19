@@ -65,13 +65,13 @@ abstract class Framework {
         //SecurityService.configure(Argon2HashingAlgorithm)
         instance.log("Framework", "Setup securing hashing using TPM 2.1")
 
-        retrofit = Retrofit.Builder()
+        /*retrofit = Retrofit.Builder()
             .baseUrl("${Deployment.Security.API_BASE_URL}/")
             .client(useWithReturn {
                 it.okHttpClient
             })
             .addConverterFactory(GsonConverterFactory.create(GsonSerializer.gson))
-            .build()
+            .build()*/
         logger.log(Level.INFO, "Registering Retrofit instance as required.")
     }
 

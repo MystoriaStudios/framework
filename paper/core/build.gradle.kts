@@ -12,6 +12,8 @@ dependencies {
     implementation(project(":paper:paper-api"))
     implementation(project(":minecraft-platform"))
     implementation(project(":independent:protocol-stub"))
+    implementation("org.reflections:reflections:0.10.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     // reference libraries
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
